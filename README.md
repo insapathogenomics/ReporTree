@@ -166,6 +166,20 @@ Stability regions:
 ```
 
 
+#### Notes on ReporTree behaviour
+
+-	To take the most profit of ReporTree, we recommend that you include the column 'date' in your metadata. This column must follow the format YYYY-MM-DD. If you only provide YYYY, it will assume YYYY-01-01!
+-	If a 'date' column is provided in the metadata, ReporTree will determine and provide in the new metadata table the columns:
+    - iso_year
+    - iso_week_nr 
+    - iso_week
+-	While for nominal or categorical variables ReporTree can provide in the summary report the number of observations (‘n_column’) or the frequency of each observation, for the 'date' column this script can provide:
+    - first_seq_date
+    - last_seq_date
+    - timespan_days
+-	The columns of the summary reports are defined by the ‘--columns_summary_report’ argument. To know the columns that you can include based on your metadata table and the outputs of ReporTree, write the full command line and add the argument ‘--list’ in the end. This will give you a list of the possible columns that your summary reports can include, i.e. that you can request in ‘--columns_summary_report’.
+
+
 ## Citation
 
 If you run ReporTree, please do not forget to cite this page.
