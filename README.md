@@ -19,7 +19,7 @@ This script takes advantage of [TreeCluster](https://github.com/niemasd/TreeClus
 
 
 - _comparing_partitions_v2.py_ (only run when the user requests “stability regions”)    
-This is a modified version of comparing_partitions.py that analyzes the cluster congruence between subsequent partitions of a given clustering method (using the Adjusted Wallace coefficient (Pinto et al. 2021)), and identifies the partition threshold ranges for which cluster composition is similar (i.e. the “stability regions”). ReporTree then includes the minimum threshold of each of the “stability regions” in the summary report.
+This is a modified version of comparing_partitions.py that analyzes the cluster congruence between subsequent partitions of a given clustering method (using the Adjusted Wallace coefficient ([Carriço et al. 2006](https://journals.asm.org/doi/10.1128/JCM.02536-05)), and identifies the partition threshold ranges for which cluster composition is similar (i.e. the “stability regions”). ReporTree then includes the minimum threshold of each of the “stability regions” in the summary report.
 
 
 - _metadata_report.py_      
