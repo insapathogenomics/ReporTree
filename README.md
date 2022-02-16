@@ -64,7 +64,7 @@ Dependencies:
 Installation:
 ```bash
 conda create -n reportree -c etetoolkit -c anaconda -c bioconda ete3 scikit-learn pandas grapetree=2.1 treecluster=1.0.3 python=3.6
-git clone ReporTree
+git clone https://github.com/insapathogenomics/ReporTree
 cd ReporTree/scripts/
 git clone https://github.com/insapathogenomics/GrapeTree
 git clone https://github.com/insapathogenomics/ComparingPartitions
