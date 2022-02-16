@@ -33,6 +33,26 @@ This script takes a metadata table as input (.tsv) and provides a separated summ
 ![reporTree](https://user-images.githubusercontent.com/87025402/154258478-f64fae75-31c6-49a6-a6ed-54948f4acb8d.png)
 
 
+## Input files
+Metadata table in .tsv format (column 'sequence' is mandatory and columns should not have blank spaces)           
+**AND (optionally)**        
+
+Newick tree which will be used to obtain genetic clusters       
+**OR**      
+Allele matrix which will be used to obtain genetic clusters from a MST      
+**OR**     
+Partitions table (i.e. matrix with genetic clusters) in .tsv format (column 'sequence' is mandatory and columns should not have blank spaces)      
+
+
+## Main output files
+1. partitions.tsv - genetic clusters obtained for each user-selected partition threshold (only generated when a newick file or an allele matrix is provided)
+2. metrics.tsv - metrics resulting from the cluster congruence analysis, with indication of the Adjusted Wallace and the Ajusted Rand coefficients for each comparison of subsequent partitions, and the Simpson's Index of Diversity for each partition.
+3. stableRegions.tsv - partition ranges for which Adjusted Wallace coefficient is higher than the cut-off defined by the user
+4. metadata_w_partitions.tsv - initial metadata information with additional columns comprising information on the genetic clusters at different partitions
+5. partitions_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters present in partitions.tsv
+6. variable_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for any (and as many) grouping variable present in metadata_w_partitions.tsv (such as, clade, lineage, ST, vaccination status, etc.)
+
+
 ## Installation and dependencies
 
 Dependencies:
