@@ -166,8 +166,23 @@ Stability regions:
 ```
 
 
-#### Notes on ReporTree behaviour
+#### Note on the '--method-threshold' argument
 
+As above-mentioned, reporTree uses [TreeCluster](https://github.com/niemasd/TreeCluster) to obtain clustering information from a SNP-distance tree. To provide some flexibility, it uses the argument '--method-threshold' to run this program for all the combinations of method-threshold that the user needs:
+- Clustering at all possible thresholds of a single method (from 1 SNP to the maximum distance of the tree) -> set only the method (e.g. root_dist)
+- Clustering at a specific threshold for a single method -> set the method and use a hyphen to indicate the threshold (e.g. root_dist-10)
+- Clustering at all possible thresholds of a range for a single method -> set the method and use a hyphen to indicate the threshold range (e.g. root_dist-10-30)
+- Clustering using two or more methods and/or different thresholds -> set the different requirements separated by a comma (e.g. root_dist,avg_dist-10,avg_dist-20-30)
+
+
+#### Note on the '--partitions2report' argument
+
+This argument is used to select the columns of the partitions table that will be incorporated into the metadata table. If you use ReporTree to obtain the partitions table, the column names specification follows the same rules as the '--method-threshold' or the '--threshold' argument, depending on whether you provided a newick tree or an allele matrix, respectively.
+
+
+#### Note on the columns for summary reports
+
+This argument is used to select the columns that will be provided in the summary report.
 -	To take the most profit of ReporTree, we recommend that you include the column 'date' in your metadata. This column must follow the format YYYY-MM-DD. If you only provide YYYY, it will assume YYYY-01-01!
 -	If a 'date' column is provided in the metadata, ReporTree will determine and provide in the new metadata table the columns:
     - iso_year
@@ -179,6 +194,8 @@ Stability regions:
     - timespan_days
 -	The columns of the summary reports are defined by the ‘--columns_summary_report’ argument. To know the columns that you can include based on your metadata table and the outputs of ReporTree, write the full command line and add the argument ‘--list’ in the end. This will give you a list of the possible columns that your summary reports can include, i.e. that you can request in ‘--columns_summary_report’.
 
+
+## Examples
 
 ## Citation
 
