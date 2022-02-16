@@ -164,3 +164,14 @@ Stability regions:
   -o ORDER, --order ORDER
                         [Set only if you provide your own partitions table] Partitions order in the partitions table (0: min -> max; 1: max -> min) [0]
 ```
+
+
+## Citation
+
+If you run ReporTree, please do not forget to cite this page.
+
+Also, ReporTree relies on the work of other developers. So, depending on the functionalities you use, there are other tools that you must cite:     
+- Ete3: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4868116/pdf/msw046.pdf (all tools)     
+- Grapetree: http://www.genome.org/cgi/doi/10.1101/gr.232397.117 (if you provided an allele matrix)      
+- TreeCluster: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6705769/pdf/pone.0221068.pdf (if you provided a newick tree)      
+- ComparingPartitions: https://journals.asm.org/doi/10.1128/jcm.02536-05?permanently=true (if you requested "stability_regions")      
