@@ -83,7 +83,7 @@ group0.add_argument("-thr", "--threshold", dest="threshold", default = "max", he
 					(e.g. 5,8,16). Ranges can be specified with an hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 1 \
 					to max")
 group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to select the samples to reconstruct the minimum \
-					spanning tree according to the '--filter' argument (column 'sequence' is mandatory)")
+					spanning tree according to the '--filter' argument")
 group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples of the allele matrix that must \
 					be used for tree reconstruction. This must be specified within quotation marks in the following format 'column< >operation< >condition' (e.g. 'country == Portugal'). When \
 					more than one condition is specified for a given column, they must be separated with commas (e.g 'country == Portugal,Spain,France'). When filters include more than one \
@@ -91,6 +91,8 @@ group0.add_argument("-f", "--filter", dest="filter_column", required=False, defa
 					so, do not leave spaces before and after commas/semicolons.")
 group0.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
 					-thr 5,8,10-30, the tree will be cut at 50,80,100,110,120,...,300). Currently, the default is 1, which is equivalent to 1 allele distance. [1.0]")
+group0.add_argument("--matrix-4-grapetree", dest="matrix4grapetree", required=False, action="store_true", help="Output an additional allele profile matrix with the header ready for GrapeTree \
+						visualization. Set only if you WANT the file")	
 						
 args = parser.parse_args()
 
@@ -105,7 +107,7 @@ print("\n-------------------- partitioning_grapetree.py --------------------\n",
 print(" ".join(sys.argv))
 print(" ".join(sys.argv), file = log)
 
-
+	
 # filtering allele matrix	----------
 
 if args.metadata != "" and args.filter_column != "":
@@ -114,6 +116,7 @@ if args.metadata != "" and args.filter_column != "":
 	
 	filters = args.filter_column
 	mx = pandas.read_table(args.metadata)
+	sample_column = mx.columns[0]
 	
 	if "date" in mx.columns and "iso_week" not in mx.columns:
 		index_no = mx.columns.get_loc("date")
@@ -185,7 +188,7 @@ if args.metadata != "" and args.filter_column != "":
 					mx[col] = mx[col].astype(int)
 					mx[col] = mx[col].astype(str)
 
-	samples = mx["sequence"].tolist()
+	samples = mx[sample_column].tolist()
 	
 	
 	allele_mx = pandas.read_table(args.allele_profile)
@@ -205,8 +208,18 @@ elif args.metadata == "" and args.filter_column != "":
 
 else:
 	allele_filename = args.allele_profile
+	sample_column = "sequence"
 
+# preparing allele matrix for grapetree	----------
 
+if args.matrix4grapetree:
+	mx_allele = pandas.read_table(allele_filename, dtype = str)
+	first_col = str(mx_allele.columns[0])
+	if first_col[0] != "#":
+		mx_allele = mx_allele.rename(columns={first_col: "#" + first_col})
+		mx_allele.to_csv(args.out + "_alleles_4_grapetree.tsv", index = False, header=True, sep ="\t")
+		
+		
 # running grapetree	----------
 
 print("Running GrapeTree...")
@@ -299,7 +312,7 @@ print("Defining clusters...")
 print("Defining clusters...", file = log)
 info = {} #dictionary with all the partitions -> info[partition][cluster] = set(sample1, sample2,...)
 order_partitions = [] #list of partitions... useful to write the dataframe with pandas
-order_partitions.append("sequence")
+order_partitions.append(sample_column)
 
 for min_r,max_r in range_def:
 	print("\tCalculating clustering in range",min_r,max_r,"with a distance of",distance_magnitude)
@@ -424,10 +437,10 @@ print("Creating sample partitions file...")
 print("Creating sample partitions file...", file = log)
 
 typing = {}
-typing["sequence"] = []
+typing[sample_column] = []
 
 for sample in info_sample.keys():
-	typing["sequence"].append(sample)
+	typing[sample_column].append(sample)
 	for min_r,max_r in range_def:
 		for partition_value in range(min_r,max_r):
 			partition = partition_value * distance_magnitude
