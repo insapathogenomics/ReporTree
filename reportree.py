@@ -58,12 +58,8 @@ def get_partitions2report(analysis, partitions_field, output, distance):
 				else:
 					if analysis != "other": # run grapetree or treecluster
 						if "-" in part: # threshold specified 
-							if analysis == "grapetree":
-								method_info = "MST"
-								threshold_info = part
-							else:
-								method_info = part.split("-", 1)[0]
-								threshold_info = part.split("-", 1)[1]
+							method_info = part.split("-", 1)[0]
+							threshold_info = part.split("-", 1)[1]
 						
 							if "-" in threshold_info: # range specified
 								min_threshold = int(threshold_info.split("-")[0])
@@ -78,9 +74,7 @@ def get_partitions2report(analysis, partitions_field, output, distance):
 								partitions2report_lst.append(info)
 						
 						else: 
-							if analysis == "grapetree": # specific number
-								info = "MST-" + str(part) + "x" + str(distance)
-								partitions2report_lst.append(info)
+							partitions2report_lst.append(part)
 					else:
 						partitions2report_lst.append(part)
 
@@ -98,12 +92,8 @@ def get_partitions2report(analysis, partitions_field, output, distance):
 			else:
 				if analysis != "other":
 					if "-" in partitions_field: # threshold specified 
-						if analysis == "grapetree":
-							method_info = "MST"
-							threshold_info = partitions_field
-						else:
-							method_info = partitions_field.split("-", 1)[0]
-							threshold_info = partitions_field.split("-", 1)[1]
+						method_info = partitions_field.split("-", 1)[0]
+						threshold_info = partitions_field.split("-", 1)[1]
 						
 						if "-" in threshold_info: # range specified
 							min_threshold = int(threshold_info.split("-")[0])
@@ -118,9 +108,7 @@ def get_partitions2report(analysis, partitions_field, output, distance):
 							partitions2report_lst.append(info)
 						
 					else: 
-						if analysis == "grapetree": # specific number
-							info = "MST-" + str(partitions_field) + "x" + str(distance)
-							partitions2report_lst.append(info)
+						partitions2report_lst.append(partitions_field)
 				else:
 					partitions2report_lst.append(partitions_field)
 	
@@ -154,7 +142,7 @@ def filter_partitions_table(method, table):
 	
 	mx = pandas.read_table(table)
 	
-	suitable_columns = ["sequence"]
+	suitable_columns = [mx.columns[0]]
 	for col in mx.columns.tolist():
 		if col.split("-")[0] == method:
 			suitable_columns.append(col)
@@ -235,12 +223,15 @@ if __name__ == "__main__":
 									other provided grouping variable (such as, clade, lineage, ST, 
 									vaccination status, etc.)
 									
+									-obtaining count/frequency matrices for the derived genetic 
+									clusters or for any other provided grouping variable
+									
 									-identifying regions of cluster stability (i.e. cg/wgMLST 
 									partition threshold ranges in which cluster composition is similar)
 									
 									
-									Note: Column 'sequence' is mandatory in metadata and partition
-									tables and white spaces should be avoided in column names!!
+									Note: White spaces should be avoided in metadata and partition
+									tables column names!!
 									
 									Note 2: To take the most profit of this script we recommend that 
 									you include the column 'date' in the metadata. This column must 
@@ -269,10 +260,10 @@ if __name__ == "__main__":
 									
 									TIP!! If you do not know which columns you can indicate for the
 									argument '--columns_summary_report', you can use the 
-									'--list'!!
+									'--list' argument!!
 									
 									
-									NOTE: Check the github page for information about citation
+									Check the github page for information about citation.
 									                  
 									-----------------------------------------------------------------"""))
 	
@@ -280,11 +271,11 @@ if __name__ == "__main__":
 	## general parameters
 	
 	group0 = parser.add_argument_group("ReporTree", "ReporTree input/output file specifications")
-	group0.add_argument("-m", "--metadata", dest="metadata", required=True, type=str, help="[MANDATORY] Metadata file in .tsv format (column 'sequence' is mandatory)")
+	group0.add_argument("-m", "--metadata", dest="metadata", required=True, type=str, help="[MANDATORY] Metadata file in .tsv format")
 	group0.add_argument("-t", "--tree", dest="tree", default="", required=False, type=str, help="[OPTIONAL] Input tree")
 	group0.add_argument("-a", "--allele-profile", dest="allele_profile", default="", required=False, type=str, help="[OPTIONAL] Input allele profile matrix")
-	group0.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="[OPTIONAL] Partitions file in .tsv format (column 'sequence' is mandatory) - \
-						'partition' represents any variable that is not in the metadata")
+	group0.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="[OPTIONAL] Partitions file in .tsv format - \
+						'partition' represents the threshold at which clustering information was obtained")
 	group0.add_argument("-out", "--output", dest="output", required=False, default="ReporTree", type=str, help="[OPTIONAL] Tag for output file name (default = ReporTree)")
 	group0.add_argument("--list", dest="list_col_summary", required=False, action="store_true", help=" [OPTIONAL] If after your command line you specify this option, ReporTree will list all the \
 						possible columns that you can use as input in '--columns_summary_report'. NOTE!! The objective of this argument is to help you with the input of '--columns_summary_report'. \
@@ -323,7 +314,9 @@ if __name__ == "__main__":
 	group2.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="Partition threshold for clustering definition. Different thresholds can be comma-separated (e.g. 5,8,16). \
 						Ranges can be specified with a hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 1 to max")
 	group2.add_argument("--subset", dest="subset", required=False, action="store_true", help="Reconstruct the minimum spanning tree using only the samples that correspond to the filters \
-						specified at the '--filter' argument")	
+						specified at the '--filter' argument")
+	group2.add_argument("--matrix-4-grapetree", dest="matrix4grapetree", required=False, action="store_true", help="Output an additional allele profile matrix with the header ready for GrapeTree \
+						visualization. Set only if you WANT the file")	
 	
 	## reportree
 	
@@ -332,12 +325,12 @@ if __name__ == "__main__":
 						(i.e. variables of metadata) to get statistics for the derived genetic clusters or for other grouping variables defined in --metadata2report (comma-separated). If the \
 						name of the column is provided, the different observations and the respective percentage are reported. If 'n_column' is specified, the number of the different \
 						observations is reported. For example, if 'n_country' and 'country'  are specified, the summary will report the number of countries and their distribution (percentage) \
-						per cluster/group. Exception: if a 'date' column is in the metadata, it can also report first_seq_date, last_seq_date, timespan_days. Default = \
-						n_sequence,lineage,n_country,country,n_region,first_seq_date,last_seq_date,timespan_days [the order of the list will be the order of the columns in the report]")
+						per cluster/group. Exception: if a 'date' column is in the metadata, it can also report first_seq_date, last_seq_date, timespan_days. Check '--list' argument for some help. \
+						Default = n_sequence,lineage,n_country,country,n_region,first_seq_date,last_seq_date,timespan_days [the order of the list will be the order of the columns in the report]")
 	group3.add_argument("--partitions2report", dest="partitions2report", required=False, default="all", type=str, help="Columns of the partitions table to include in a joint report \
 						(comma-separated). Other alternatives: 'all' == all partitions; 'stability_regions' == first partition of each stability region as determined by \
-						comparing_partitions_v2.py. Warning!! 'stability_regions' can only be inferred when partitioning TreeCluster or GrapeTree is run for all possible thresholds or when a \
-						similar partitions table is provided (i.e. sequential partitions obtained with the same clustering method) [all]")
+						comparing_partitions_v2.py. Note: 'stability_regions' can only be inferred when partitioning TreeCluster or GrapeTree is run for all possible thresholds or when a \
+						similar partitions table is provided (i.e. sequential partitions obtained with the same clustering method) [all]. Check '--list' argument for some help")
 	group3.add_argument("--metadata2report", dest="metadata2report", required=False, default="country", help="Columns of the metadata table for which a separated summary report must be \
 						provided (comma-separated)")
 	group3.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples to analyze. This must be specified \
@@ -353,8 +346,6 @@ if __name__ == "__main__":
 	group3.add_argument("--count-matrix", dest="count_matrix", required=False, default="no", help="[OPTIONAL] Same as '--frequency-matrix' but outputs counts and not frequencies")
 	group3.add_argument("--mx-transpose", dest="mx_transpose", required=False, action="store_true", help="[OPTIONAL] Set ONLY if you want that the variable1 specified in '--frequency-matrix' \
 						or in '--count-matrix' corresponds to the matrix first column.")
-	group3.add_argument("--metadata-4-grapetree", dest="metadata4grapetree", required=False, action="store_true", help="Output an additional metadata file with the header ready for GrapeTree \
-						visualization. Set only if you WANT the file")	
 					
 						
 	## comparing partitions
@@ -379,7 +370,11 @@ if __name__ == "__main__":
 		print("\n".join(columns_metadata))
 		
 		if columns_methods != []:
-			print("\nReporTree will also output some partition columns that can be included in your summary reports. For each method that you provided, the column name will have the following structure:")
+			print("\nReporTree will also output some partition columns that can be included in your summary reports. For each method that you requested, the column name that you can indicate in '--columns_summary_report', '--frequency-matrix' and '--count-matrix' arguments must follow this structure:")
+			for method in columns_methods:
+				print(method + "-<threshold>          ---------->          e.g. " + method + "-30")
+			
+			print("\nFor the '--partitions2report' argument, if you did not provide a  partitions table, you can indicate:")
 			for method in columns_methods:
 				print(method + "-<threshold>          ---------->          e.g. " + method + "-30")
 				print(method + "-<range>          ---------->          e.g. " + method + "-30-40")
@@ -441,24 +436,14 @@ if __name__ == "__main__":
 			log.close()
 			
 			# getting metadata report
-			if args.metadata4grapetree:
-				if args.mx_transpose:
-					os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
-					" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
-					--metadata-4-grapetree --frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
-				else:
-					os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
-					" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
-					--metadata-4-grapetree --frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
+			if args.mx_transpose:
+				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
+				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
+				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
 			else:
-				if args.mx_transpose:
-					os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
-					" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
-					--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
-				else:
-					os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
-					" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
-					--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
+				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
+				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
+				 --frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
 			log = open(log_name, "a+")
 	
 	
@@ -545,22 +530,40 @@ if __name__ == "__main__":
 		log.close()
 		
 		# running partitioning grapetree
-		if args.wgMLST == True:
-			if args.subset == True:
-				os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-				" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-				-f \"" + args.filter_column + "\"")
+		if args.matrix4grapetree == True:
+			if args.wgMLST == True:
+				if args.subset == True:
+					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+					" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+					-f \"" + args.filter_column + "\" --matrix-4-grapetree")
+				else:
+					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+					" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree")
 			else:
-				os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-				" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist))
+				if args.subset == True:
+					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+					" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+					-f \"" + args.filter_column + "\" --matrix-4-grapetree")
+				else:
+					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+					" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree")
 		else:
-			if args.subset == True:
-				os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-				" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-				-f \"" + args.filter_column + "\"")
+			if args.wgMLST == True:
+				if args.subset == True:
+					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+					" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+					-f \"" + args.filter_column + "\"")
+				else:
+					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+					" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist))
 			else:
-				os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-				" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist))
+				if args.subset == True:
+					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+					" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+					-f \"" + args.filter_column + "\"")
+				else:
+					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+					" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist))
 		log = open(log_name, "a+")
 		
 		# running comparing partitions
@@ -581,12 +584,12 @@ if __name__ == "__main__":
 					print("\t'stability_regions' option specified but minimum distance was different from 1.", file = log)
 					sys.exit()
 				else:
-					print("\t'stability_regions' option specified partitions were not obtained for all possible thresholds.")
-					print("\t'stability_regions' option specified partitions were not obtained for all possible thresholds.", file = log)
+					print("\t'stability_regions' option specified but partitions were not obtained for all possible thresholds.")
+					print("\t'stability_regions' option specified but partitions were not obtained for all possible thresholds.", file = log)
 					sys.exit()
 			
 		partitions2report_final = get_partitions2report("grapetree", args.partitions2report, args.output, args.dist)
-				
+		
 		if len(partitions2report_final) == 0:
 			log = open(log_name, "a+")
 			print("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...")
@@ -595,24 +598,14 @@ if __name__ == "__main__":
 			log.close()
 
 		# getting metadata report
-		if args.metadata4grapetree == True:
-			if args.mx_transpose:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
-				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" --metadata-4-grapetree\
-				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
-			else:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
-				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" --metadata-4-grapetree\
-				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
+		if args.mx_transpose:
+			os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
+			" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
+			--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
 		else:
-			if args.mx_transpose:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
-				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
-				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
-			else:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
-				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
-				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
+			os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
+			" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
+			--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
 		log = open(log_name, "a+")
 
 	
@@ -622,24 +615,14 @@ if __name__ == "__main__":
 		print("\nOnly metadata file provided -> only metadata_report.py will be run:\n")
 		print("\nOnly metadata file provided -> only metadata_report.py will be run:\n", file = log)
 		log.close()
-		if args.metadata4grapetree == True:
-			if args.mx_transpose:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
-				" + args.columns_summary_report + " --partitions2report " + args.partitions2report + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" --metadata-4-grapetree \
-				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
-			else:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
-				" + args.columns_summary_report + " --partitions2report " + args.partitions2report + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" --metadata-4-grapetree \
-				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
+		if args.mx_transpose:
+			os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
+			" + args.columns_summary_report + " --partitions2report " + args.partitions2report + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
+			--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
 		else:
-			if args.mx_transpose:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
-				" + args.columns_summary_report + " --partitions2report " + args.partitions2report + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
-				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
-			else:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
-				" + args.columns_summary_report + " --partitions2report " + args.partitions2report + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
-				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
+			os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
+			" + args.columns_summary_report + " --partitions2report " + args.partitions2report + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
+			--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
 		log = open(log_name, "a+")
 	
 	
