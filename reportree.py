@@ -357,6 +357,8 @@ if __name__ == "__main__":
 						'stability region' (i.e. a threshold range in which cluster composition is similar) [5]")
 	group4.add_argument("-o", "--order", dest="order", action= "store", default=0, required=False, help="[Set only if you provide your own partitions table] Partitions order in the partitions \
 						table (0: min -> max; 1: max -> min) [0]")
+	group4.add_argument("--keep-redundants", dest="keep_redundants", action= "store_true", help="Set ONLY if you want to keep all samples of each cluster of the most discriminatory partition\
+						 (by default redundant samples are removed to avoid the influence of cluster size)")
 	
 						 
 	args = parser.parse_args()
@@ -423,8 +425,12 @@ if __name__ == "__main__":
 				print("\t'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...")
 				print("\t'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...", file = log)
 				log.close()
-				os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.partitions + " -t " + args.output + " -o1 " +  str(args.order) + " -a stability -n \
-				" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
+				if args.keep_redundants:
+					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.partitions + " -t " + args.output + " -o1 " +  str(args.order) + " -a stability -n \
+					" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " --keep-redundants -log " + log_name)
+				else:
+					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.partitions + " -t " + args.output + " -o1 " +  str(args.order) + " -a stability -n \
+					" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
 				log = open(log_name, "a+")
 				
 			partitions2report_final = get_partitions2report("other", args.partitions2report, args.output, args.dist)
@@ -488,8 +494,12 @@ if __name__ == "__main__":
 				for method in all_partitions_available(args.method_threshold, args.root_dist_by_node):
 					filter_partitions_table(method, args.output + "_partitions.tsv")
 					log.close()
-					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 tmp.tsv -t " + args.output + "_" + method + " -o1 " + str(args.order) + " -a stability -n \
-					" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
+					if args.keep_redundants:
+						os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 tmp.tsv -t " + args.output + "_" + method + " -o1 " + str(args.order) + " -a stability -n \
+						" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " --keep-redundants -log " + log_name)
+					else:
+						os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 tmp.tsv -t " + args.output + "_" + method + " -o1 " + str(args.order) + " -a stability -n \
+						" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
 					os.system("rm tmp.tsv")
 			else:
 				if len(all_partitions_available(args.method_threshold, args.root_dist_by_node)) >= 1 and args.dist != 1.0:
@@ -576,8 +586,12 @@ if __name__ == "__main__":
 				print("\t'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...")
 				print("\t'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...", file = log)
 				log.close()
-				os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.output + "_partitions.tsv -t " + args.output + " -o1 " + str(args.order) + " -a \
-				stability -n " + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
+				if args.keep_redundants:
+					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.output + "_partitions.tsv -t " + args.output + " -o1 " + str(args.order) + " -a \
+					stability -n " + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " --keep-redundants -log " + log_name)
+				else:
+					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.output + "_partitions.tsv -t " + args.output + " -o1 " + str(args.order) + " -a \
+					stability -n " + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
 			else:
 				if args.threshold == "max" and args.dist != 1.0:
 					print("\t'stability_regions' option specified but minimum distance was different from 1.")
