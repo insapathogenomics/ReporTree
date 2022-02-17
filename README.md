@@ -296,7 +296,7 @@ This argument is used to select the columns that will be provided in the summary
 
 #### Note on the '--frequency-matrix' and '--count-matrix' arguments
 
-These areguments take as input two variables separated by a comma (variable1,variable2). Frequencies will be calculated for variable1 and by default the different observations of this variable (e.g. different lineages if variable 1 == 'lineage') will correspond to different columns, while the observations of variable 2 will correspond to different rows. To transpose this you can use '--mx-transpose'.
+These arguments take as input two variables separated by a comma (variable1,variable2). Frequencies will be calculated for variable1 and by default the different observations of this variable (e.g. different lineages if variable 1 == 'lineage') will correspond to different columns, while the observations of variable 2 will correspond to different rows. To transpose this you can use '--mx-transpose'.
 
 _TIP: If you want, you can split variable 2 in up to two variables. To this end you can indicate them separated by colon (e.g. lineage,country:iso_week)_
 
