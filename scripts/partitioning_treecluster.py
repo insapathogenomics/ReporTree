@@ -185,12 +185,12 @@ if __name__ == "__main__":
 									partitioning_treecluster.py obtains genetic clusters at any 
 									partition level(s) of a rooted tree (e.g. SNP-scaled tree)
 									
-									WARNING!! Currently, for non-SNP-distance rooted trees, users 
+									Note: Currently, for non-SNP-distance rooted trees, users 
 									have to specify a minimum unit to cut the tree (currently, the
 									default is 1, which is equivalent to 1 SNP in a SNP-scaled rooted
 									tree). NEWS COMING SOON!!
 									
-									NOTE: Do not forget to cite TreeCluster authors.
+									NOTE 2: Do not forget to cite TreeCluster authors.
 									
 									
 									How to run partitioning_treecluster.py?
