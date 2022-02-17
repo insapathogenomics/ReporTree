@@ -260,7 +260,8 @@ Stability regions:
   --keep-redundants     Set ONLY if you want to keep all samples of each
                         cluster of the most discriminatory partition (by
                         default redundant samples are removed to avoid the
-                        influence of cluster size)
+                        influence of cluster size in the identification of
+                        stability regions)
 ```
 
 
