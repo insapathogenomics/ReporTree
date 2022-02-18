@@ -54,7 +54,7 @@ Partitions table (i.e. matrix with genetic clusters) in .tsv format (columns sho
 
 - metadata_w_partitions.tsv - initial metadata information with additional columns comprising information on the genetic clusters at different partitions
 
-_TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) at [auspice.us](https://auspice.us) or the allele profile matrix or the newick tree (cg/wgMLST data) using [GrapeTree](https://github.com/achtman-lab/GrapeTree). With these tools your dataset is visualised client-side in the browser._
+_TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) at [auspice.us](https://auspice.us) or the allele profile matrix (cg/wgMLST data) using [GrapeTree](https://github.com/achtman-lab/GrapeTree). With these tools your dataset is visualised client-side in the browser._
 
 - partitions_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters present in partitions.tsv
 - variable_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for any (and as many) grouping variable present in metadata_w_partitions.tsv (such as, clade, lineage, ST, vaccination status, etc.)
