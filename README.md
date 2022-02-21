@@ -29,7 +29,7 @@ This script takes advantage of [TreeCluster](https://github.com/niemasd/TreeClus
 
 
 - _comparing_partitions_v2.py_ (only run when the user requests “stability regions”)    
-This is a modified and automated version of [comparing_partitions.py](https://github.com/jacarrico/ComparingPartitions) that analyzes the cluster congruence between subsequent partitions of a given clustering method (using the Adjusted Wallace coefficient ([Carriço et al. 2006](https://journals.asm.org/doi/10.1128/JCM.02536-05))) and identifies the stability regions. ReporTree then includes the minimum threshold of each “stability region” in the summary report.
+This is a modified and automated version of [comparing_partitions.py](https://github.com/jacarrico/ComparingPartitions) that analyzes the cluster congruence between subsequent partitions of a given clustering method (using the Adjusted Wallace coefficient ([Carriço et al. 2006](https://journals.asm.org/doi/10.1128/JCM.02536-05); [Severiano et al. 2011](https://journals.asm.org/doi/10.1128/JCM.00624-11))) and identifies the stability regions as previously described ([Llarena et al. 2018](https://efsa.onlinelibrary.wiley.com/doi/abs/10.2903/sp.efsa.2018.EN-1498); [Barker et al. 2018](https://doi.org/10.1101/299347)). ReporTree then includes the minimum threshold of each “stability region” in the summary report.
 
 
 - _metadata_report.py_      
@@ -81,6 +81,7 @@ cd ReporTree/scripts/
 git clone https://github.com/insapathogenomics/GrapeTree
 git clone https://github.com/insapathogenomics/ComparingPartitions
 ```
+
 
 ## Usage
 
