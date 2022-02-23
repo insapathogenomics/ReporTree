@@ -45,7 +45,6 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 	mx_metadata = pandas.read_table(metadata, dtype = str)
 	sample_column = mx_metadata.columns[0]
 	
-	
 	# checking for 'date' column
 	if "date" in mx_metadata.columns and "iso_week_nr" not in mx_metadata.columns and "iso_year" not in mx_metadata.columns and "iso_week" not in mx_metadata.columns:
 		index_no = mx_metadata.columns.get_loc("date")
@@ -198,7 +197,7 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 	
 	if partitions2report == "all":
 		if partitions is not "":
-			partitions2report = ",".join(partitions.columns.tolist())			
+			partitions2report = ",".join(partitions.columns.tolist()[1:])			
 	
 	absent_columns = []
 	for column in partitions2report.split(","): # for column to report
