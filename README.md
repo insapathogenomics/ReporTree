@@ -4,7 +4,7 @@
   <img width="300" height="190" src=https://user-images.githubusercontent.com/19263468/154529278-2447e132-c903-46ec-86ae-467c5c72b6c8.png>
 </p>
 
-**Genomics-informed pathogen surveillance** strengthens public health decision-making, thus playing an important role in infectious diseases’ prevention and control. A pivotal outcome of genomics surveillance is the **identification of pathogen genetic clusters/lineages and their characterization in terms of geotemporal spread or linkage to clinical and demographic data**. This task usually relies on the visual exploration of (large) phylogenetic trees (e.g. Minimum Spanning Trees (MST) for bacteria or rooted SNP-based trees for viruses). As this may be a non-trivial, non-reproducible and time consuming task, we aimed to develop a flexible pipeline that facilitates the detection of genetic clusters and their linkage to epidemiological data. 
+**Genomics-informed pathogen surveillance** strengthens public health decision-making, thus playing an important role in infectious diseases’ prevention and control. A pivotal outcome of genomics surveillance is the **identification of pathogen genetic clusters/lineages and their characterization in terms of geotemporal spread or linkage to clinical and demographic data**. This task usually relies on the visual exploration of (large) phylogenetic trees (e.g. Minimum Spanning Trees (MST) for bacteria or rooted SNP-based trees for viruses). As this may be a non-trivial, non-reproducible and time consuming task, we developed **ReporTree, a flexible pipeline that facilitates the detection of genetic clusters and their linkage to epidemiological data**. 
 
 
 _ReporTree can help you to:_      
@@ -13,33 +13,18 @@ _ReporTree can help you to:_
 - obtain **count/frequency matrices** for the derived genetic clusters or for any other provided grouping variable
 - identify regions of **cluster stability** (i.e. cg/wgMLST partition/threshold ranges in which cluster composition is similar)
 
+In summary, ReporTree facilitates and accelerates the production of surveillance-oriented reports, thus contributing to a sustainable and efficient public health genomics-informed pathogen surveillance.
 
-_Note: ReporTree relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO CITE THEM!_
+_Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO CITE THEM!_
 
 
 ## Implementation
 
-ReporTree is implemented in python 3.6 and comprises four modules available in standalone mode that are orchestrated by _reportree.py_:
-- _partitioning_grapetree.py_ (only run when an allele matrix is provided)   
-This script reconstructs the minimum spanning tree of a user-provided cg/wgMLST allele-matrix using a modified version of [GrapeTree](https://github.com/insapathogenomics/GrapeTree), and cuts this tree at all (or any user-specified) thresholds. The resulting genetic clusters are reported in a single matrix file (partitions.tsv).
-
-
-- _partitioning_treecluster.py_ (only run when a newick tree is provided)    
-This script takes advantage of [TreeCluster](https://github.com/niemasd/TreeCluster) to cut a newick tree for all the user-specified clustering methods and respective thresholds. It then reports all the resulting genetic clusters in a partitions matrix file (partitions.tsv).
-
-
-- _comparing_partitions_v2.py_ (only run when the user requests “stability regions”)    
-This is a modified and automated version of [comparing_partitions.py](https://github.com/jacarrico/ComparingPartitions) that analyzes the cluster congruence between subsequent partitions of a given clustering method (using the Adjusted Wallace coefficient ([Carriço et al. 2006](https://journals.asm.org/doi/10.1128/JCM.02536-05); [Severiano et al. 2011](https://journals.asm.org/doi/10.1128/JCM.00624-11))) and identifies the stability regions as previously described ([Llarena et al. 2018](https://efsa.onlinelibrary.wiley.com/doi/abs/10.2903/sp.efsa.2018.EN-1498); [Barker et al. 2018](https://doi.org/10.1101/299347)). ReporTree then includes the minimum threshold of each “stability region” in the summary report.
-
-
-- _metadata_report.py_      
-This script takes a metadata table as input (.tsv) and provides a separated summary report for each variable specified by the user. If a partitions matrix file is also provided, this script includes the genetic clusters in a new metadata file (metadata_w_partitions.tsv) and creates a summary report of the metadata associated with each of the genetic clusters. Frequency and/or count matrices can also be produced.
-
-
-![reportree](https://user-images.githubusercontent.com/19263468/154530356-f046c2d4-a648-43a5-a1d2-35eed1cad24c.png)
+ReporTree is implemented in python 3.6 and comprises four modules available in standalone mode that are orchestrated by _reportree.py_ (see details in [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/1.-Implementation#reportree-modular-organization)).
 
 
 ## Input files
+
 Metadata table in .tsv format (column should not have blank spaces)           
 **AND (optionally)**        
 
@@ -56,7 +41,7 @@ Partitions table (i.e. matrix with genetic clusters) in .tsv format (columns sho
 
 _TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) at [auspice.us](https://auspice.us) or the allele profile matrix (cg/wgMLST data) using [GrapeTree](https://github.com/achtman-lab/GrapeTree). With these tools your dataset is visualised client-side in the browser._
 
-- partitions_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters present in partitions.tsv
+- partitions_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters present in partitions.tsv (note: singletons are not reported in this file but indicated in metadata_w_partitions.tsv)
 - variable_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for any (and as many) grouping variable present in metadata_w_partitions.tsv (such as, clade, lineage, ST, vaccination status, etc.)
 - partitions.tsv - genetic clusters obtained for each user-selected partition threshold (only generated when a newick file or an allele matrix is provided)
 - freq_matrix.tsv - frequencies of grouping variable present in metadata_w_partitions.tsv (e.g. lineage, ST, etc.) across another grouping variable (e.g. iso_week, country, etc.)
@@ -306,11 +291,40 @@ These arguments take as input two variables separated by a comma (variable1,vari
 _TIP: If you want, you can split variable 2 in up to two variables. To this end you can indicate them separated by colon (e.g. lineage,country:iso_week)_
 
 
+### How to run ReporTree with a newick tree as input?
+
+```bash
+reportree.py -m metadata.tsv -t tree.nw -out output -d dist --method-threshold method1,method2-threshold --root-dist-by-node --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2
+```
+
+
+### How to run ReporTree with an allele matrix as input?
+
+```bash
+reportree.py -m metadata.tsv -a allele_matrix.tsv -out output -d dist --method MSTreeV2 -thr 5,8,15 --matrix-4-grapetree --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 -AdjW adjusted_wallace -n n
+```
+
+
 ## Examples
+
+### Routine surveillance - viral pathogen (e.g. SARS-CoV-2)
+
+ReporTree is currently applied to generate weekly reports about SARS-CoV-2 variant circulation in Portugal (https://insaflu.insa.pt/covid19/). In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#routine-surveillance---viral-pathogen-eg-sars-cov-2), we give some examples on how to rapidly generate key surveillance metrics taking as input metadata tables (tsv format) and rooted divergence (SNP) trees (newick format) provided for download in regular Nextstrain (auspice) builds, such as those maintained by the National Institute of Health Dr. Ricardo Jorge, Portugal (INSA) at https://insaflu.insa.pt/covid19/.
+
+
+### Outbreak detection - bacterial foodborne pathogen (e.g. _Listeria monocytogenes_)
+
+ReporTree can facilitate the routine surveillance and outbreak investigation of bacterial pathogens, such as foodborne pathogens. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#outbreak-detection---bacterial-foodborne-pathogen-eg-listeria-monocytogenes), we provide a simple example of the usage of ReporTree to rapidly identify and characterize potential Listeriosis outbreaks. With a single command, ReporTree builds a MST from cgMLST data and **automatically extracts genetic clusters at three high resolution levels (<5, <8, <15 allelic differences)**, and provides comprehensive reports about the sample collection (e.g. ST sequence count/frequency per year, etc).  
+
+
+### Large-scale genetic clustering and linkage to antibiotic resistance data (e.g. _Neisseria gonorrhoeae_)
+
+ReporTree can enhance genomics surveillance and quickly identify/characterize genetic clusters from large datasets. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#large-scale-genetic-clustering-and-linkage-to-antibiotic-resistance-data-eg-neisseria-gonorrhoeae), with a single command line, we reproduce part of the extensive genomics analysis performed by [Pinto et al., 2021](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8208699/pdf/mgen-7-481.pdf) over 3,791 _N. gonorrhoeae_ genomes from isolates collected across Europe.
+
 
 ## Citation
 
-If you run ReporTree, please do not forget to cite this page.
+If you run ReporTree, please do not forget to cite this repository.
 
 Also, ReporTree relies on the work of other developers. So, depending on the functionalities you use, there are other tools that you must cite:     
 - Ete3: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4868116/pdf/msw046.pdf (all tools)     
