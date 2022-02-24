@@ -1,0 +1,31 @@
+
+******************** running reportree.py ********************
+
+../../ReporTree/reportree.py -m nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.tsv --columns_summary_report n_strain,n_originating_lab --metadata2report Health_region,iso_week -f country == Portugal;Representative_sampling == Weekly;iso_week == 2022W02,2022W03,2022W04,2022W05,2022W06 --frequency-matrix lineage,Health_region:iso_week;clade_membership,Health_region:iso_week --count-matrix lineage,Health_region:iso_week;clade_membership,Health_region:iso_week;Health_region,iso_week -out ReporTree_ncov_PT_lineage_clade_reg_freq
+start: 2022-02-23 14:30:15.105965
+
+Only metadata file provided -> only metadata_report.py will be run:
+
+
+-------------------- metadata_report.py --------------------
+
+/mnt/extra_disk_02/TEMP_SARS_CoV_2/ReporTree/ReporTree/scripts/metadata_report.py -m nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.tsv -o ReporTree_ncov_PT_lineage_clade_reg_freq --columns_summary_report n_strain,n_originating_lab --partitions2report all --metadata2report Health_region,iso_week -f country == Portugal;Representative_sampling == Weekly;iso_week == 2022W02,2022W03,2022W04,2022W05,2022W06 --frequency-matrix lineage,Health_region:iso_week;clade_membership,Health_region:iso_week --count-matrix lineage,Health_region:iso_week;clade_membership,Health_region:iso_week;Health_region,iso_week
+Getting metadata information...
+	Filtering metadata for the following parameters: country == Portugal & Representative_sampling == Weekly & iso_week == 2022W02,2022W03,2022W04,2022W05,2022W06
+Getting summary stats for the variables specified at '--metadata2report'...
+Getting frequency matrix for the variables specified at '--frequency-matrix'...
+		Creating matrix with the frequency of lineage per Health_region and iso_week...
+		Creating matrix with the frequency of clade_membership per Health_region and iso_week...
+Getting count matrix for the variables specified at '--count-matrix'...
+		Creating matrix with the count of lineage per Health_region and iso_week...
+		Creating matrix with the count of clade_membership per Health_region and iso_week...
+		Creating matrix with the count of Health_region per iso_week...
+metadata_report.py is done!
+
+------------------------------------------------------------
+
+ReporTree is done! If you found any issue please contact us!!
+
+
+End: 2022-02-23 14:30:16.615416
+Time elapsed: 0:00:01.509451

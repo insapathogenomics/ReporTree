@@ -1,0 +1,30 @@
+
+******************** running reportree.py ********************
+
+../../ReporTree/reportree.py -m nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.tsv --columns_summary_report n_strain,first_seq_date,last_seq_date,timespan_days,n_Health_region,Health_region,division,n_division,n_location,lineage,clade_membership --metadata2report lineage,clade_membership,Health_region -f country == Portugal;Representative_sampling == Weekly --frequency-matrix lineage,iso_week;clade_membership,iso_week --count-matrix lineage,iso_week;clade_membership,iso_week -out ReporTree_ncov_PT_lineage_clade_overview
+start: 2022-02-23 14:29:54.656126
+
+Only metadata file provided -> only metadata_report.py will be run:
+
+
+-------------------- metadata_report.py --------------------
+
+/mnt/extra_disk_02/TEMP_SARS_CoV_2/ReporTree/ReporTree/scripts/metadata_report.py -m nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.tsv -o ReporTree_ncov_PT_lineage_clade_overview --columns_summary_report n_strain,first_seq_date,last_seq_date,timespan_days,n_Health_region,Health_region,division,n_division,n_location,lineage,clade_membership --partitions2report all --metadata2report lineage,clade_membership,Health_region -f country == Portugal;Representative_sampling == Weekly --frequency-matrix lineage,iso_week;clade_membership,iso_week --count-matrix lineage,iso_week;clade_membership,iso_week
+Getting metadata information...
+	Filtering metadata for the following parameters: country == Portugal & Representative_sampling == Weekly
+Getting summary stats for the variables specified at '--metadata2report'...
+Getting frequency matrix for the variables specified at '--frequency-matrix'...
+		Creating matrix with the frequency of lineage per iso_week...
+		Creating matrix with the frequency of clade_membership per iso_week...
+Getting count matrix for the variables specified at '--count-matrix'...
+		Creating matrix with the count of lineage per iso_week...
+		Creating matrix with the count of clade_membership per iso_week...
+metadata_report.py is done!
+
+------------------------------------------------------------
+
+ReporTree is done! If you found any issue please contact us!!
+
+
+End: 2022-02-23 14:29:58.464260
+Time elapsed: 0:00:03.808134

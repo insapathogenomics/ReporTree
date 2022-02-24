@@ -1,0 +1,84 @@
+
+******************** running reportree.py ********************
+
+../../ReporTree/reportree.py -m nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.tsv -t nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk --columns_summary_report n_strain,lineage,clade_membership,first_seq_date,last_seq_date,timespan_days,n_Health_region,Health_region,S1_mutations --metadata2report S1_mutations --method-threshold root_dist-25-69,avg_clade-1,max_clade-2 -out ReporTree_ncov_PT_get_clusters
+start: 2022-02-23 14:22:22.904103
+
+Tree file provided -> will run partitioning_treecluster.py and metadata_report.py:
+
+
+-------------------- partitioning_treecluster.py --------------------
+
+/mnt/extra_disk_02/TEMP_SARS_CoV_2/ReporTree/ReporTree/scripts/partitioning_treecluster.py -t nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters -d 1.0 --method-threshold root_dist-25-69,avg_clade-1,max_clade-2
+Assessing tree specificities...
+	Minimum possible threshold is 1.0
+	Maximum possible threshold is 69.0
+Getting partitions with the following command line(s):
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 25.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 26.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 27.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 28.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 29.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 30.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 31.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 32.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 33.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 34.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 35.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 36.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 37.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 38.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 39.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 40.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 41.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 42.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 43.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 44.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 45.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 46.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 47.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 48.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 49.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 50.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 51.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 52.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 53.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 54.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 55.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 56.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 57.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 58.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 59.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 60.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 61.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 62.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 63.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 64.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 65.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 66.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 67.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 68.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 69.0 -s -inf -m root_dist
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 1.0 -s -inf -m avg_clade
+	TreeCluster.py -i nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.nwk -o ReporTree_ncov_PT_get_clusters.tsv -t 2.0 -s -inf -m max_clade
+
+partitioning_treecluster.py is done!
+
+-------------------- metadata_report.py --------------------
+
+/mnt/extra_disk_02/TEMP_SARS_CoV_2/ReporTree/ReporTree/scripts/metadata_report.py -m nextstrain_ncov_PT_INSA_since_Nov2021_release_2022-02-22.tsv -p ReporTree_ncov_PT_get_clusters_partitions.tsv -o ReporTree_ncov_PT_get_clusters --columns_summary_report n_strain,lineage,clade_membership,first_seq_date,last_seq_date,timespan_days,n_Health_region,Health_region,S1_mutations --partitions2report all --metadata2report S1_mutations -f  --frequency-matrix no --count-matrix no
+Getting information from the partitions table: ReporTree_ncov_PT_get_clusters_partitions.tsv
+Getting metadata information...
+		Samples present in partitions table but missing in metadata table: 
+		Samples not present in partitions table but present in metadata table: 
+Getting summary stats for the variables specified at '--partitions2report'...
+Getting summary stats for the variables specified at '--metadata2report'...
+metadata_report.py is done!
+
+------------------------------------------------------------
+
+ReporTree is done! If you found any issue please contact us!!
+
+
+End: 2022-02-23 14:23:12.347965
+Time elapsed: 0:00:49.443862
