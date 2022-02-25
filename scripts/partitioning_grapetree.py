@@ -74,6 +74,8 @@ parser = argparse.ArgumentParser(prog="partitioning_grapetree.py", formatter_cla
 group0 = parser.add_argument_group("Partitioning with GrapeTree", "Specifications to get and cut minimum spanning trees derived from cg/wgMLST allele data")
 group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=True, type=str, help="[MANDATORY] Input allele profile matrix")
 group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
+group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci called (e.g. '--loci-called 0.95' will only keep in the allele \
+					matrix samples with > 95%% of alleles, i.e. <= 5%% missing data)")
 group0.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree\"\n")
 group0.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 					with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
@@ -107,7 +109,41 @@ print("\n-------------------- partitioning_grapetree.py --------------------\n",
 print(" ".join(sys.argv))
 print(" ".join(sys.argv), file = log)
 
+
+# cleaning allele matrix	----------
+
+if args.loci_called != "":
+	print("Cleaning the allele matrix using a threshold of >" + str(args.loci_called) + " alleles called...")
+	print("Cleaning the allele matrix using a threshold of >" + str(args.loci_called) + " alleles called...", file = log)
 	
+	allele_mx = pandas.read_table(args.allele_profile, dtype = str)
+	
+	report_allele_mx = {}
+	
+	len_schema = len(allele_mx.columns) - 1
+	
+	report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
+	report_allele_mx["loci_missing"] = allele_mx.isin(["0"]).sum(axis=1)
+	report_allele_mx["loci_called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
+	report_allele_mx["pct_loci_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
+
+	report_allele_df = pandas.DataFrame(data = report_allele_mx)
+	flt_report = report_allele_df[report_allele_df["pct_loci_called"] > float(args.loci_called)]
+	pass_samples = flt_report["samples"].values.tolist()
+	
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the allele matrix.")
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the allele matrix.", file = log)
+	
+	allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
+	allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
+	allele_filename = args.out + "_flt_matrix.tsv"
+	report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
+
+else:
+	allele_mx = pandas.read_table(args.allele_profile, dtype = str)
+	allele_filename = args.allele_profile
+	
+
 # filtering allele matrix	----------
 
 if args.metadata != "" and args.filter_column != "":
@@ -191,10 +227,9 @@ if args.metadata != "" and args.filter_column != "":
 	samples = mx[sample_column].tolist()
 	
 	
-	allele_mx = pandas.read_table(args.allele_profile)
 	allele_mx_filtered = allele_mx[allele_mx[allele_mx.columns[0]].isin(samples)]
-	allele_mx_filtered.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
-	allele_filename = args.out + "_flt_matrix.tsv"
+	allele_mx_filtered.to_csv(args.out + "_subset_matrix.tsv", index = False, header=True, sep ="\t")
+	allele_filename = args.out + "_subset_matrix.tsv"
 	
 elif args.metadata != "" and args.filter_column == "":
 	print("Metadata file was provided but no filter was found... I am confused :-(")
@@ -207,8 +242,8 @@ elif args.metadata == "" and args.filter_column != "":
 	sys.exit()
 
 else:
-	allele_filename = args.allele_profile
 	sample_column = "sequence"
+
 
 # preparing allele matrix for grapetree	----------
 

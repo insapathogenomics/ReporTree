@@ -277,7 +277,7 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 	if len(absent_columns) > 0:
 		print("\t\tWarning!!! Could not identify the following requested columns: ", ",".join(set(absent_columns)))
 		print("\t\tWarning!!! Could not identify the following requested columns: ", ",".join(set(absent_columns)), file = log)
-				
+	
 	summary_df = pandas.DataFrame(data = summary, columns = order_columns)
 	
 	return summary_df
