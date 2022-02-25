@@ -197,7 +197,26 @@ def col_list(metadata, partitions, tree, allele_profile, method_threshold, root_
 	
 	return cols_output,methods_output
 	
+
+def loci_called2metadata(metadata, out, thr):
+	""" adds column with percentage of called loci
+	to metadata table """
 	
+	metadata = pandas.read_table(metadata, dtype = str)
+	loci = pandas.read_table(out + "_loci_report.tsv")
+	a = metadata.set_index(metadata.columns[0], drop = False)
+	b = loci.set_index(loci.columns[0], drop = True)
+
+	c = pandas.concat([a, b["pct_loci_called"]], axis=1)
+	c = c.reset_index(drop = True)
+	c["QUAL_loci_called"] = c["pct_loci_called"]
+	c["QUAL_loci_called"].where(c["QUAL_loci_called"] <= float(thr), "PASS", inplace = True)
+	c["QUAL_loci_called"].where(c["QUAL_loci_called"].astype(str) =="PASS", "excluded", inplace = True)
+
+	complete_metadata = pandas.DataFrame(data = c)
+	complete_metadata.to_csv(out +  "_metadata_w_loci_called.tsv", index = False, header=True, sep = "\t")
+
+
 # running the pipeline	----------
 
 if __name__ == "__main__":
@@ -306,6 +325,8 @@ if __name__ == "__main__":
 	## partitioning grapetree
 	
 	group2 = parser.add_argument_group("Partitioning with GrapeTree", "Specifications to get and cut minimum spanning trees derived from cg/wgMLST allele data [only if an allele profile file is provided]")
+	group2.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci called (e.g. '--loci-called 0.95' will only keep in the \
+						allele matrix samples with > 95%% of alleles, i.e. <= 5%% missing data)")
 	group2.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree\"\n")
 	group2.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 						with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
@@ -540,40 +561,76 @@ if __name__ == "__main__":
 		log.close()
 		
 		# running partitioning grapetree
-		if args.matrix4grapetree == True:
-			if args.wgMLST == True:
-				if args.subset == True:
-					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-					" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-					-f \"" + args.filter_column + "\" --matrix-4-grapetree")
+		if args.loci_called == "":
+			if args.matrix4grapetree == True:
+				if args.wgMLST == True:
+					if args.subset == True:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+						-f \"" + args.filter_column + "\" --matrix-4-grapetree")
+					else:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree")
 				else:
-					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-					" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree")
+					if args.subset == True:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+						-f \"" + args.filter_column + "\" --matrix-4-grapetree")
+					else:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree")
 			else:
-				if args.subset == True:
-					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-					" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-					-f \"" + args.filter_column + "\" --matrix-4-grapetree")
+				if args.wgMLST == True:
+					if args.subset == True:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+						-f \"" + args.filter_column + "\"")
+					else:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist))
 				else:
-					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-					" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree")
+					if args.subset == True:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+						-f \"" + args.filter_column + "\"")
+					else:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist))
 		else:
-			if args.wgMLST == True:
-				if args.subset == True:
-					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-					" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-					-f \"" + args.filter_column + "\"")
+			if args.matrix4grapetree == True:
+				if args.wgMLST == True:
+					if args.subset == True:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+						-f \"" + args.filter_column + "\" --matrix-4-grapetree --loci-called " + str(args.loci_called))
+					else:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree --loci-called " + str(args.loci_called))
 				else:
-					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-					" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist))
+					if args.subset == True:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+						-f \"" + args.filter_column + "\" --matrix-4-grapetree --loci-called " + str(args.loci_called))
+					else:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree --loci-called " + str(args.loci_called))
 			else:
-				if args.subset == True:
-					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-					" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-					-f \"" + args.filter_column + "\"")
+				if args.wgMLST == True:
+					if args.subset == True:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+						-f \"" + args.filter_column + "\" --loci-called " + str(args.loci_called))
+					else:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --loci-called " + str(args.loci_called))
 				else:
-					os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-					" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist))
+					if args.subset == True:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
+						-f \"" + args.filter_column + "\" --loci-called " + str(args.loci_called))
+					else:
+						os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + args.allele_profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+						" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --loci-called " + str(args.loci_called))		
 		log = open(log_name, "a+")
 		
 		# running comparing partitions
@@ -610,7 +667,13 @@ if __name__ == "__main__":
 			print("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...", file = log)
 			partitions2report_final = "all"
 			log.close()
-
+			
+		# if allele matrix was filtered, add this info in metadata
+		metadata = args.metadata
+		if os.path.exists(args.output + "_loci_report.tsv"):
+			loci_called2metadata(metadata, args.output, args.loci_called)
+			metadata = args.output + "_metadata_w_loci_called.tsv"
+			
 		# getting metadata report
 		if args.mx_transpose:
 			os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
