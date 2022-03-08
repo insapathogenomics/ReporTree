@@ -324,10 +324,16 @@ ReporTree can enhance genomics surveillance and quickly identify/characterize ge
 
 ## Citation
 
-If you run ReporTree, please do not forget to cite this repository.
+If you run ReporTree, please cite our preprint publication:    
+[Mixão V, Pinto M, Gomes JP, Borges V (2022) ReporTree: a surveillance-oriented tool to strengthen the linkage between pathogen genetic clusters and epidemiological data. _Research Square_. doi: 10.21203/rs.3.rs-1404655/v1](https://www.researchsquare.com/article/rs-1404655/v1)
 
 Also, ReporTree relies on the work of other developers. So, depending on the functionalities you use, there are other tools that you must cite:     
 - Ete3: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4868116/pdf/msw046.pdf (all tools)     
 - Grapetree: http://www.genome.org/cgi/doi/10.1101/gr.232397.117 (if you provided an allele matrix)      
 - TreeCluster: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6705769/pdf/pone.0221068.pdf (if you provided a newick tree)      
-- ComparingPartitions: https://journals.asm.org/doi/10.1128/jcm.02536-05?permanently=true (if you requested "stability_regions")      
+- ComparingPartitions: https://journals.asm.org/doi/10.1128/jcm.02536-05?permanently=true (if you requested "stability_regions")
+
+
+## Funding
+
+This work was supported by funding from the European Union’s Horizon 2020 Research and Innovation programme under grant agreement No 773830: One Health European Joint Programme.
