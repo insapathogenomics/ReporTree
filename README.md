@@ -1,7 +1,7 @@
 # ReporTree
 
 <p align="center">
-  <img width="300" height="190" src=https://user-images.githubusercontent.com/19263468/154529278-2447e132-c903-46ec-86ae-467c5c72b6c8.png>
+  <img width="300" height="180" src=https://user-images.githubusercontent.com/19263468/154529278-2447e132-c903-46ec-86ae-467c5c72b6c8.png>
 </p>
 
 **Genomics-informed pathogen surveillance** strengthens public health decision-making, thus playing an important role in infectious diseases’ prevention and control. A pivotal outcome of genomics surveillance is the **identification of pathogen genetic clusters/lineages and their characterization in terms of geotemporal spread or linkage to clinical and demographic data**. This task usually relies on the visual exploration of (large) phylogenetic trees (e.g. Minimum Spanning Trees (MST) for bacteria or rooted SNP-based trees for viruses). As this may be a non-trivial, non-reproducible and time consuming task, we developed **ReporTree, a flexible pipeline that facilitates the detection of genetic clusters and their linkage to epidemiological data**. 
