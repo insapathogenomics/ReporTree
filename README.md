@@ -136,6 +136,11 @@ Partitioning with TreeCluster:
 Partitioning with GrapeTree:
   Specifications to get and cut minimum spanning trees derived from cg/wgMLST allele data [only if an allele profile file is provided]
 
+  --loci-called LOCI_CALLED
+                        [OPTIONAL] Minimum percentage of loci called (e.g. '--
+                        loci-called 0.95' will only keep in the allele matrix
+                        samples with > 95% of alleles, i.e. <= 5% missing
+                        data)
   --method GRAPETREE_METHOD
                         "MSTreeV2" [DEFAULT] Alternative:"MSTree"
   --missing HANDLER     ONLY FOR MSTree. 0: [DEFAULT] ignore missing data in
@@ -250,8 +255,7 @@ Stability regions:
   --keep-redundants     Set ONLY if you want to keep all samples of each
                         cluster of the most discriminatory partition (by
                         default redundant samples are removed to avoid the
-                        influence of cluster size in the identification of
-                        stability regions)
+                        influence of cluster size)
 ```
 
 
