@@ -8,10 +8,11 @@
 
 
 _ReporTree can help you to:_      
-- obtain **genetic clusters at all partition level(s)** of a newick tree (e.g. SNP-scaled tree) or an MST derived from cg/wgMLST allele matrix
-- obtain **summary reports with the statistics/trends** (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters or for any other provided grouping variable (e.g. clade, lineage, ST, vaccination status, etc.)
+- obtain **genetic clusters at any threshold level(s)** of a tree, SNP or cg/wgMLST allele matrix, sequence alignment, or distance matrix
+- obtain **summary reports with the statistics/trends** (e.g., timespan, location, cluster/group composition, age distribution etc.) for the derived genetic clusters or for any other provided grouping variable (e.g., clade, lineage, ST, vaccination status, etc.)
 - obtain **count/frequency matrices** for the derived genetic clusters or for any other provided grouping variable
-- identify regions of **cluster stability** (i.e. cg/wgMLST partition/threshold ranges in which cluster composition is similar)
+- identify **regions of cluster stability** (i.e., threshold ranges in which cluster composition is similar), a key step for nomenclature design
+
 
 In summary, ReporTree facilitates and accelerates the production of surveillance-oriented reports, thus contributing to a sustainable and efficient public health genomics-informed pathogen surveillance.
 
@@ -20,7 +21,7 @@ _Note: this tool relies on the usage of programs/modules of other developers. DO
 
 ## Implementation
 
-ReporTree is implemented in python 3.6 and comprises four modules available in standalone mode that are orchestrated by _reportree.py_ (see details in [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/1.-Implementation#reportree-modular-organization)).
+ReporTree is implemented in python 3.6 and comprises five main modules available in standalone mode that are orchestrated by _reportree.py_ (see details in [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/1.-Implementation#reportree-modular-organization)).
 
 
 ## Input files
@@ -30,16 +31,20 @@ Metadata table in .tsv format (column should not have blank spaces)
 
 Newick tree which will be used to obtain genetic clusters       
 **OR**      
-Allele matrix which will be used to obtain genetic clusters from a MST      
-**OR**     
-Partitions table (i.e. matrix with genetic clusters) in .tsv format (columns should not have blank spaces)      
+Allele/SNP matrix which will be used to obtain genetic clusters from a MST      
+**OR**  
+Sequence alignment which will be used to obtain genetic clusters  
+**OR**  
+Distance matrix which will be used to obtain genetic clusters    
+**OR**  
+Partitions table (i.e. matrix with genetic clusters) in .tsv format (columns should not have blank spaces)       
 
 
 ## Main output files
 
 - metadata_w_partitions.tsv - initial metadata information with additional columns comprising information on the genetic clusters at different partitions
 
-_TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) at [auspice.us](https://auspice.us) or the allele profile matrix (cg/wgMLST data) using [GrapeTree](https://github.com/achtman-lab/GrapeTree). With these tools your dataset is visualised client-side in the browser._
+_TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) or the dendrogram resulting from hierarchical clustering at [auspice.us](https://auspice.us) or the allele profile matrix (cg/wgMLST data) using [GrapeTree](https://github.com/achtman-lab/GrapeTree). With these tools your dataset is visualised client-side in the browser._
 
 - partitions_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters present in partitions.tsv (note: singletons are not reported in this file but indicated in metadata_w_partitions.tsv)
 - variable_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for any (and as many) grouping variable present in metadata_w_partitions.tsv (such as, clade, lineage, ST, vaccination status, etc.)
@@ -48,6 +53,7 @@ _TIP: Users can interactively visualize and explore the ReporTree derived cluste
 - count_matrix.tsv - counts of a grouping variable present in metadata_w_partitions.tsv (e.g. lineage, ST, etc.) across another grouping variable (e.g. iso_week, country, etc.)
 - metrics.tsv - metrics resulting from the cluster congruence analysis, with indication of the Adjusted Wallace and the Ajusted Rand coefficients for each comparison of subsequent partitions, and the Simpson's Index of Diversity for each partition.
 - stableRegions.tsv - partition ranges for which Adjusted Wallace coefficient is higher than the cut-off defined by the user (useful to study cluster stability and infer possible nomenclature) 
+- Newick file with the dendrogram resulting of the hierarchical clustering analysis or with the minimum spanning tree of GrapeTree
 
 
 ## Installation and dependencies
@@ -57,10 +63,11 @@ Dependencies:
 - [A modified version of GrapeTree](https://github.com/insapathogenomics/GrapeTree)
 - [Pandas](https://pandas.pydata.org)
 - [Ete3](http://etetoolkit.org)
+- [cgmlst-dists](https://github.com/tseemann/cgmlst-dists)
 
 Installation:
 ```bash
-conda create -n reportree -c etetoolkit -c anaconda -c bioconda ete3 scikit-learn pandas grapetree=2.1 treecluster=1.0.3 python=3.6
+conda create -n reportree -c etetoolkit -c anaconda -c bioconda ete3 scikit-learn pandas grapetree=2.1 treecluster=1.0.3 python=3.6 cgmlst-dists biopython
 git clone https://github.com/insapathogenomics/ReporTree
 cd ReporTree/scripts/
 git clone https://github.com/insapathogenomics/GrapeTree
@@ -77,14 +84,20 @@ ReporTree:
   ReporTree input/output file specifications
 
   -m METADATA, --metadata METADATA
-                        [MANDATORY] Metadata file in .tsv format
-  -t TREE, --tree TREE  [OPTIONAL] Input tree
+                        [MANDATORY] Metadata file (tsv format)
   -a ALLELE_PROFILE, --allele-profile ALLELE_PROFILE
-                        [OPTIONAL] Input allele profile matrix
+                        [OPTIONAL] Input allele/SNP profile matrix (tsv
+                        format)
+  -align ALIGNMENT, --alignment ALIGNMENT
+                        [OPTIONAL] Input multiple sequence alignment (fasta
+                        format)
+  -d_mx DISTANCE_MATRIX, --distance_matrix DISTANCE_MATRIX
+                        [OPTIONAL] Input pairwise distance matrix (tsv format)
+  -t TREE, --tree TREE  [OPTIONAL] Input tree (newick format)
   -p PARTITIONS, --partitions PARTITIONS
-                        [OPTIONAL] Partitions file in .tsv format -
-                        'partition' represents the threshold at which
-                        clustering information was obtained
+                        [OPTIONAL] Partitions file (tsv format) - 'partition'
+                        represents the threshold at which clustering
+                        information was obtained
   -out OUTPUT, --output OUTPUT
                         [OPTIONAL] Tag for output file name (default =
                         ReporTree)
@@ -96,21 +109,76 @@ ReporTree:
                         columns_summary_report'. So, it will not run
                         reportree.py main functions!!
 
-Partition minimum unit:
-  Minimum unit/distance between partition thresholds
+Clustering details:
+  Clustering details
 
+  --analysis ANALYSIS   Type of clustering analysis (options: grapetree, HC,
+                        treecluster). If you provide a tree, genetic clusters
+                        will always be obtained with treecluster. If you
+                        provide a distance matrix, genetic clusters will
+                        always be obtained with HC. If you provide any other
+                        input, it is MANDATORY to specify this argument.
+  --loci-called LOCI_CALLED
+                        [OPTIONAL] Minimum percentage of loci/positions called
+                        (e.g. '--loci-called 0.95' will only keep in the
+                        profile matrix samples with > 95% of
+                        alleles/positions, i.e. <= 5% missing data). Code for
+                        missing data: 0 for profile matrix and N for sequence
+                        alignment.
+  --subset              Obtain genetic clusters using only the samples that
+                        correspond to the filters specified in the '--filter'
+                        argument (only valid for analysis == grapetree or HC)
   -d DIST, --dist DIST  Distance unit by which partition thresholds will be
                         multiplied (example: if -d 10 and -thr 5,8,10-30, the
                         minimum spanning tree will be cut at
                         50,80,100,110,120,...,300. If -d 10 and --method-
                         threshold avg_clade-2, the avg_clade threshold will be
                         set at 20). This argument is particularly useful for
-                        non- SNP-scaled trees. Currently, the default is 1,
+                        non-SNP-scaled trees. Currently, the default is 1,
                         which is equivalent to 1 allele distance or 1 SNP
                         distance. [1.0]
 
+Partitioning with GrapeTree:
+  Specifications to get and cut minimum spanning trees
+
+  --method GRAPETREE_METHOD
+                        "MSTreeV2" [DEFAULT] Alternative:"MSTree"
+  --missing HANDLER     ONLY FOR MSTree. 0: [DEFAULT] ignore missing data in
+                        pairwise comparison. 1: remove column with missing
+                        data. 2: treat missing data as an allele. 3: use
+                        absolute number of allelic differences.
+  --wgMLST              [EXPERIMENTAL: see GrapeTree github for details] a
+                        better support of wgMLST schemes
+  --n_proc NUMBER_OF_PROCESSES
+                        Number of CPU processes in parallel use. [5]
+  -thr THRESHOLD, --threshold THRESHOLD
+                        Partition threshold for clustering definition.
+                        Different thresholds can be comma-separated (e.g.
+                        5,8,16). Ranges can be specified with a hyphen (e.g.
+                        5,8,10-20). If this option is not set, the script will
+                        perform clustering for all the values in the range 1
+                        to max
+  --matrix-4-grapetree  Output an additional allele profile matrix with the
+                        header ready for GrapeTree visualization. Set only if
+                        you WANT the file
+
+Partitioning with HC:
+  Specifications to genetic clusters with hierarchical clustering
+
+  --HC-threshold HCMETHOD_THRESHOLD
+                        List of HC methods and thresholds to include in the
+                        analysis (comma-separated). To get clustering at all
+                        possible thresholds for a given method, write the
+                        method name (e.g. single). To get clustering at a
+                        specific threshold, indicate the threshold with a
+                        hyphen (e.g. single-10). To get clustering at a
+                        specific range, indicate the range with a hyphen (e.g.
+                        single-2-10). Default: single (Possible methods:
+                        single, complete, average, weighted, centroid, median,
+                        ward)
+
 Partitioning with TreeCluster:
-  Specifications to cut the tree with TreeCluster [only if a tree file is provided]
+  Specifications to cut the tree with TreeCluster
 
   --method-threshold METHOD_THRESHOLD
                         List of TreeCluster methods and thresholds to include
@@ -132,38 +200,6 @@ Partitioning with TreeCluster:
                         root_dist method at each tree node distance to the
                         root (similar to root_dist at all levels but just for
                         informative distances)
-
-Partitioning with GrapeTree:
-  Specifications to get and cut minimum spanning trees derived from cg/wgMLST allele data [only if an allele profile file is provided]
-
-  --loci-called LOCI_CALLED
-                        [OPTIONAL] Minimum percentage of loci called (e.g. '--
-                        loci-called 0.95' will only keep in the allele matrix
-                        samples with > 95% of alleles, i.e. <= 5% missing
-                        data)
-  --method GRAPETREE_METHOD
-                        "MSTreeV2" [DEFAULT] Alternative:"MSTree"
-  --missing HANDLER     ONLY FOR MSTree. 0: [DEFAULT] ignore missing data in
-                        pairwise comparison. 1: remove column with missing
-                        data. 2: treat missing data as an allele. 3: use
-                        absolute number of allelic differences.
-  --wgMLST              [EXPERIMENTAL: see GrapeTree github for details] a
-                        better support of wgMLST schemes
-  --n_proc NUMBER_OF_PROCESSES
-                        Number of CPU processes in parallel use. [5]
-  -thr THRESHOLD, --threshold THRESHOLD
-                        Partition threshold for clustering definition.
-                        Different thresholds can be comma-separated (e.g.
-                        5,8,16). Ranges can be specified with a hyphen (e.g.
-                        5,8,10-20). If this option is not set, the script will
-                        perform clustering for all the values in the range 1
-                        to max
-  --subset              Reconstruct the minimum spanning tree using only the
-                        samples that correspond to the filters specified at
-                        the '--filter' argument
-  --matrix-4-grapetree  Output an additional allele profile matrix with the
-                        header ready for GrapeTree visualization. Set only if
-                        you WANT the file
 
 ReporTree metadata report:
   Specific parameters to report clustering/grouping information associated to metadata
@@ -214,6 +250,11 @@ ReporTree metadata report:
                         2022-01-01'). White spaces are important in this
                         argument, so, do not leave spaces before and after
                         commas/semicolons.
+  --sample_of_interest SAMPLE_OF_INTEREST
+                        Comma-separated list of samples of interest for which
+                        summary reports will be created. If none provided,
+                        only the summary reports comprising all samples will
+                        be generated.
   --frequency-matrix FREQUENCY_MATRIX
                         [OPTIONAL] Metadata column names for which a frequency
                         matrix will be generated. This must be specified
@@ -268,6 +309,10 @@ ReporTree uses [TreeCluster](https://github.com/niemasd/TreeCluster) to obtain c
 - Clustering using two or more methods and/or different thresholds -> set the different requirements separated by a comma (e.g. root_dist,avg_dist-10,avg_dist-20-30)
 
 
+#### Note on the '--HC-threshold' argument
+'--HC-threshold' is the equivalent to '--method-threshold' for the hierarchical clustering analysis. As such, the input of this argument follows the same structure as mentioned in the previous paragraph. Possible methods: single, complete, average, weighted, centroid, median, ward.
+
+
 #### Note on the '--partitions2report' argument
 
 This argument is used to select the columns of the partitions table that will be incorporated into the metadata table. If you use ReporTree to obtain the partitions table, the column names specification follows the same rules as the '--method-threshold' or the '--threshold' argument, depending on whether you provided a newick tree or an allele matrix, respectively.
@@ -305,7 +350,7 @@ reportree.py -m metadata.tsv -t tree.nw -out output -d dist --method-threshold m
 ### How to run ReporTree with an allele matrix as input?
 
 ```bash
-reportree.py -m metadata.tsv -a allele_matrix.tsv -out output -d dist --method MSTreeV2 -thr 5,8,15 --matrix-4-grapetree --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 -AdjW adjusted_wallace -n n
+reportree.py -m metadata.tsv -a allele_matrix.tsv -out output -d dist --method MSTreeV2 -thr 5,8,15 --matrix-4-grapetree --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 -AdjW adjusted_wallace -n n --analysis grapetree
 ```
 
 
