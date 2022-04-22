@@ -82,12 +82,13 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 			print("\tWARNING!! You have duplicated columns in the partitions table! I cannot continue!")
 			print("\tWARNING!! You have duplicated columns in the partitions table! I cannot continue!", file = log)
 			sys.exit()
-			
+		
 		a = mx_metadata.set_index(sample_column, drop = False)
 		b = mx_partitions.set_index(sample_column_part, drop = True)
 		
 		if partitions2report == "all": # add all partitions
 			c = pandas.concat([a, b], axis=1)
+			
 		else: # add specific set of partitions
 			required_partitions = partitions2report.split(",")
 			c = a
@@ -100,8 +101,10 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		
 		
 	# filtering table according to specifications
+	names = list(c.index.values)
+	c[c.columns[0]] = names
 	c_filtered = c.reset_index(drop = True)
-	
+
 	if filters != "":
 		print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
 		print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)
@@ -159,7 +162,6 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 
 	new_metadata = c_filtered
 	
-	
 	# check for missing samples
 	if partitions is not "":
 		metadata_samples = new_metadata[sample_column].values.tolist()
@@ -168,7 +170,6 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		
 		print("\t\tSamples present in partitions table but missing in metadata table: " + ",".join(list(missing_in_metadata)))
 		print("\t\tSamples present in partitions table but missing in metadata table: " + ",".join(list(missing_in_metadata)), file = log)
-		
 		print("\t\tSamples not present in partitions table but present in metadata table: " + ",".join(list(missing_in_partitions)))
 		print("\t\tSamples not present in partitions table but present in metadata table: " + ",".join(list(missing_in_partitions)), file = log)
 		
@@ -205,7 +206,7 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 			if column in complete_metadata.columns: # if column exists
 				clusters = complete_metadata[column].values.tolist()
 				for cluster in set(clusters):
-					if "singleton" not in str(cluster) and "EMPTY" not in str(cluster):
+					if "singleton" not in str(cluster) and "EMPTY" not in str(cluster) and clusters.count(cluster) > 1:
 						flt_data = complete_metadata[complete_metadata[column] == cluster] # filter the dataframe
 						summary["partition"].append(column)
 						summary["cluster"].append(str(cluster))
@@ -253,8 +254,9 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 												summary["timespan_days"].append(timespan.days)
 											
 										else:
-											print("\t\tWarning!!! Column 'date' was not found to report " + stat)
-											print("\t\tWarning!!! Column 'date' was not found to report " + stat, file = log)
+											if stat not in absent_columns:
+												absent_columns.append(stat)
+											summary[stat].append("")
 									
 									elif "n_" in stat and len(stat.split("n_")) > 0:
 										if stat.split("n_")[1] in complete_metadata.columns: # get number of different observations
@@ -371,8 +373,9 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 								summary[stat].append("")
 		
 	else:
-		print("\t\tWarning!!! Column " + column + " was not found. The respective summary stats will not be generated!")
-		print("\t\tWarning!!! Column " + column + " was not found. The respective summary stats will not be generated!", file = log)
+		if column != "none":
+			print("\t\tWarning!!! Column " + column + " was not found. The respective summary stats will not be generated!")
+			print("\t\tWarning!!! Column " + column + " was not found. The respective summary stats will not be generated!", file = log)
 		summary = {}
 		order_columns = []
 	
@@ -549,77 +552,62 @@ if __name__ == "__main__":
 	# argument options
     
 	parser = argparse.ArgumentParser(prog="metadata_report.py", formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent("""\
-									#################################################################             
-									#                                                               #
-									#                      metadata_report.py                       #
-									#                                                               #
-									################################################################# 
+									###############################################################################             
+									#                                                                             #
+									#                             metadata_report.py                              #
+									#                                                                             #
+									############################################################################### 
 									                            
-									metadata_report.py provides summary reports with the 
-									statistics/trends (e.g. timespan, location range, cluster/group 
-									size and composition, age distribution etc.) for genetic clusters 
-									or any other provided grouping variable (such as, clade, lineage, 
-									ST, vaccination status, etc.).
+									metadata_report.py provides summary reports with the statistics/trends (e.g. 
+									timespan, location range, cluster/group size and composition, age distribution,
+									etc.) for genetic clusters or any other provided grouping variable (such as, 
+									clade, lineage, ST, vaccination status, etc.).
 									 
 									A metadata table needs to be provided in .tsv format.
 									
-									This script was designed keeping in mind the combination of 
-									metadata with clustering information for multiple partition
-									thresholds. Therefore, it can also take an additional table with 
-									genetic clusters, which we call the 'partitions table'.
+									This script was designed keeping in mind the combination of metadata with 
+									clustering information for multiple partition thresholds. Therefore, it can 
+									also take an additional table with genetic clusters, which we call the 
+									'partitions table'.
 									
 									
-									Note: White spaces should be avoided in metadata and partition
-									tables column names!!
+									Note: White spaces should be avoided in metadata and partition tables column 
+									names!!
 									
-									Note 2: To take the most profit of this script we recommend
-									that you include the column 'date' in the metadata. This column 
-									must follow the format YYYY-MM-DD. If you only provide YYYY, 
-									it will assume YYYY-01-01!!
+									Note 2: To take the most profit of this script we recommend that you include 
+									the column 'date' in the metadata. This column must follow the format 
+									YYYY-MM-DD. If you only provide YYYY, it will assume YYYY-01-01!!
 									
-									Note 3: If a 'date' column is provided in the metadata, this 
-									script will determine and provide in the new metadata table the 
-									columns iso_year, iso_week_nr and iso_week for each sequence  
-									(e.g. iso_year = 2021, iso_week_nr = 52, iso_week = 2021W52)!!
+									Note 3: If a 'date' column is provided in the metadata, this script will 
+									determine and provide in the new metadata table the columns iso_year, 
+									iso_week_nr and iso_week for each sequence (e.g. iso_year = 2021, 
+									iso_week_nr = 52, iso_week = 2021W52)!!
 									
-									Note 4: While for nominal or categorical variables this script
-									can provide in the summary report the number of observations or 
-									the frequency of each observation, for the 'date' column this 
-									script can provide:
+									Note 4: While for nominal or categorical variables this script can provide in 
+									the summary report the number of observations or the frequency of each 
+									observation, for the 'date' column this script can provide:
 										- first_seq_date
 										- last_seq_date
 										- timespan_days
 								
-								
-								
-								
 									How to run metadata_report.py?
 									
-									A) obtain summary report for the variable lineage during December 
-									2021 with the number of samples, coutry, and country distribution
-									metadata_report.py -m METADATA -o OUTPUT --columns_summary_report 
-									n_sequence,n_country,country -f 
-									"date >= 2021-12-02;date <= 2021-12-31" --metadata2report lineage
+									A) obtain summary report for the variable lineage during December 2021 with the 
+									number of samples, coutry, and country distribution 
+									metadata_report.py -m METADATA -o OUTPUT --columns_summary_report  
+									n_sequence,n_country,country -f "date >= 2021-12-02;date <= 2021-12-31" 
+									--metadata2report lineage
 
-									B) obtain summary report for the variable lineage and all the 
-									partitions of a partitions table with the number of samples, 
-									country, and country distribution
-									metadata_report.py -m METADATA -p PARTITIONS -o OUTPUT 
-									--columns_summary_report n_sequence,n_country,country 
-									--partitions2report all --metadata2report lineage
+									B) obtain summary report for the variable lineage and all the partitions of a 
+									partitions table with the number of samples, country, and country distribution
+									metadata_report.py -m METADATA -p PARTITIONS -o OUTPUT --columns_summary_report 
+									n_sequence,n_country,country --partitions2report all --metadata2report lineage
 									
+									TIP!! If you do not know which columns you can indicate for the argument 
+									'--columns_summary_report', you can use the '--list' option!!
 									
-									
-									
-									TIP!! If you do not know which columns you can indicate for the
-									argument '--columns_summary_report', you can use the 
-									'--list' option!!
-									
-									
-									
-									-----------------------------------------------------------------"""))
-									
-									
+									-------------------------------------------------------------------------------"""))
+										
 	parser.add_argument("-m", "--metadata", dest="metadata", required=True, type=str, help="[MANDATORY] Metadata file in .tsv format")
 	parser.add_argument("--list", dest="list_col_summary", required=False, action="store_true", help="[OPTIONAL] This option lists all the possible columns that you can use in \
 						'--columns_summary_report' considering your input. NOTE!! The objective of this argument is to help you with the input of '--columns_summary_report'. So, it will not run \
@@ -637,7 +625,7 @@ if __name__ == "__main__":
 						(comma-separated). Other alternatives: 'all' == all partitions; 'stability_regions' == first partition of each stability region as determined by \
 						comparing_partitions_v2.py. Note: 'stability_regions' can only be inferred when partitioning TreeCluster or GrapeTree is run for all possible thresholds or when a \
 						similar partitions table is provided (i.e. sequential partitions obtained with the same clustering method) [all]. Check '--list' argument for some help")
-	parser.add_argument("--metadata2report", dest="metadata2report", required=False, default="", help="[OPTIONAL] Columns of the metadata table for which a separated summary report must be \
+	parser.add_argument("--metadata2report", dest="metadata2report", required=False, default="none", help="[OPTIONAL] Columns of the metadata table for which a separated summary report must be \
 						provided (comma-separated)")
 	parser.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples to analyze. This must be specified \
 						within quotation marks in the following format 'column< >operation< >condition' (e.g. 'country == Portugal'). When more than one condition is specified for a given column, \

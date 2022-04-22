@@ -2,9 +2,9 @@
 
 """
 Obtain genetic clusters at any partition level(s) of a minimum spanning tree derived from a cg/wgMLST allele matrix.
-It requires a MODIFIED version of GrapeTree available at https://github.com/vmixao!
+It requires a MODIFIED version of GrapeTree available at https://github.com/insapathogenomics/GrapeTree
 
-WARNING!! This script takes advantage of GrapeTree -> do not forget to cite its authors as well!!
+Note: This script takes advantage of GrapeTree -> do not forget to cite its authors as well!!
 
 By Veronica Mixao
 @INSA
@@ -32,20 +32,18 @@ grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapet
 # defining parameters ----------
 
 parser = argparse.ArgumentParser(prog="partitioning_grapetree.py", formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent("""\
-									#################################################################             
-									#                                                               #
-									#                   partitioning_grapetree.py                   #
-									#                                                               #
-									################################################################# 
+									###############################################################################             
+									#                                                                             #
+									#                          partitioning_grapetree.py                          #
+									#                                                                             #
+									###############################################################################
 									                            
-									partitioning_grapetree.py obtains genetic clusters at any 
-									partition level(s) of a minimum spanning tree derived from a 
-									cg/wgMLST allele matrix.
+									partitioning_grapetree.py obtains genetic clusters at any partition level(s) of 
+									a minimum spanning tree derived from a SNP or cg/wgMLST allele matrix.
 									
 									
-									This script requires a modified version of GrapeTree that is 
-									available at: 
-									https://github.com/vmixao
+									This script requires a modified version of GrapeTree that is available at: 
+									https://github.com/insapathogenomics/GrapeTree
 									
 									
 									NOTE: Do not forget to cite GrapeTree original authors.
@@ -53,29 +51,25 @@ parser = argparse.ArgumentParser(prog="partitioning_grapetree.py", formatter_cla
 									
 									How to run partitioning_grapetree.py?
 									
-									A) Minimum-spanning tree of the provided allele matrix and 
-									partitions for thresholds 5,8, and 10 to 20:
-									partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME 
-									--method MSTreeV2 --missing 0 --n_proc 5 -thr 5,8,10-20 
+									A) Minimum-spanning tree of the provided allele matrix and partitions for 
+									thresholds 5,8, and 10 to 20:
+									partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME --method MSTreeV2 
+									--missing 0 --n_proc 5 -thr 5,8,10-20 
 
 									
-									B) Minimum-spanning tree for a subset of the provided allele 
-									matrix and all partitions:
-									partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME 
-									--method MSTreeV2 --missing 0 --n_proc 5 -thr max -m METADATA 
-									-f "column_metadata<>operation<>value"
+									B) Minimum-spanning tree for a subset of the provided allele matrix and all 
+									partitions:
+									partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME --method MSTreeV2 
+									--missing 0 --n_proc 5 -thr max -m METADATA -f 
+									"column_metadata<>operation<>value"
 									
-									
-									
-									
-									-----------------------------------------------------------------"""))
+									-------------------------------------------------------------------------------"""))
 
-
-group0 = parser.add_argument_group("Partitioning with GrapeTree", "Specifications to get and cut minimum spanning trees derived from cg/wgMLST allele data")
-group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=True, type=str, help="[MANDATORY] Input allele profile matrix")
+group0 = parser.add_argument_group("Partitioning with GrapeTree", "Specifications to get and cut minimum spanning trees")
+group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=True, type=str, help="[MANDATORY] Input allele profile matrix (can either be an allele matrix or a SNP matrix)")
 group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
 group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci called (e.g. '--loci-called 0.95' will only keep in the allele \
-					matrix samples with > 95%% of alleles, i.e. <= 5%% missing data)")
+					matrix the samples with > 95%% of alleles called, i.e. <= 5%% missing data). Code for missing data: 0.")
 group0.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree\"\n")
 group0.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 					with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
@@ -92,9 +86,9 @@ group0.add_argument("-f", "--filter", dest="filter_column", required=False, defa
 					column, they must be separated with semicolon (e.g. 'country == Portugal,Spain,France;date > 2018-01-01;date < 2022-01-01'). White spaces are important in this argument, \
 					so, do not leave spaces before and after commas/semicolons.")
 group0.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
-					-thr 5,8,10-30, the tree will be cut at 50,80,100,110,120,...,300). Currently, the default is 1, which is equivalent to 1 allele distance. [1.0]")
+					-thr 5,8,10-30, the tree will be cut at 50,80,100,110,120,...,300). Currently, the default is 1, which is equivalent to 1 allele/SNP distance. [1.0]")
 group0.add_argument("--matrix-4-grapetree", dest="matrix4grapetree", required=False, action="store_true", help="Output an additional allele profile matrix with the header ready for GrapeTree \
-						visualization. Set only if you WANT the file")	
+					visualization. Set only if you WANT the file")	
 						
 args = parser.parse_args()
 
@@ -112,9 +106,9 @@ print(" ".join(sys.argv), file = log)
 
 # cleaning allele matrix	----------
 
-if args.loci_called != "":
-	print("Cleaning the allele matrix using a threshold of >" + str(args.loci_called) + " alleles called...")
-	print("Cleaning the allele matrix using a threshold of >" + str(args.loci_called) + " alleles called...", file = log)
+if args.loci_called != "" and ".fasta" not in args.allele_profile and ".fa" not in args.allele_profile and ".fas" not in args.allele_profile:
+	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...")
+	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...", file = log)
 	
 	allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 	
@@ -131,8 +125,8 @@ if args.loci_called != "":
 	flt_report = report_allele_df[report_allele_df["pct_loci_called"] > float(args.loci_called)]
 	pass_samples = flt_report["samples"].values.tolist()
 	
-	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the allele matrix.")
-	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the allele matrix.", file = log)
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the profile matrix.")
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
 	
 	allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
 	allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
@@ -146,7 +140,7 @@ else:
 
 # filtering allele matrix	----------
 
-if args.metadata != "" and args.filter_column != "":
+if args.metadata != "" and args.filter_column != "" and ".fasta" not in args.allele_profile and ".fa" not in args.allele_profile and ".fas" not in args.allele_profile:
 	print("Filtering the allele matrix...")
 	print("Filtering the allele matrix...", file = log)
 	
@@ -247,7 +241,7 @@ else:
 
 # preparing allele matrix for grapetree	----------
 
-if args.matrix4grapetree:
+if args.matrix4grapetree and ".fasta" not in args.allele_profile and ".fa" not in args.allele_profile and ".fas" not in args.allele_profile:
 	mx_allele = pandas.read_table(allele_filename, dtype = str)
 	first_col = str(mx_allele.columns[0])
 	if first_col[0] != "#":

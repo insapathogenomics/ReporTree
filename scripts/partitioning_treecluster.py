@@ -1,10 +1,10 @@
 #!/usr/bin/env	python3
 
 """
-Obtain clustering information for multiple partitions of a rooted tree using TreeCluster.py
+Obtain clustering information for multiple partitions of a newick tree using TreeCluster.py
 
-WARNING!! Currently, for non-SNP-distance trees, users have to provide a minimum distance!! NEWS COMING SOON!!
-WARNING!! This script takes advantage of TreeCluster.py -> do not forget to cite its authors as well!!
+Note: Currently, for non-SNP-distance trees, users have to provide a minimum distance!! NEWS COMING SOON!!
+Note2: This script takes advantage of TreeCluster.py -> do not forget to cite its authors as well!!
 
 By Veronica Mixao
 @INSA
@@ -176,48 +176,42 @@ if __name__ == "__main__":
 	# argument options
     
 	parser = argparse.ArgumentParser(prog="partitioning_treecluster.py", formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent("""\
-									#################################################################             
-									#                                                               #
-									#                  partitioning_treecluster.py                  #
-									#                                                               #
-									################################################################# 
+									###############################################################################             
+									#                                                                             #
+									#                         partitioning_treecluster.py                         #
+									#                                                                             #
+									############################################################################### 
 									                            
-									partitioning_treecluster.py obtains genetic clusters at any 
-									partition level(s) of a rooted tree (e.g. SNP-scaled tree)
+									partitioning_treecluster.py obtains genetic clusters at any partition level(s) 
+									of a newick tree (e.g. SNP-scaled tree)
 									
-									Note: Currently, for non-SNP-distance rooted trees, users 
-									have to specify a minimum unit to cut the tree (currently, the
-									default is 1, which is equivalent to 1 SNP in a SNP-scaled rooted
-									tree). NEWS COMING SOON!!
+									Note: Currently, for non-SNP-distance rooted trees, users have to specify a 
+									minimum unit to cut the tree (currently, the default is 1, which is equivalent 
+									to 1 SNP in a SNP-scaled rooted	tree). NEWS COMING SOON!!
 									
 									NOTE 2: Do not forget to cite TreeCluster authors.
 									
 									
 									How to run partitioning_treecluster.py?
 									
-									A) Partitions at all thresholds of root_dist and avg_clade 
-									threshold = 2:
-									partitioning_treecluster.py -t TREE -o OUTPUT_NAME 
-									--method-threshold root_dist,avg_clade-2 
+									A) Partitions at all thresholds of root_dist and avg_clade threshold = 2:
+									partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold 
+									root_dist,avg_clade-2 
 
-									B) Partitions at avg_clade threshold = 2 and root_dist at the 
-									distance of each node to the root:
-									partitioning_treecluster.py -t TREE -o OUTPUT_NAME 
-									--method-threshold avg_clade-2 --root-dist-by-node
+									B) Partitions at avg_clade threshold = 2 and root_dist at the distance of each 
+									node to the root:
+									partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold 
+									avg_clade-2 --root-dist-by-node
 
-									C) Partitions at all thresholds of root_dist for a 
-									non- SNP-scaled rooted tree where 1 SNP distance == 0.123:
-									partitioning_treecluster.py -t TREE -o OUTPUT_NAME 
-									--method-threshold root_dist -d 0.123
+									C) Partitions at all thresholds of root_dist for a non-SNP-scaled rooted tree 
+									where 1 SNP distance == 0.123:
+									partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold root_dist 
+									-d 0.123
 									
-									
-									
-									
-									-----------------------------------------------------------------"""))
-	
+									-------------------------------------------------------------------------------"""))
 	
 	group0 = parser.add_argument_group("Partitioning with TreeCluster", "Specifications to cut the tree with TreeCluster")
-	group0.add_argument("-t", "--tree", dest="tree", default="", required=True, type=str, help="[MANDATORY] Input tree")
+	group0.add_argument("-t", "--tree", dest="tree", default="", required=True, type=str, help="[MANDATORY] Input newick tree")
 	group0.add_argument("-o", "--output", dest="output", required=True, type=str, help="[MANDATORY] Tag for output file name")
 	group0.add_argument("--method-threshold", dest="method_threshold", required=False, default="root_dist,avg_clade-1", 
 						help="List of TreeCluster methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, write \
