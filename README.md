@@ -4,6 +4,7 @@
   <img width="300" height="180" src=https://user-images.githubusercontent.com/19263468/154529278-2447e132-c903-46ec-86ae-467c5c72b6c8.png>
 </p>
 
+
 **Genomics-informed pathogen surveillance** strengthens public health decision-making, thus playing an important role in infectious diseases’ prevention and control. A pivotal outcome of genomics surveillance is the **identification of pathogen genetic clusters/lineages and their characterization in terms of geotemporal spread or linkage to clinical and demographic data**. This task usually relies on the visual exploration of (large) phylogenetic trees (e.g. Minimum Spanning Trees (MST) for bacteria or rooted SNP-based trees for viruses). As this may be a non-trivial, non-reproducible and time consuming task, we developed **ReporTree, a flexible pipeline that facilitates the detection of genetic clusters and their linkage to epidemiological data**. 
 
 
@@ -15,6 +16,10 @@ _ReporTree can help you to:_
 
 
 In summary, ReporTree facilitates and accelerates the production of surveillance-oriented reports, thus contributing to a sustainable and efficient public health genomics-informed pathogen surveillance.
+
+
+_2022.04.24 - NEWS!! ReporTree can determine genetic clusters with a hierarchical clustering approach. Besides the allele matrix and the newick tree, now ReporTree also accepts SNP matrices, sequence alignments and previously computed pairwise distance matrices!_
+
 
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO CITE THEM!_
 
@@ -31,13 +36,19 @@ Metadata table in .tsv format (column should not have blank spaces)
 
 Newick tree which will be used to obtain genetic clusters       
 **OR**      
-Allele/SNP matrix which will be used to obtain genetic clusters from a MST      
+Allele/SNP profile matrix which will be used to obtain genetic clusters from a MST      
 **OR**  
-Sequence alignment which will be used to obtain genetic clusters  
+Sequence alignment which will be converted into a profile and used to obtain genetic clusters  
 **OR**  
 Distance matrix which will be used to obtain genetic clusters    
 **OR**  
 Partitions table (i.e. matrix with genetic clusters) in .tsv format (columns should not have blank spaces)       
+
+
+_In the following table we summarize the different options that ReporTree provides to determine genetic clusters, as well as the different types of file that each of them can take as input:_
+<p align="center">
+  <img width="800" alt="Captura de ecrã 2022-04-23, às 17 09 32" src="https://user-images.githubusercontent.com/19263468/164914113-0ba5cc72-ec13-401c-9639-677353df346d.png">
+</p>
 
 
 ## Main output files
@@ -347,10 +358,16 @@ reportree.py -m metadata.tsv -t tree.nw -out output -d dist --method-threshold m
 ```
 
 
-### How to run ReporTree with an allele matrix as input?
+### How to run ReporTree with an allele matrix as input and obtain the genetic clusters from a MST?
 
 ```bash
 reportree.py -m metadata.tsv -a allele_matrix.tsv -out output -d dist --method MSTreeV2 -thr 5,8,15 --matrix-4-grapetree --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 -AdjW adjusted_wallace -n n --analysis grapetree
+```
+
+### How to run ReporTree with an alignment as input and obtain the genetic clusters with hierarchical clustering?
+
+```bash
+reportree.py -m metadata.tsv -align alignment.fasta -out output -d dist --HC-threshold single --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 -AdjW adjusted_wallace -n n --analysis HC
 ```
 
 
