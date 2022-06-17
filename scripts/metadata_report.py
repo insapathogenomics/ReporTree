@@ -60,7 +60,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		mx_metadata.insert(index_no + 1, "iso_year", isoyear)
 		mx_metadata.insert(index_no + 2, "iso_week_nr", isoweek)
 		mx_metadata.insert(index_no + 3, "iso_week", isodate)
-	
+
 		
 	# check for duplicated samples in metadata
 	metadata_samples = mx_metadata[mx_metadata.columns.tolist()[0]]
