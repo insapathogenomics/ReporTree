@@ -66,11 +66,14 @@ parser = argparse.ArgumentParser(prog="partitioning_grapetree.py", formatter_cla
 									-------------------------------------------------------------------------------"""))
 
 group0 = parser.add_argument_group("Partitioning with GrapeTree", "Specifications to get and cut minimum spanning trees")
-group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=True, type=str, help="[MANDATORY] Input allele profile matrix (can either be an allele matrix or a SNP matrix)")
+group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=True, type=str, help="[MANDATORY] Input profile matrix (can either be an allele matrix or a SNP matrix)")
 group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
-group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci called (e.g. '--loci-called 0.95' will only keep in the allele \
-					matrix the samples with > 95%% of alleles called, i.e. <= 5%% missing data). Code for missing data: 0.")
-group0.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree\"\n")
+group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci/positions called for SNP/allele matrices (e.g. \
+					'--loci-called 0.95' will only keep in the profile matrix samples with > 95%% of alleles/positions, i.e. <= 5%% missing data). Code for missing data: 0.")
+group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
+					proportion of samples per site/loci without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
+					'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment positions/loci (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
+group0.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree (goeBURST)\"\n")
 group0.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 					with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
 group0.add_argument("--wgMLST", default=False, action="store_true", help="[EXPERIMENTAL: see GrapeTree github for details] a better support of wgMLST schemes")
@@ -117,12 +120,12 @@ if args.loci_called != "" and ".fasta" not in args.allele_profile and ".fa" not 
 	len_schema = len(allele_mx.columns) - 1
 	
 	report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
-	report_allele_mx["loci_missing"] = allele_mx.isin(["0"]).sum(axis=1)
-	report_allele_mx["loci_called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
-	report_allele_mx["pct_loci_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
+	report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
+	report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
+	report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
 
 	report_allele_df = pandas.DataFrame(data = report_allele_mx)
-	flt_report = report_allele_df[report_allele_df["pct_loci_called"] > float(args.loci_called)]
+	flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
 	pass_samples = flt_report["samples"].values.tolist()
 	
 	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the profile matrix.")
@@ -145,7 +148,7 @@ if args.metadata != "" and args.filter_column != "" and ".fasta" not in args.all
 	print("Filtering the allele matrix...", file = log)
 	
 	filters = args.filter_column
-	mx = pandas.read_table(args.metadata)
+	mx = pandas.read_table(args.metadata, dtype = str)
 	sample_column = mx.columns[0]
 	
 	if "date" in mx.columns and "iso_week" not in mx.columns:
@@ -162,7 +165,7 @@ if args.metadata != "" and args.filter_column != "" and ".fasta" not in args.all
 		mx.insert(index_no + 1, "iso_year", isoyear)
 		mx.insert(index_no + 2, "iso_week", isoweek)
 		mx.insert(index_no + 3, "iso_date", isodate)
-		
+	
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)
 	
@@ -238,6 +241,27 @@ elif args.metadata == "" and args.filter_column != "":
 else:
 	sample_column = "sequence"
 
+
+# cleaning allele matrix (columns)
+
+if args.samples_called != 0.0 and not os.path.exists(args.out + "_align_profile.tsv"):
+	print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
+	print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
+	
+	mx_allele = pandas.read_table(allele_filename, dtype = str)
+	pos_t0 = len(mx_allele.columns[1:])
+	for col in mx_allele.columns[1:]:
+		values = mx_allele[col].values.tolist()
+		if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
+			mx_allele = mx_allele.drop(columns=col)
+		elif (len(values)-values.count(0))/len(values) < float(args.samples_called):
+			mx_allele = mx_allele.drop(columns=col)
+	mx_allele.to_csv(args.out + "_clean_missing_matrix.tsv", index = False, header=True, sep ="\t")
+	allele_filename = args.out + "_clean_missing_matrix.tsv"
+	pos_t1 = len(mx_allele.columns[1:])
+	print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
+	print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
+		
 
 # preparing allele matrix for grapetree	----------
 
