@@ -24,7 +24,6 @@ def conv_nucl(allele_filename):
 	mx = pandas.read_table(allele_filename, dtype = str)
 
 	alleles =  mx[mx.columns[1:]]
-	alleles = alleles.replace({"A": 1, "T": 2, "C": 3, "G": 4, "N": 0})
 	alleles.insert(0, mx.columns[0], mx[mx.columns[0]])
 	
 	alleles.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
@@ -236,6 +235,7 @@ if __name__ == "__main__":
 									allele/SNP profile or pairwise distance matrix using hierarchical clustering 
 									methods.
 									
+									Note: if a profile is provided, pairwise hamming distances will be calculated.
 									
 									How to run partitioning_HC.py?
 									
@@ -259,6 +259,9 @@ if __name__ == "__main__":
 						range, indicate the range with a hyphen (e.g. single-2-10). Default: single (List of possible methods: single, complete, average, weighted, centroid, median, ward)")
 	group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci called (e.g. '--loci-called 0.95' will only keep in the allele \
 						matrix the samples with > 95%% of alleles called, i.e. <= 5%% missing data). Code for missing data: 0.")
+	group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
+						proportion of samples per site without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
+						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment positions/loci (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to select the samples to use for clustering \
 						according to the '--filter' argument")
 	group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples that must be used for HC \
@@ -284,28 +287,31 @@ if __name__ == "__main__":
 	print(" ".join(sys.argv), file = log)
 	
 	# processing allele profile ----------
-		
+	
 	if args.allele_profile:
 		print("Profile matrix provided... pairwise distance will be calculated!")
 		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
 		
+		allele_mx = pandas.read_table(args.allele_profile, dtype = str)
+		allele_mx = allele_mx.replace({"N": "0", "a": "A", "c": "C", "t": "T", "g": "G"})
+		
 		# cleaning allele matrix
 
 		if args.loci_called != "":
-			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...")
-			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...", file = log)
+			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
+			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...", file = log)
 			
 			report_allele_mx = {}
-			allele_mx = pandas.read_table(args.allele_profile)
+			
 			len_schema = len(allele_mx.columns) - 1
 			
 			report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
-			report_allele_mx["loci_missing"] = allele_mx.isin(["0"]).sum(axis=1)
-			report_allele_mx["loci_called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
-			report_allele_mx["pct_loci_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
+			report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
+			report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
+			report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
 
 			report_allele_df = pandas.DataFrame(data = report_allele_mx)
-			flt_report = report_allele_df[report_allele_df["pct_loci_called"] > float(args.loci_called)]
+			flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
 			pass_samples = flt_report["samples"].values.tolist()
 			
 			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the profile matrix.")
@@ -317,10 +323,24 @@ if __name__ == "__main__":
 			report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
 		
 		else:
-			allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 			allele_filename = args.allele_profile
 	
-	
+		# cleaning allele matrix (columns)
+		
+		print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
+		print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
+		
+		pos_t0 = len(allele_mx.columns[1:])
+		for col in allele_mx.columns[1:]:
+			values = allele_mx[col].values.tolist()
+			if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
+				allele_mx = allele_mx.drop(columns=col)
+		allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
+		allele_filename = args.out + "_flt_matrix.tsv"
+		pos_t1 = len(allele_mx.columns[1:])
+		print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
+		print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
+			
 		# getting distance matrix	----------
 		
 		print("Getting the pairwise distance matrix with cgmlst-dists...")
@@ -332,6 +352,9 @@ if __name__ == "__main__":
 		# run cgmlst-dists
 		os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist.mx")
 		os.system("rm temporary_profile.tsv")
+		temp_df = pandas.read_table(args.out + "_dist.mx", dtype = str)
+		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
+		temp_df.to_csv(args.out + "_dist.mx", sep = "\t", index = None)
 		pairwise_matrix = args.out + "_dist.mx"
 		
 	
@@ -353,7 +376,7 @@ if __name__ == "__main__":
 		print("Filtering the distance matrix...", file = log)
 		
 		filters = args.filter_column
-		mx = pandas.read_table(args.metadata)
+		mx = pandas.read_table(args.metadata, dtype = str)
 		sample_column = mx.columns[0]
 		dist = filter_mx(pairwise_matrix, mx, filters, log)
 		dist.to_csv(args.out + "_flt_dist.mx", sep = "\t", index = None)
