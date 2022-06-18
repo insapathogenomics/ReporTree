@@ -253,7 +253,7 @@ def filter_samples_interest(samples, matrix, out):
 			if len(found) == 0:
 				print("*All samples of interest are singletons in all thresholds used!", file = outfile)
 			elif len(found) != len(samples):
-				print("*Sample(s) " + ",".join(set(samples) - found) + " are singletons in all thresholds used!", file = outfile)
+				print("*Sample(s) " + ",".join(set(samples.split(",")) - found) + " are singletons in all thresholds used!", file = outfile)
 	
 	
 # running the pipeline	----------
