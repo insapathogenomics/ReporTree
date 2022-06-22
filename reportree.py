@@ -356,6 +356,8 @@ if __name__ == "__main__":
 						proportion of samples per site without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment/profile; \
 						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment positions/loci (i.e. columns)! [default: 0.0 - content of \
 						missing data is not considered during matrix/alignment cleaning].")
+	group1.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="Set if your profile is based on wgMLST scheme (if set, '--loci-called' will be applied after \
+						'--site-inclusion')")
 						
 			
 	## matrices processing
@@ -385,7 +387,6 @@ if __name__ == "__main__":
 	group4.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree (goeBURST)\"\n")
 	group4.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 						with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
-	group4.add_argument("--wgMLST", default=False, action="store_true", help="[EXPERIMENTAL: see GrapeTree github for details] a better support of wgMLST schemes")
 	group4.add_argument("--n_proc",  dest="number_of_processes", type=int, default=5, help="Number of CPU processes in parallel use. [5]")
 	group4.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="Partition threshold for clustering definition. Different thresholds can be comma-separated (e.g. 5,8,16). \
 						Ranges can be specified with a hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 1 to max")
@@ -846,7 +847,7 @@ if __name__ == "__main__":
 		if analysis == "grapetree": # grapetree
 			if args.loci_called == "":
 				if args.matrix4grapetree == True:
-					if args.wgMLST == True:
+					if args.wgmlst == True:
 						if args.subset == True:
 							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
@@ -865,7 +866,7 @@ if __name__ == "__main__":
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree  --site-inclusion \
 							" + str(args.N_content))
 				else:
-					if args.wgMLST == True:
+					if args.wgmlst == True:
 						if args.subset == True:
 							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
@@ -884,7 +885,7 @@ if __name__ == "__main__":
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) +  " --site-inclusion " + str(args.N_content))
 			else:
 				if args.matrix4grapetree == True:
-					if args.wgMLST == True:
+					if args.wgmlst == True:
 						if args.subset == True:
 							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
@@ -903,7 +904,7 @@ if __name__ == "__main__":
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree \
 							--loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
 				else:
-					if args.wgMLST == True:
+					if args.wgmlst == True:
 						if args.subset == True:
 							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
@@ -928,20 +929,36 @@ if __name__ == "__main__":
 		
 		elif analysis == "HC": # hc
 			if not distance_matrix_input:
-				if args.loci_called != "":
-					if args.subset == True:
-						os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-						-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\" --loci-called " + args.loci_called + " --site-inclusion " + str(args.N_content))
+				if args.wgmlst == True:
+					if args.loci_called != "":
+						if args.subset == True:
+							os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --wgMLST --HC-threshold " + args.HCmethod_threshold + " \
+							-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\" --loci-called " + args.loci_called + " --site-inclusion " + str(args.N_content))
+						else:
+							os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --wgMLST --HC-threshold " + args.HCmethod_threshold + " \
+							-d " + str(args.dist) + " --loci-called " + str(args.loci_called) + " --site-inclusion " + str(args.N_content))
 					else:
-						os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-						-d " + str(args.dist) + " --loci-called " + str(args.loci_called) + " --site-inclusion " + str(args.N_content))
-				else:
-					if args.subset == True:
-						os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-						-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\"" + " --site-inclusion " + str(args.N_content))
+						if args.subset == True:
+							os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --wgMLST --HC-threshold " + args.HCmethod_threshold + " \
+							-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\"" + " --site-inclusion " + str(args.N_content))
+						else:
+							os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --wgMLST --HC-threshold " + args.HCmethod_threshold + " \
+							-d " + str(args.dist) + " --site-inclusion " + str(args.N_content))
+				else:	
+					if args.loci_called != "":
+						if args.subset == True:
+							os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+							-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\" --loci-called " + args.loci_called + " --site-inclusion " + str(args.N_content))
+						else:
+							os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+							-d " + str(args.dist) + " --loci-called " + str(args.loci_called) + " --site-inclusion " + str(args.N_content))
 					else:
-						os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-						-d " + str(args.dist) + " --site-inclusion " + str(args.N_content))
+						if args.subset == True:
+							os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+							-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\"" + " --site-inclusion " + str(args.N_content))
+						else:
+							os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+							-d " + str(args.dist) + " --site-inclusion " + str(args.N_content))
 			else:
 				if args.subset == True:
 					os.system("python " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
