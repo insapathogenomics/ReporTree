@@ -262,6 +262,8 @@ if __name__ == "__main__":
 	group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
 						proportion of samples per site without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
 						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment positions/loci (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
+	group0.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="Set if your profile is based on wgMLST scheme (if set, '--loci-called' will be applied after \
+						'--site-inclusion')")
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to select the samples to use for clustering \
 						according to the '--filter' argument")
 	group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples that must be used for HC \
@@ -286,6 +288,7 @@ if __name__ == "__main__":
 	print(" ".join(sys.argv))
 	print(" ".join(sys.argv), file = log)
 	
+	
 	# processing allele profile ----------
 	
 	if args.allele_profile:
@@ -295,9 +298,10 @@ if __name__ == "__main__":
 		allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 		allele_mx = allele_mx.replace({"N": "0", "a": "A", "c": "C", "t": "T", "g": "G"})
 		
-		# cleaning allele matrix
+		
+		# cleaning allele matrix	----------
 
-		if args.loci_called != "":
+		if args.loci_called != "" and not args.wgmlst:
 			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
 			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...", file = log)
 			
@@ -314,8 +318,8 @@ if __name__ == "__main__":
 			flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
 			pass_samples = flt_report["samples"].values.tolist()
 			
-			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the profile matrix.")
-			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
+			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
+			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
 			
 			allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
 			allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
@@ -325,7 +329,8 @@ if __name__ == "__main__":
 		else:
 			allele_filename = args.allele_profile
 	
-		# cleaning allele matrix (columns)
+	
+		# cleaning allele matrix (columns)	----------
 		
 		print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
 		print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
@@ -340,14 +345,45 @@ if __name__ == "__main__":
 		pos_t1 = len(allele_mx.columns[1:])
 		print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
 		print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
+		
+		
+		# cleaning allele matrix if wgMLST	----------
+
+		if args.loci_called != "" and args.wgmlst:
+			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
+			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...", file = log)
+			
+			report_allele_mx = {}
+			
+			len_schema = len(allele_mx.columns) - 1
+			
+			report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
+			report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
+			report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
+			report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
+
+			report_allele_df = pandas.DataFrame(data = report_allele_mx)
+			flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
+			pass_samples = flt_report["samples"].values.tolist()
+			
+			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
+			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
+			
+			allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
+			allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
+			allele_filename = args.out + "_flt_matrix.tsv"
+			report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
+			
 			
 		# getting distance matrix	----------
 		
 		print("Getting the pairwise distance matrix with cgmlst-dists...")
 		print("Getting the pairwise distance matrix with cgmlst-dists...", file = log)
 		
+		
 		# convert ATCG to integers
 		conv_nucl(allele_filename)
+		
 		
 		# run cgmlst-dists
 		os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist.mx")
