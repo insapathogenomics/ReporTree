@@ -76,7 +76,8 @@ group0.add_argument("--site-inclusion", dest="samples_called", required=False, d
 group0.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree (goeBURST)\"\n")
 group0.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 					with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
-group0.add_argument("--wgMLST", default=False, action="store_true", help="[EXPERIMENTAL: see GrapeTree github for details] a better support of wgMLST schemes")
+group0.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="Set if your profile is based on wgMLST scheme (if set, '--loci-called' will be applied after \
+					'--site-inclusion')")
 group0.add_argument("--n_proc",  dest="number_of_processes", type=int, default=5, help="Number of CPU processes in parallel use. [5]")
 group0.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="[OPTIONAL] Partition thresholds for clustering definition. Different thresholds can be comma-separated \
 					(e.g. 5,8,16). Ranges can be specified with an hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 1 \
@@ -109,7 +110,7 @@ print(" ".join(sys.argv), file = log)
 
 # cleaning allele matrix	----------
 
-if args.loci_called != "" and ".fasta" not in args.allele_profile and ".fa" not in args.allele_profile and ".fas" not in args.allele_profile:
+if args.loci_called != "" and not args.wgmlst:
 	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...")
 	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...", file = log)
 	
@@ -128,8 +129,8 @@ if args.loci_called != "" and ".fasta" not in args.allele_profile and ".fa" not 
 	flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
 	pass_samples = flt_report["samples"].values.tolist()
 	
-	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the profile matrix.")
-	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + ", " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
 	
 	allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
 	allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
@@ -139,7 +140,7 @@ if args.loci_called != "" and ".fasta" not in args.allele_profile and ".fa" not 
 else:
 	allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 	allele_filename = args.allele_profile
-	
+
 
 # filtering allele matrix	----------
 
@@ -249,6 +250,7 @@ if args.samples_called != 0.0 and not os.path.exists(args.out + "_align_profile.
 	print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
 	
 	mx_allele = pandas.read_table(allele_filename, dtype = str)
+
 	pos_t0 = len(mx_allele.columns[1:])
 	for col in mx_allele.columns[1:]:
 		values = mx_allele[col].values.tolist()
@@ -263,9 +265,39 @@ if args.samples_called != 0.0 and not os.path.exists(args.out + "_align_profile.
 	print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
 		
 
+# cleaning allele matrix if wgMLST	----------
+
+if args.loci_called != "" and args.wgmlst:
+	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...")
+	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...", file = log)
+	
+	allele_mx = pandas.read_table(allele_filename, dtype = str)
+	
+	report_allele_mx = {}
+	
+	len_schema = len(allele_mx.columns) - 1
+	
+	report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
+	report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
+	report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
+	report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
+
+	report_allele_df = pandas.DataFrame(data = report_allele_mx)
+	flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
+	pass_samples = flt_report["samples"].values.tolist()
+	
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
+	
+	allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
+	allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
+	allele_filename = args.out + "_flt_matrix.tsv"
+	report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
+	
+	
 # preparing allele matrix for grapetree	----------
 
-if args.matrix4grapetree and ".fasta" not in args.allele_profile and ".fa" not in args.allele_profile and ".fas" not in args.allele_profile:
+if args.matrix4grapetree:
 	mx_allele = pandas.read_table(allele_filename, dtype = str)
 	first_col = str(mx_allele.columns[0])
 	if first_col[0] != "#":
@@ -278,7 +310,7 @@ if args.matrix4grapetree and ".fasta" not in args.allele_profile and ".fa" not i
 print("Running GrapeTree...")
 print("Running GrapeTree...", file = log)
 
-if args.wgMLST == True:
+if args.wgmlst == True:
 	print("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST")
 	print("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST", file = log)
 	os.system("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST")
