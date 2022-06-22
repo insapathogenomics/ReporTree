@@ -63,7 +63,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 
 		
 	# check for duplicated samples in metadata
-	metadata_samples = mx_metadata[mx_metadata.columns.tolist()[0]]
+	metadata_samples = mx_metadata[mx_metadata.columns[0]].values.tolist()
 	
 	if len(metadata_samples) != len(set(metadata_samples)):
 		print("\tWARNING!! You have duplicated samples in the metadata table! I cannot continue!")
@@ -77,7 +77,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		sample_column_part = mx_partitions.columns[0]
 
 		# check for duplicated samples in partitions
-		partitions_samples = mx_partitions[mx_partitions.columns.tolist()[0]]
+		partitions_samples = mx_partitions[mx_partitions.columns[0]].values.tolist()
 		if len(partitions_samples) != len(set(partitions_samples)):
 			print("\tWARNING!! You have duplicated columns in the partitions table! I cannot continue!")
 			print("\tWARNING!! You have duplicated columns in the partitions table! I cannot continue!", file = log)
@@ -163,7 +163,6 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 	
 	# check for missing samples
 	if partitions is not "":
-		metadata_samples = new_metadata[sample_column].values.tolist()
 		missing_in_metadata = set(partitions_samples) - set(metadata_samples)
 		missing_in_partitions = set(metadata_samples) - set(partitions_samples)
 		
