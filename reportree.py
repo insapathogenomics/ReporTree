@@ -213,11 +213,12 @@ def loci_called2metadata(metadata, out, thr, analysis):
 	
 	metadata = pandas.read_table(metadata, dtype = str)
 	loci = pandas.read_table(out + "_" + analysis + "_report.tsv")
-	a = metadata.set_index(metadata.columns[0], drop = False)
+	a = metadata.set_index(metadata.columns[0], drop = True)
 	b = loci.set_index(loci.columns[0], drop = True)
 
 	c = pandas.concat([a, b["pct_called"]], axis=1)
-	c = c.reset_index(drop = True)
+	c = c.reset_index(drop = False)
+	c.rename(columns={c.columns[0]: metadata.columns[0]}, inplace=True)
 	c["QUAL_called"] = c["pct_called"]
 	c["QUAL_called"].where(c["QUAL_called"] <= float(thr), "PASS", inplace = True)
 	c["QUAL_called"].where(c["QUAL_called"].astype(str) =="PASS", "excluded", inplace = True)
