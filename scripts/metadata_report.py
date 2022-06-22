@@ -44,7 +44,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 
 	mx_metadata = pandas.read_table(metadata, dtype = str)
 	sample_column = mx_metadata.columns[0]
-	
+
 	# checking for 'date' column
 	if "date" in mx_metadata.columns and "iso_week_nr" not in mx_metadata.columns and "iso_year" not in mx_metadata.columns and "iso_week" not in mx_metadata.columns:
 		index_no = mx_metadata.columns.get_loc("date")
@@ -75,7 +75,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 	else:
 		mx_partitions = pandas.DataFrame(data = partitions, dtype = str)
 		sample_column_part = mx_partitions.columns[0]
-		
+
 		# check for duplicated samples in partitions
 		partitions_samples = mx_partitions[mx_partitions.columns.tolist()[0]]
 		if len(partitions_samples) != len(set(partitions_samples)):
@@ -83,7 +83,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 			print("\tWARNING!! You have duplicated columns in the partitions table! I cannot continue!", file = log)
 			sys.exit()
 		
-		a = mx_metadata.set_index(sample_column, drop = False)
+		a = mx_metadata.set_index(sample_column, drop = True)
 		b = mx_partitions.set_index(sample_column_part, drop = True)
 		
 		if partitions2report == "all": # add all partitions
@@ -101,9 +101,8 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		
 		
 	# filtering table according to specifications
-	names = list(c.index.values)
-	c[c.columns[0]] = names
-	c_filtered = c.reset_index(drop = True)
+	c_filtered = c.reset_index(drop = False)
+	c_filtered.rename(columns={c_filtered.columns[0]: mx_metadata.columns[0]}, inplace=True)
 
 	if filters != "":
 		print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
