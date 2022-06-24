@@ -108,40 +108,6 @@ print(" ".join(sys.argv))
 print(" ".join(sys.argv), file = log)
 
 
-# cleaning allele matrix	----------
-
-if args.loci_called != "" and not args.wgmlst:
-	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...")
-	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...", file = log)
-	
-	allele_mx = pandas.read_table(args.allele_profile, dtype = str)
-	
-	report_allele_mx = {}
-	
-	len_schema = len(allele_mx.columns) - 1
-	
-	report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
-	report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
-	report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
-	report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
-
-	report_allele_df = pandas.DataFrame(data = report_allele_mx)
-	flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
-	pass_samples = flt_report["samples"].values.tolist()
-	
-	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
-	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
-	
-	allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
-	allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
-	allele_filename = args.out + "_flt_matrix.tsv"
-	report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
-
-else:
-	allele_mx = pandas.read_table(args.allele_profile, dtype = str)
-	allele_filename = args.allele_profile
-
-
 # filtering allele matrix	----------
 
 if args.metadata != "" and args.filter_column != "" and ".fasta" not in args.allele_profile and ".fa" not in args.allele_profile and ".fas" not in args.allele_profile:
@@ -150,6 +116,7 @@ if args.metadata != "" and args.filter_column != "" and ".fasta" not in args.all
 	
 	filters = args.filter_column
 	mx = pandas.read_table(args.metadata, dtype = str)
+	allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 	sample_column = mx.columns[0]
 	
 	if "date" in mx.columns and "iso_week" not in mx.columns:
@@ -241,6 +208,38 @@ elif args.metadata == "" and args.filter_column != "":
 
 else:
 	sample_column = "sequence"
+	allele_filename = args.allele_profile
+	allele_mx = pandas.read_table(allele_filename, dtype = str)
+	
+
+# cleaning allele matrix	----------
+
+if args.loci_called != "" and not args.wgmlst:
+	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...")
+	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...", file = log)
+	
+	allele_mx = pandas.read_table(allele_filename, dtype = str)
+	
+	report_allele_mx = {}
+	
+	len_schema = len(allele_mx.columns) - 1
+	
+	report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
+	report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
+	report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
+	report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
+
+	report_allele_df = pandas.DataFrame(data = report_allele_mx)
+	flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
+	pass_samples = flt_report["samples"].values.tolist()
+	
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
+	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
+	
+	allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
+	allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
+	allele_filename = args.out + "_flt_matrix.tsv"
+	report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
 
 
 # cleaning allele matrix (columns)
