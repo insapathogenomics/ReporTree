@@ -29,10 +29,10 @@ def conv_nucl(allele_filename):
 	alleles.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
 	
 	
-def filter_mx(pairwise, mx, filters, log):
-	""" filter the pairwise distance matrix
-	input: distance matrix
-	output: filtered pandas dataframe of the pairwise distance matrix
+def filter_mx(matrix, mx, filters, matrix_type, log):
+	""" filter the allele or pairwise distance matrix
+	input: matrix
+	output: filtered pandas dataframe
 	"""
     
 	if "date" in mx.columns and "iso_week" not in mx.columns:
@@ -107,18 +107,22 @@ def filter_mx(pairwise, mx, filters, log):
 
 	samples = mx[sample_column].tolist()
 	
-	pairwise_dist_mx = pandas.read_table(pairwise)
-	pairwise_dist_mx = pairwise_dist_mx.set_index(pairwise_dist_mx.columns[0], drop = True)
-	
-	columns_interest = []
-	
-	for sample in pairwise_dist_mx.columns:
-		if sample in samples:
-			columns_interest.append(sample)
+	if matrix_type == "dist":
+		pairwise_dist_mx = pairwise_dist_mx.set_index(pairwise_dist_mx.columns[0], drop = True)
+		
+		columns_interest = []
+		
+		for sample in pairwise_dist_mx.columns:
+			if sample in samples:
+				columns_interest.append(sample)
 
-	df = pairwise_dist_mx[columns_interest].loc[columns_interest]
+		df = pairwise_dist_mx[columns_interest].loc[columns_interest]
+		df = df.reset_index(drop=False)
 	
-	return df.reset_index(drop=False)
+	else:
+		df = matrix[matrix[matrix.columns[0]].isin(samples)]
+	
+	return df
 
 			
 def dist_mx(dist, log):
@@ -299,6 +303,19 @@ if __name__ == "__main__":
 		allele_mx = allele_mx.replace({"N": "0", "a": "A", "c": "C", "t": "T", "g": "G"})
 		
 		
+		# filtering allele matrix	----------
+		
+		if args.metadata != "" and args.filter_column != "":
+			print("Filtering the distance matrix...")
+			print("Filtering the distance matrix...", file = log)
+			
+			filters = args.filter_column
+			mx = pandas.read_table(args.metadata, dtype = str)
+			sample_column = mx.columns[0]
+			allele_mx = filter_mx(allele_mx, mx, filters, "allele", log)
+			allele_mx.to_csv(args.out + "_subset_matrix.tsv", sep = "\t", index = None)
+		
+		
 		# cleaning allele matrix	----------
 
 		if args.loci_called != "" and not args.wgmlst:
@@ -391,47 +408,45 @@ if __name__ == "__main__":
 		temp_df = pandas.read_table(args.out + "_dist.mx", dtype = str)
 		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
 		temp_df.to_csv(args.out + "_dist.mx", sep = "\t", index = None)
-		pairwise_matrix = args.out + "_dist.mx"
+		dist = pandas.read_table(args.out + "_dist.mx")
 		
 	
 	elif args.distance_matrix:
 		print("Distance matrix provided... pairwise distance will not be calculated!")
 		print("Distance matrix provided... pairwise distance will not be calculated!", file = log)		
-		pairwise_matrix = args.distance_matrix
+		pairwise_matrix = pandas.read_table(pairwise_matrix)
+	
+		# filtering the pairwise distance matrix	----------
+		
+		if args.metadata != "" and args.filter_column != "":
+			print("Filtering the distance matrix...")
+			print("Filtering the distance matrix...", file = log)
+			
+			filters = args.filter_column
+			mx = pandas.read_table(args.metadata, dtype = str)
+			sample_column = mx.columns[0]
+			dist = filter_mx(pairwise_matrix, mx, filters, "dist", log)
+			dist.to_csv(args.out + "_flt_dist.mx", sep = "\t", index = None)
+
+		elif args.metadata != "" and args.filter_column == "":
+			print("Metadata file was provided but no filter was found... I am confused :-(")
+			print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
+			sys.exit()
+
+		elif args.metadata == "" and args.filter_column != "":
+			print("Metadata file was not provided but a filter was found... I am confused :-(")
+			print("Metadata file was not provided but a filter was found... I am confused :-(", file = log)
+			sys.exit()
+
+		else:
+			sample_column = "sequence"
+			dist = pairwise_matrix
 	
 	else:
 		print("Could not find a profile or a distance matrix... One of them needs to be specified!!")
 		print("Could not find a profile or a distance matrix... One of them needs to be specified!!", file = log)	
-		sys.exit()		
-	
-	
-	# filtering pairwise distance matrix	----------
-	
-	if args.metadata != "" and args.filter_column != "":
-		print("Filtering the distance matrix...")
-		print("Filtering the distance matrix...", file = log)
-		
-		filters = args.filter_column
-		mx = pandas.read_table(args.metadata, dtype = str)
-		sample_column = mx.columns[0]
-		dist = filter_mx(pairwise_matrix, mx, filters, log)
-		dist.to_csv(args.out + "_flt_dist.mx", sep = "\t", index = None)
-
-		
-	elif args.metadata != "" and args.filter_column == "":
-		print("Metadata file was provided but no filter was found... I am confused :-(")
-		print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
 		sys.exit()
-
-	elif args.metadata == "" and args.filter_column != "":
-		print("Metadata file was not provided but a filter was found... I am confused :-(")
-		print("Metadata file was not provided but a filter was found... I am confused :-(", file = log)
-		sys.exit()
-
-	else:
-		sample_column = "sequence"
-		dist = pandas.read_table(pairwise_matrix)
-	
+		
 			
 	# hierarchical clustering 	----------
 	
