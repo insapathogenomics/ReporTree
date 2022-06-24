@@ -334,12 +334,12 @@ if __name__ == "__main__":
 	group0.add_argument("-t", "--tree", dest="tree", default="", required=False, type=str, help="[OPTIONAL] Input tree (newick format)")
 	group0.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="[OPTIONAL] Partitions file (tsv format) - 'partition' represents the threshold at \
 						which clustering information was obtained")
+	group0.add_argument("-m", "--metadata", dest="metadata", required=False, type=str, default = "none", help="[MANDATORY] Metadata file (tsv format). To take the most profit of ReporTree \
+						functionalities, you must provide this file.")
 	group0.add_argument("-out", "--output", dest="output", required=False, default="ReporTree", type=str, help="[OPTIONAL] Tag for output file name (default = ReporTree)")
 	group0.add_argument("--list", dest="list_col_summary", required=False, action="store_true", help=" [OPTIONAL] If after your command line you specify this option, ReporTree will list all the \
 						possible columns that you can use as input in '--columns_summary_report'. NOTE!! The objective of this argument is to help you with the input of '--columns_summary_report'. \
 						So, it will not run reportree.py main functions!!")
-	group0.add_argument("-m", "--metadata", dest="metadata", required=False, type=str, default = "none", help="[OPTIONAL] Metadata file (tsv format). To take the most profit of ReporTree \
-						functionalities, you must provide this file.")
 	
 	
 	## analysis details
@@ -1076,3 +1076,4 @@ if __name__ == "__main__":
 	print("Time elapsed:", elapsed)
 	print("Time elapsed:", elapsed, file = log)
 	log.close()
+
