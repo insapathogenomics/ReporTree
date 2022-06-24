@@ -476,7 +476,7 @@ if __name__ == "__main__":
 		if columns_methods != []:
 			print("\nReporTree will also output some partition columns that can be included in your summary reports. For each method that you requested, the column name that you can indicate in '--columns_summary_report', '--frequency-matrix' and/or '--count-matrix' arguments must follow this structure:")
 			for method in columns_methods:
-				print(method + "-<threshold>          ---------->          e.g. " + method + "-30")
+				print(method + "-<threshold>x<dist>          ---------->          e.g. " + method + "-30x" + str(args.dist))
 			
 			print("\nFor the '--partitions2report' argument, if you did not provide a partitions table, you can indicate:")
 			for method in columns_methods:
