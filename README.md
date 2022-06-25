@@ -9,7 +9,7 @@
 
 
 _ReporTree can help you to:_      
-- obtain **genetic clusters at any threshold level(s)** of a tree, SNP or cg/wgMLST allele matrix, sequence alignment, or distance matrix
+- obtain **genetic clusters at any threshold level(s)** of a tree, SNP or cg/wgMLST allele matrix, VCF files, sequence alignment, or distance matrix
 - obtain **summary reports with the statistics/trends** (e.g., timespan, location, cluster/group composition, age distribution etc.) for the derived genetic clusters or for any other provided grouping variable (e.g., clade, lineage, ST, vaccination status, etc.)
 - obtain **count/frequency matrices** for the derived genetic clusters or for any other provided grouping variable
 - identify **regions of cluster stability** (i.e., threshold ranges in which cluster composition is similar), a key step for nomenclature design
@@ -18,7 +18,7 @@ _ReporTree can help you to:_
 In summary, ReporTree facilitates and accelerates the production of surveillance-oriented reports, thus contributing to a sustainable and efficient public health genomics-informed pathogen surveillance.
 
 
-_2022.04.24 - NEWS!! ReporTree can determine genetic clusters with a hierarchical clustering approach. Besides the allele matrix and the newick tree, now ReporTree also accepts SNP matrices, sequence alignments and previously computed pairwise distance matrices!_
+_2022.06.25 - NEWS!! ReporTree can take VCF files as input!_
 
 
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO CITE THEM!_
@@ -26,7 +26,7 @@ _Note: this tool relies on the usage of programs/modules of other developers. DO
 
 ## Implementation
 
-ReporTree is implemented in python 3.6 and comprises five main modules available in standalone mode that are orchestrated by _reportree.py_ (see details in [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/1.-Implementation#reportree-modular-organization)).
+ReporTree is implemented in python 3.6 and comprises six main modules available in standalone mode that are orchestrated by _reportree.py_ (see details in [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/1.-Implementation#reportree-modular-organization)).
 
 
 ## Input files
@@ -40,14 +40,17 @@ Allele/SNP profile matrix which will be used to obtain genetic clusters from a M
 **OR**  
 Sequence alignment which will be converted into a profile and used to obtain genetic clusters  
 **OR**  
-Distance matrix which will be used to obtain genetic clusters    
+VCF which will be converted into a profile and used to obtain genetic clusters    
+**OR**     
+Distance matrix which will be used to obtain genetic clusters       
 **OR**  
 Partitions table (i.e. matrix with genetic clusters) in .tsv format (columns should not have blank spaces)       
 
 
 _In the following table we summarize the different options that ReporTree provides to determine genetic clusters, as well as the different types of file that each of them can take as input:_
+
 <p align="center">
-  <img width="800" alt="Captura de ecrã 2022-04-23, às 17 09 32" src="https://user-images.githubusercontent.com/19263468/164914113-0ba5cc72-ec13-401c-9639-677353df346d.png">
+  <img width="800" alt="Captura de ecrã 2022-06-25, às 11 22 47" src="https://user-images.githubusercontent.com/19263468/175769475-5fc6efb3-266b-4302-b85d-0400d5671df0.png">
 </p>
 
 
@@ -55,11 +58,11 @@ _In the following table we summarize the different options that ReporTree provid
 
 - metadata_w_partitions.tsv - initial metadata information with additional columns comprising information on the genetic clusters at different partitions
 
-_TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) or the dendrogram resulting from hierarchical clustering at [auspice.us](https://auspice.us) or the allele profile matrix (cg/wgMLST data) using [GrapeTree](https://github.com/achtman-lab/GrapeTree). With these tools your dataset is visualised client-side in the browser._
+_TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) or the dendrogram resulting from hierarchical clustering at [auspice.us](https://auspice.us) or the MST resulting from GrapeTree at [GrapeTree](https://github.com/achtman-lab/GrapeTree). With these tools your dataset is visualised from the client-side in the browser._
 
 - partitions_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters present in partitions.tsv (note: singletons are not reported in this file but indicated in metadata_w_partitions.tsv)
 - variable_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for any (and as many) grouping variable present in metadata_w_partitions.tsv (such as, clade, lineage, ST, vaccination status, etc.)
-- partitions.tsv - genetic clusters obtained for each user-selected partition threshold (only generated when a newick file or an allele matrix is provided)
+- partitions.tsv - genetic clusters obtained for each user-selected partition threshold
 - freq_matrix.tsv - frequencies of grouping variable present in metadata_w_partitions.tsv (e.g. lineage, ST, etc.) across another grouping variable (e.g. iso_week, country, etc.)
 - count_matrix.tsv - counts of a grouping variable present in metadata_w_partitions.tsv (e.g. lineage, ST, etc.) across another grouping variable (e.g. iso_week, country, etc.)
 - metrics.tsv - metrics resulting from the cluster congruence analysis, with indication of the Adjusted Wallace and the Ajusted Rand coefficients for each comparison of subsequent partitions, and the Simpson's Index of Diversity for each partition.
@@ -72,17 +75,19 @@ _TIP: Users can interactively visualize and explore the ReporTree derived cluste
 Dependencies:
 - [TreeCluster](https://github.com/niemasd/TreeCluster) v1.0.3
 - [A modified version of GrapeTree](https://github.com/insapathogenomics/GrapeTree)
+- [Biopython](https://biopython.org)
 - [Pandas](https://pandas.pydata.org)
 - [Ete3](http://etetoolkit.org)
 - [cgmlst-dists](https://github.com/tseemann/cgmlst-dists)
 
 Installation:
 ```bash
-conda create -n reportree -c etetoolkit -c anaconda -c bioconda ete3 scikit-learn pandas grapetree=2.1 treecluster=1.0.3 python=3.6 cgmlst-dists biopython
+conda create -n reportree -c anaconda -c bioconda -c python=3.6 biopython grapetree=2.1 treecluster=1.0.3 etetoolkit pandas ete3 scikit-learn cgmlst-dists 
 git clone https://github.com/insapathogenomics/ReporTree
 cd ReporTree/scripts/
 git clone https://github.com/insapathogenomics/GrapeTree
 git clone https://github.com/insapathogenomics/ComparingPartitions
+git clone https://github.com/vmixao/vcf2mst.git
 ```
 
 
@@ -94,14 +99,15 @@ git clone https://github.com/insapathogenomics/ComparingPartitions
 ReporTree:
   ReporTree input/output file specifications
 
-  -m METADATA, --metadata METADATA
-                        [MANDATORY] Metadata file (tsv format)
   -a ALLELE_PROFILE, --allele-profile ALLELE_PROFILE
                         [OPTIONAL] Input allele/SNP profile matrix (tsv
                         format)
   -align ALIGNMENT, --alignment ALIGNMENT
                         [OPTIONAL] Input multiple sequence alignment (fasta
                         format)
+  -vcf VCF, --vcf VCF   [OPTIONAL] Single-column list of VCF files (txt
+                        format). This file must comprise the full PATH to each
+                        vcf file.
   -d_mx DISTANCE_MATRIX, --distance_matrix DISTANCE_MATRIX
                         [OPTIONAL] Input pairwise distance matrix (tsv format)
   -t TREE, --tree TREE  [OPTIONAL] Input tree (newick format)
@@ -109,6 +115,10 @@ ReporTree:
                         [OPTIONAL] Partitions file (tsv format) - 'partition'
                         represents the threshold at which clustering
                         information was obtained
+  -m METADATA, --metadata METADATA
+                        [MANDATORY] Metadata file (tsv format). To take the
+                        most profit of ReporTree functionalities, you must
+                        provide this file.
   -out OUTPUT, --output OUTPUT
                         [OPTIONAL] Tag for output file name (default =
                         ReporTree)
@@ -120,8 +130,8 @@ ReporTree:
                         columns_summary_report'. So, it will not run
                         reportree.py main functions!!
 
-Clustering details:
-  Clustering details
+Analysis details:
+  Analysis details
 
   --analysis ANALYSIS   Type of clustering analysis (options: grapetree, HC,
                         treecluster). If you provide a tree, genetic clusters
@@ -129,13 +139,6 @@ Clustering details:
                         provide a distance matrix, genetic clusters will
                         always be obtained with HC. If you provide any other
                         input, it is MANDATORY to specify this argument.
-  --loci-called LOCI_CALLED
-                        [OPTIONAL] Minimum percentage of loci/positions called
-                        (e.g. '--loci-called 0.95' will only keep in the
-                        profile matrix samples with > 95% of
-                        alleles/positions, i.e. <= 5% missing data). Code for
-                        missing data: 0 for profile matrix and N for sequence
-                        alignment.
   --subset              Obtain genetic clusters using only the samples that
                         correspond to the filters specified in the '--filter'
                         argument (only valid for analysis == grapetree or HC)
@@ -148,18 +151,62 @@ Clustering details:
                         non-SNP-scaled trees. Currently, the default is 1,
                         which is equivalent to 1 allele distance or 1 SNP
                         distance. [1.0]
+  --site-inclusion N_CONTENT
+                        [OPTIONAL: Useful to remove informative sites/loci
+                        with excess of missing data] Minimum proportion of
+                        samples per site without missing data (e.g. '--site-
+                        inclusion 1.0' will only keep loci/positions without
+                        missing data, i.e. a core alignment/profile; '--site-
+                        inclusion 0.0' will keep all loci/positions) NOTE:
+                        This argument works on profile/alignment
+                        positions/loci (i.e. columns)! [default: 0.0 - content
+                        of missing data is not considered during
+                        matrix/alignment cleaning].
+  --wgMLST              Set if your profile is based on wgMLST scheme (if set,
+                        '--loci-called' will be applied after '--site-
+                        inclusion')
+
+Processing profiles:
+  Processing profiles
+
+  --loci-called LOCI_CALLED
+                        [OPTIONAL] Minimum proportion of loci/positions called
+                        for SNP/allele matrices (e.g. '--loci-called 0.95'
+                        will only keep in the profile matrix samples with >
+                        95% of alleles/positions, i.e. <= 5% missing data).
+                        Code for missing data: 0.
+
+Alignment processing:
+  Alignment processing
+
+  --sample-ATCG-content ATCG_CONTENT
+                        [OPTIONAL] Minimum proportion (0 to 1) of ATCG in
+                        informative sites of the alignment per sample (e.g. '
+                        --sample-ATCG-content 1.0' will only keep samples
+                        without N's or any non-ATCG code in informative sites)
+  --remove-reference    Set only if you want to remove the reference sequence
+                        of the alignment (reference name must be provided with
+                        the argument '--reference').
+  --use-reference-coords
+                        Set only if you want that column names in the final
+                        alignment matrix represent the reference coordinates
+                        (reference name must be provided with the argument '--
+                        reference') Note: Depending on the alignment size,
+                        this argument can make alignment processing very slow!
+  -r REFERENCE, --reference REFERENCE
+                        [OPTIONAL] Name of reference sequence. Required if '--
+                        remove-reference' and/or '--use-reference-coords'
+                        specified.
 
 Partitioning with GrapeTree:
   Specifications to get and cut minimum spanning trees
 
   --method GRAPETREE_METHOD
-                        "MSTreeV2" [DEFAULT] Alternative:"MSTree"
+                        "MSTreeV2" [DEFAULT] Alternative:"MSTree (goeBURST)"
   --missing HANDLER     ONLY FOR MSTree. 0: [DEFAULT] ignore missing data in
                         pairwise comparison. 1: remove column with missing
                         data. 2: treat missing data as an allele. 3: use
                         absolute number of allelic differences.
-  --wgMLST              [EXPERIMENTAL: see GrapeTree github for details] a
-                        better support of wgMLST schemes
   --n_proc NUMBER_OF_PROCESSES
                         Number of CPU processes in parallel use. [5]
   -thr THRESHOLD, --threshold THRESHOLD
@@ -393,11 +440,14 @@ ReporTree can enhance genomics surveillance and quickly identify/characterize ge
 If you run ReporTree, please cite our preprint publication:    
 [Mixão V, Pinto M, Gomes JP, Borges V (2022) ReporTree: a surveillance-oriented tool to strengthen the linkage between pathogen genetic clusters and epidemiological data. _Research Square_. doi: 10.21203/rs.3.rs-1404655/v1](https://www.researchsquare.com/article/rs-1404655/v1)
 
-Also, ReporTree relies on the work of other developers. So, depending on the functionalities you use, there are other tools that you must cite:     
-- Ete3: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4868116/pdf/msw046.pdf (all tools)     
-- Grapetree: http://www.genome.org/cgi/doi/10.1101/gr.232397.117 (if you provided an allele matrix)      
-- TreeCluster: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6705769/pdf/pone.0221068.pdf (if you provided a newick tree)      
-- ComparingPartitions: https://journals.asm.org/doi/10.1128/jcm.02536-05?permanently=true (if you requested "stability_regions")
+Also, ReporTree relies on the work of other developers. So, depending on the functionalities you use, there are other tools that you must cite:
+1. Grapetree: http://www.genome.org/cgi/doi/10.1101/gr.232397.117 (if you requested a grapetree analysis)
+2. TreeCluster: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6705769/pdf/pone.0221068.pdf (if you provided a newick tree)
+3. vcf2mst: https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-021-08112-0 (if you provided a vcf or a list of variants)
+4. ComparingPartitions: https://journals.asm.org/doi/10.1128/jcm.02536-05?permanently=true (if you requested "stability_regions")
+5. Adjusted Wallace and cluster stability: https://www.biorxiv.org/content/10.1101/299347v1 (if you requested "stability_regions")
+6. Ete3: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4868116/pdf/msw046.pdf (if you provided a newick tree)     
+7. cgmlst-dists: https://github.com/tseemann/cgmlst-dists (if you requested a HC analysis and did not provide a distance matrix)
 
 
 ## Funding
