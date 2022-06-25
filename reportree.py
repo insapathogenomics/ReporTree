@@ -357,8 +357,7 @@ if __name__ == "__main__":
 						proportion of samples per site without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment/profile; \
 						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment positions/loci (i.e. columns)! [default: 0.0 - content of \
 						missing data is not considered during matrix/alignment cleaning].")
-	group1.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="Set if your profile is based on wgMLST scheme (if set, '--loci-called' will be applied after \
-						'--site-inclusion')")
+	group1.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="Set if your profile is based on wgMLST scheme")
 						
 			
 	## matrices processing
@@ -1076,4 +1075,3 @@ if __name__ == "__main__":
 	print("Time elapsed:", elapsed)
 	print("Time elapsed:", elapsed, file = log)
 	log.close()
-
