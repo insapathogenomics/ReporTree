@@ -162,9 +162,7 @@ Analysis details:
                         positions/loci (i.e. columns)! [default: 0.0 - content
                         of missing data is not considered during
                         matrix/alignment cleaning].
-  --wgMLST              Set if your profile is based on wgMLST scheme (if set,
-                        '--loci-called' will be applied after '--site-
-                        inclusion')
+  --wgMLST              Set if your profile is based on wgMLST scheme
 
 Processing profiles:
   Processing profiles
