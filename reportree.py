@@ -670,7 +670,7 @@ if __name__ == "__main__":
 			log.close()
 
 		# getting metadata report
-		if args.metadata == "none":
+		if args.metadata != "none":
 			if args.mx_transpose:
 				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
