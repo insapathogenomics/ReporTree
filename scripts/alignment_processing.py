@@ -2,7 +2,6 @@
 
 """
 Filter multiple sequence alignment and transform it into a profile matrix
-
 By Veronica Mixao
 @INSA
 """

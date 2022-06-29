@@ -2,13 +2,10 @@
 
 """
 Obtain metadata summary reports
-
 By Veronica Mixao
 @INSA
-
 A) obtain summary report for the variable lineage during December 2021 with the number of samples, coutry, and country distribution
 metadata_report.py -m METADATA -o OUTPUT --columns_summary_report n_sequence,n_country,country -f "date >= 2021-12-02;date <= 2021-12-31" --metadata2report lineage
-
 B) obtain summary report for the variable lineage and all the partitions of a partitions table with the number of samples, country, and country distribution
 metadata_report.py -m METADATA -p PARTITIONS -o OUTPUT --columns_summary_report n_sequence,n_country,country --partitions2report all --metadata2report lineage
 """
@@ -595,7 +592,6 @@ if __name__ == "__main__":
 									metadata_report.py -m METADATA -o OUTPUT --columns_summary_report  
 									n_sequence,n_country,country -f "date >= 2021-12-02;date <= 2021-12-31" 
 									--metadata2report lineage
-
 									B) obtain summary report for the variable lineage and all the partitions of a 
 									partitions table with the number of samples, country, and country distribution
 									metadata_report.py -m METADATA -p PARTITIONS -o OUTPUT --columns_summary_report 

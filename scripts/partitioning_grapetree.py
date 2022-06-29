@@ -3,16 +3,11 @@
 """
 Obtain genetic clusters at any partition level(s) of a minimum spanning tree derived from a cg/wgMLST allele matrix.
 It requires a MODIFIED version of GrapeTree available at https://github.com/insapathogenomics/GrapeTree
-
 Note: This script takes advantage of GrapeTree -> do not forget to cite its authors as well!!
-
 By Veronica Mixao
 @INSA
-
-
 A) Minimum-spanning tree of the provided allele matrix and partitions for thresholds 5,8, and 10 to 20
 partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME --method MSTreeV2 --missing 0 --n_proc 5 -thr 5,8,10-20 
-
 B) Minimum-spanning tree for a subset of the provided allele matrix and all partitions
 partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME --method MSTreeV2 --missing 0 --n_proc 5 -thr max -m METADATA -f "column_metadata<>operation<>value"
 """
@@ -55,7 +50,6 @@ parser = argparse.ArgumentParser(prog="partitioning_grapetree.py", formatter_cla
 									thresholds 5,8, and 10 to 20:
 									partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME --method MSTreeV2 
 									--missing 0 --n_proc 5 -thr 5,8,10-20 
-
 									
 									B) Minimum-spanning tree for a subset of the provided allele matrix and all 
 									partitions:
@@ -76,7 +70,7 @@ group0.add_argument("--site-inclusion", dest="samples_called", required=False, d
 group0.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree (goeBURST)\"\n")
 group0.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 					with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
-group0.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="Set if your profile is based on wgMLST scheme")
+group0.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="[EXPERIMENTAL] a better support of wgMLST schemes (check GrapeTree github for details).")
 group0.add_argument("--n_proc",  dest="number_of_processes", type=int, default=5, help="Number of CPU processes in parallel use. [5]")
 group0.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="[OPTIONAL] Partition thresholds for clustering definition. Different thresholds can be comma-separated \
 					(e.g. 5,8,16). Ranges can be specified with an hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 1 \
