@@ -82,7 +82,7 @@ Dependencies:
 
 Installation:
 ```bash
-conda create -n reportree -c anaconda -c bioconda -c python=3.6 biopython grapetree=2.1 treecluster=1.0.3 etetoolkit pandas ete3 scikit-learn cgmlst-dists 
+conda create -n reportree -c anaconda -c bioconda -c etetoolkit python=3.6 biopython grapetree=2.1 treecluster=1.0.3 pandas ete3 scikit-learn cgmlst-dists 
 git clone https://github.com/insapathogenomics/ReporTree
 cd ReporTree/scripts/
 git clone https://github.com/insapathogenomics/GrapeTree
