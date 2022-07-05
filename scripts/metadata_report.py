@@ -68,7 +68,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		sys.exit()
 	
 	if partitions is "":
-		c = mx_metadata
+		c = mx_metadata.set_index(mx_metadata.columns[0], drop = True)
 	else:
 		mx_partitions = pandas.DataFrame(data = partitions, dtype = str)
 		sample_column_part = mx_partitions.columns[0]
@@ -767,11 +767,11 @@ if __name__ == "__main__":
 	# preparing outputs
 	complete_metadata = complete_metadata.replace(["EMPTY"],"")
 	complete_metadata = pandas.DataFrame(data = complete_metadata)
-	complete_metadata.to_csv(args.output + "_metadata_w_partitions.tsv", index = False, header=True, sep ="\t")
 	if args.partitions != "":
 		partitions_stats = pandas.DataFrame(data = partitions_stats)
 		partitions_stats["samples"].where(partitions_stats["samples"].str.len() < 30000, "list is too large, check *metadata_w_partitions.tsv", inplace=True)
 		partitions_stats.to_csv(args.output + "_partitions_summary.tsv", index = False, header=True, sep ="\t")
+		complete_metadata.to_csv(args.output + "_metadata_w_partitions.tsv", index = False, header=True, sep ="\t")
 	print("metadata_report.py is done!")
 	print("metadata_report.py is done!", file = log)
 	
