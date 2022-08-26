@@ -8,26 +8,17 @@ Note2: This script takes advantage of TreeCluster.py -> do not forget to cite it
 
 By Veronica Mixao
 @INSA
-
-
-A) Partitions at all thresholds of root_dist and avg_clade threshold = 2:
-partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold root_dist,avg_clade-2 
-
-B) Partitions at avg_clade threshold = 2 and root_dist at the distance of each node to the root:
-partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold avg_clade-2 --root-dist-by-node
-
-C) Partitions at all thresholds of root_dist for a non- SNP-scaled rooted tree where 1 SNP distance == 0.123:
-partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold root_dist -d 0.123
 """
 
-
 import os
-import pandas
-import argparse
 import sys
+import argparse
 import textwrap
+import pandas
 import ete3 as ete
 
+version = "1.0.0"
+last_updated = "2022-08-26"
 
 treecluster = "TreeCluster.py"
 
@@ -130,6 +121,15 @@ def get_partitions(cluster_file, partitions, method, threshold, dist):
 	
 	mx = pandas.read_table(cluster_file, dtype = str)
 	new_mx = mx.replace(str(-1), "singleton") # replacing singletons
+	
+	singleton_counter = 0
+	for index, row in new_mx.iterrows():
+		if row[new_mx.columns[1]] == "singleton":
+			singleton_counter += 1
+			row[new_mx.columns[1]] = "singleton_" + str(singleton_counter)
+		else:
+			row[new_mx.columns[1]] = "cluster_" + str(row[new_mx.columns[1]])
+			
 	if method == "node":
 		column_name = method + "-" + str(threshold) + "x1.0" # defining column name
 	else:
@@ -186,27 +186,10 @@ if __name__ == "__main__":
 									of a newick tree (e.g. SNP-scaled tree)
 									
 									Note: Currently, for non-SNP-distance rooted trees, users have to specify a 
-									minimum unit to cut the tree (currently, the default is 1, which is equivalent 
-									to 1 SNP in a SNP-scaled rooted	tree). NEWS COMING SOON!!
+									minimum unit to cut the tree (the default is 1, which is equivalent to 1 SNP in 
+									a SNP-scaled rooted	tree). NEWS COMING SOON!!
 									
 									NOTE 2: Do not forget to cite TreeCluster authors.
-									
-									
-									How to run partitioning_treecluster.py?
-									
-									A) Partitions at all thresholds of root_dist and avg_clade threshold = 2:
-									partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold 
-									root_dist,avg_clade-2 
-
-									B) Partitions at avg_clade threshold = 2 and root_dist at the distance of each 
-									node to the root:
-									partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold 
-									avg_clade-2 --root-dist-by-node
-
-									C) Partitions at all thresholds of root_dist for a non-SNP-scaled rooted tree 
-									where 1 SNP distance == 0.123:
-									partitioning_treecluster.py -t TREE -o OUTPUT_NAME --method-threshold root_dist 
-									-d 0.123
 									
 									-------------------------------------------------------------------------------"""))
 	
@@ -217,7 +200,7 @@ if __name__ == "__main__":
 						help="List of TreeCluster methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, write \
 						the method name (e.g. root_dist). To get clustering at a specific threshold, indicate the threshold with a hyphen (e.g. root_dist-10). To get clustering at a specific \
 						range, indicate the range with a hyphen (e.g. root_dist-2-10). Default: root_dist,avg_clade-1 (List of possible methods: avg_clade, leaf_dist_max, leaf_dist_min, length, \
-						length_clade, max, max_clade, root_dist, single_linkage, single_linkage_cut, single_linkage_union) Warning!! So far, reporTree was only tested with avg_clade and \
+						length_clade, max, max_clade, root_dist, single_linkage, single_linkage_cut, single_linkage_union) Warning!! So far, ReporTree was only tested with avg_clade and \
 						root_dist!")
 	group0.add_argument("--support", dest="support", required=False, default=float('-inf'), help="[OPTIONAL: see TreeCluster github for details] Branch support threshold") 
 	group0.add_argument("--root-dist-by-node", dest="root_dist_by_node", required=False, action="store_true", help="[OPTIONAL] Set only if you WANT to cut the tree with root_dist method at \
@@ -237,8 +220,11 @@ if __name__ == "__main__":
 	
 	print("\n-------------------- partitioning_treecluster.py --------------------\n")
 	print("\n-------------------- partitioning_treecluster.py --------------------\n", file = log)
-	print(" ".join(sys.argv))
-	print(" ".join(sys.argv), file = log)
+	print("version", version, "last updated on", last_updated, "\n")
+	print("version", version, "last updated on", last_updated, "\n", file = log)
+	print(" ".join(sys.argv), "\n")
+	print(" ".join(sys.argv), "\n", file = log)
+	
 
 
 	# preparing variables
@@ -254,8 +240,8 @@ if __name__ == "__main__":
 	min_dist, max_dist, distances = get_distances(args.tree)
 	min_dist = args.dist # default minimum distance is 1 because the script works better with snp trees
 	
-	print("\tMinimum possible threshold is " + str(min_dist))
-	print("\tMinimum possible threshold is " + str(min_dist), file = log)
+	print("\tThreshold magnitude is " + str(min_dist))
+	print("\tThreshold magnitude is " + str(min_dist), file = log)
 	print("\tMaximum possible threshold is " + str(max_dist))
 	print("\tMaximum possible threshold is " + str(max_dist), file = log)
 		
@@ -291,7 +277,7 @@ if __name__ == "__main__":
 			runs.append(info_run)
 							
 		else: # run for all possible thresholds
-			i = 1
+			i = 0
 			while float(min_dist) * float(i) <= float(max_dist):
 				final_thr = float(min_dist) * float(i)
 				info_run = method + "-" + str(i) + "x" + str(min_dist)

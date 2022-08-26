@@ -1,30 +1,29 @@
 #!/usr/bin/env	python3
 
 """
-Obtain genetic clusters at any partition level(s) of a distance matrixes using hierarchical clustering.
+Obtain genetic clusters at any partition level(s) of a distance matrixes using hierarchical clustering
 By Veronica Mixao
 @INSA
 """
 
-from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_tree
-from scipy.spatial.distance import squareform
-import pandas
-import argparse
-import textwrap
 import sys
 import os
+import argparse
+import textwrap
+import pandas
+from datetime import date
+from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_tree
+from scipy.spatial.distance import squareform
 
+version = "1.0.0"
+last_updated = "2022-08-26"
 
 # functions	----------
 
 def conv_nucl(alleles):
 	"""convert nucl to integers"""
 	
-	mx = alleles
-
-	alleles =  mx[mx.columns[1:]]
-	alleles.insert(0, mx.columns[0], mx[mx.columns[0]])
-	
+	alleles = alleles.replace({"N": "0", "A": "1", "C": "2", "T": "3", "G": "4"})
 	alleles.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
 	
 	
@@ -40,14 +39,14 @@ def filter_mx(matrix, mx, filters, matrix_type, log):
 		year = mx["date"].dt.isocalendar().year
 		week = mx["date"].dt.isocalendar().week
 		mx["iso_year"] = year.astype(str)
-		mx["iso_week"] = week.astype(str)
-		mx["iso_date"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--")
+		mx["iso_week_nr"] = week.astype(str)
+		mx["iso_week"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--")
 		isoyear = mx.pop("iso_year")
-		isoweek = mx.pop("iso_week")
-		isodate = mx.pop("iso_date")
+		isoweek = mx.pop("iso_week_nr")
+		isodate = mx.pop("iso_week")
 		mx.insert(index_no + 1, "iso_year", isoyear)
-		mx.insert(index_no + 2, "iso_week", isoweek)
-		mx.insert(index_no + 3, "iso_date", isodate)
+		mx.insert(index_no + 2, "iso_week_nr", isoweek)
+		mx.insert(index_no + 3, "iso_week", isodate)
 				
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)
@@ -85,7 +84,26 @@ def filter_mx(matrix, mx, filters, matrix_type, log):
 					mx = mx[mx["date"] <= cond] 
 				elif val == "<":
 					mx = mx[mx["date"] < cond]
-								
+			elif col == "iso_week":
+				if "date" in mx.columns:
+					year = cond.split("W")[0]
+					week = cond.split("W")[1]
+					cond = pandas.to_datetime(date.fromisocalendar(int(year), int(week), 1))
+					mx["date"] = mx["date"].astype("datetime64[ns]")
+					if val == "==":
+						mx = mx[mx["date"] == cond]  
+					elif val == "!=":
+						mx = mx[mx["date"] != cond] 
+					elif val == ">":
+						mx = mx[mx["date"] > cond] 
+					elif val == ">=":
+						mx = mx[mx["date"] >= cond] 
+					elif val == "<=":
+						mx = mx[mx["date"] <= cond] 
+					elif val == "<":
+						mx = mx[mx["date"] < cond]	
+				else:
+					print("\tCannot apply the 'iso_week' filter because column 'date' was not found in the metadata!")				
 			else:
 				if val == "==":
 					mx = mx[mx[col] == cond]
@@ -149,7 +167,7 @@ def hcluster(dist_mx, method_choice, log):
     """
     
     clustering = linkage(dist_mx, method = method_choice)
-    max_dist = maxdists(clustering)[-1] + 1
+    max_dist = maxdists(clustering)[-1]
     
     print("\tMaximum distance " + str(max_dist) + "...")
     print("\tMaximum distance " + str(max_dist) + "...", file = log)
@@ -235,34 +253,30 @@ if __name__ == "__main__":
 									                            
 									partitioning_HC.py obtains genetic clusters at any distance threshold(s) of an
 									allele/SNP profile or pairwise distance matrix using hierarchical clustering 
-									methods.
+									methods. If a profile is provided, pairwise hamming distances will be 
+									calculated.
 									
-									Note: if a profile is provided, pairwise hamming distances will be calculated.
-									
-									How to run partitioning_HC.py?
-									
-									A) Partitions at all thresholds using single linkage:
-									partitioning_HC.py -d_mx DISTANCE_MATRIX -o OUTPUT_NAME --HC-threshold single 
-									B) Partitions at single linkage threshold = 2 and average linkage
-									in the range 10 to 30:
-									partitioning_HC.py -d_mx DISTANCE_MATRIX -o OUTPUT_NAME --HC-threshold 
-									single-2,average-10-30
+									Note: the profile matrix provided can only contain integers or ATCG values.
+									Alleles starting by "*" or "INF-" will be considered as a new. All the other 
+									values will be considered as missing data.
 									
 									-----------------------------------------------------------------------------"""))
 	
-	group0 = parser.add_argument_group("Partitioning with Hierarchical Clustering", "Specifications to cut the tree with HC methods")
+	group0 = parser.add_argument_group("Partitioning with Hierarchical Clustering", "Specifications to get partitions with HC methods")
 	group0.add_argument("-d_mx", "--distance_matrix", dest="distance_matrix", required=False, type=str, help="[OPTIONAL] Input pairwise distance matrix")
 	group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=False, type=str, help="[OPTIONAL] Input allele profile matrix (can either be an allele matrix or a SNP matrix)")
 	group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
 	group0.add_argument("--HC-threshold", dest="method_threshold", required=False, default="single", 
-						help="List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, write \
+						help="List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, just write \
 						the method name (e.g. single). To get clustering at a specific threshold, indicate the threshold with a hyphen (e.g. single-10). To get clustering at a specific \
-						range, indicate the range with a hyphen (e.g. single-2-10). Default: single (List of possible methods: single, complete, average, weighted, centroid, median, ward)")
-	group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci called (e.g. '--loci-called 0.95' will only keep in the allele \
-						matrix the samples with > 95%% of alleles called, i.e. <= 5%% missing data). Code for missing data: 0.")
+						range, indicate the range with a hyphen (e.g. single-2-10). Note: Threshold values are inclusive, i.e. '--HC-threshold single-7' will consider samples with <= 7 \
+						differences as belonging to the same cluster! Default: single (List of possible methods: single, complete, average, weighted, centroid, median, ward)")
 	group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
-						proportion of samples per site without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
-						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment positions/loci (i.e. columns)! [default: 0.0]. Code for missing data: 0.")
+						proportion of samples per site/loci without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
+						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment loci/positions (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
+	group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci/positions called for allele/SNP matrices (e.g. \
+						'--loci-called 0.95' will only keep in the profile matrix samples with > 95%% of alleles/positions, i.e. <= 5%% missing data). Applied after '--site-inclusion' argument! \
+						Code for missing data: 0.")
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to select the samples to use for clustering \
 						according to the '--filter' argument")
 	group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples that must be used for HC \
@@ -284,8 +298,10 @@ if __name__ == "__main__":
 	
 	print("\n-------------------- partitioning_HC.py --------------------\n")
 	print("\n-------------------- partitioning_HC.py --------------------\n", file = log)
-	print(" ".join(sys.argv))
-	print(" ".join(sys.argv), file = log)
+	print("version", version, "last updated on", last_updated, "\n")
+	print("version", version, "last updated on", last_updated, "\n", file = log)
+	print(" ".join(sys.argv), "\n")
+	print(" ".join(sys.argv), "\n", file = log)
 	
 	
 	# processing allele profile ----------
@@ -295,6 +311,8 @@ if __name__ == "__main__":
 		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
 		
 		allele_mx = pandas.read_table(args.allele_profile, dtype = str)
+		allele_mx = allele_mx.replace("INF-","", regex=True) #implemented because of chewie-ns profiles
+		allele_mx = allele_mx.replace("\*","", regex=True) #implemented because of chewie-ns profiles
 		allele_mx = allele_mx.replace({"N": "0", "a": "A", "c": "C", "t": "T", "g": "G"})
 		
 		
@@ -317,7 +335,7 @@ if __name__ == "__main__":
 	
 		# cleaning allele matrix (columns)	----------
 		
-		if float(args.samples_called) != 1.0:
+		if float(args.samples_called) != 1.0 and float(args.samples_called) != 0.0:
 			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
 			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
 			
@@ -332,7 +350,7 @@ if __name__ == "__main__":
 			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
 		
 		
-		# cleaning allele matrix	----------
+		# cleaning allele matrix (rows)	----------
 
 		if args.loci_called != "":
 			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
@@ -370,12 +388,12 @@ if __name__ == "__main__":
 		
 		
 		# run cgmlst-dists
-		os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist.mx")
+		os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist.tsv")
 		os.system("rm temporary_profile.tsv")
-		temp_df = pandas.read_table(args.out + "_dist.mx", dtype = str)
+		temp_df = pandas.read_table(args.out + "_dist.tsv", dtype = str)
 		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
-		temp_df.to_csv(args.out + "_dist.mx", sep = "\t", index = None)
-		dist = pandas.read_table(args.out + "_dist.mx")
+		temp_df.to_csv(args.out + "_dist.tsv", sep = "\t", index = None)
+		dist = pandas.read_table(args.out + "_dist.tsv")
 		
 	
 	elif args.distance_matrix:
@@ -393,7 +411,7 @@ if __name__ == "__main__":
 			mx = pandas.read_table(args.metadata, dtype = str)
 			sample_column = mx.columns[0]
 			dist = filter_mx(dist, mx, filters, "dist", log)
-			dist.to_csv(args.out + "_flt_dist.mx", sep = "\t", index = None)
+			dist.to_csv(args.out + "_flt_dist.tsv", sep = "\t", index = None)
 
 		elif args.metadata != "" and args.filter_column == "":
 			print("Metadata file was provided but no filter was found... I am confused :-(")
@@ -449,11 +467,23 @@ if __name__ == "__main__":
 		print("\tDefining clusters...", file = log)
 		
 		if threshold == "all":
-			print("\tCalculating clustering in range",str(1),str(max_dist),"with a distance of",str(args.dist))
-			print("\tCalculating clustering in range",str(1),str(max_dist),"with a distance of",str(args.dist), file = log)
-			for thr in range(1,int(max_dist) + 1):
+			print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist))
+			print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist), file = log)
+			for thr in range(0,int(max_dist) + 1):
 				partition = method + "-" + str(thr) + "x" + str(args.dist)
-				clustering[partition] = list(fcluster(hc_matrix, t = int(thr) * args.dist, criterion = "distance"))
+				info_clusters = list(fcluster(hc_matrix, t = int(thr) * args.dist, criterion = "distance"))
+				# change cluster name according to cluster size
+				counter = {}
+				singleton_counter = 0
+				for cluster in set(info_clusters):
+					counter[cluster] = info_clusters.count(cluster)
+				for i in range(len(info_clusters)):
+					if counter[info_clusters[i]] == 1:
+						singleton_counter += 1
+						info_clusters[i] = "singleton_" + str(singleton_counter)
+					else:
+						info_clusters[i] = "cluster_" + str(info_clusters[i])
+				clustering[partition] = info_clusters
 		else:
 			if "-" in threshold:
 				min_thr = int(threshold.split("-")[0])
@@ -466,12 +496,36 @@ if __name__ == "__main__":
 				print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist), file = log)
 				for thr in range(min_thr,max_thr):
 					partition = method + "-" + str(thr) + "x" + str(args.dist)
-					clustering[partition] = list(fcluster(hc_matrix, t = thr * args.dist, criterion = "distance"))
+					info_clusters = list(fcluster(hc_matrix, t = thr * args.dist, criterion = "distance"))
+					# change cluster name according to cluster size
+					counter = {}
+					singleton_counter = 0
+					for cluster in set(info_clusters):
+						counter[cluster] = info_clusters.count(cluster)
+					for i in range(len(info_clusters)):
+						if counter[info_clusters[i]] == 1:
+							singleton_counter += 1
+							info_clusters[i] = "singleton_" + str(singleton_counter)
+						else:
+							info_clusters[i] = "cluster_" + str(info_clusters[i])
+					clustering[partition] = info_clusters
 			else:
 				partition = method + "-" + str(threshold) + "x" + str(args.dist)
 				print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist))
 				print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist), file = log)
-				clustering[partition] = list(fcluster(hc_matrix, t = int(threshold) * args.dist, criterion = "distance"))
+				info_clusters = list(fcluster(hc_matrix, t = int(threshold) * args.dist, criterion = "distance"))
+				# change cluster name according to cluster size
+				counter = {}
+				singleton_counter = 0
+				for cluster in set(info_clusters):
+					counter[cluster] = info_clusters.count(cluster)
+				for i in range(len(info_clusters)):
+					if counter[info_clusters[i]] == 1:
+						singleton_counter += 1
+						info_clusters[i] = "singleton_" + str(singleton_counter)
+					else:
+						info_clusters[i] = "cluster_" + str(info_clusters[i])
+				clustering[partition] = info_clusters
 
 
 	# output partitions

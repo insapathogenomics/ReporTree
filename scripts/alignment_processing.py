@@ -10,10 +10,13 @@ import sys
 import os
 import argparse
 import textwrap
-from Bio import SeqIO, AlignIO
 import pandas
 import numpy as np
+from datetime import date
+from Bio import SeqIO, AlignIO
 
+version = "1.0.0"
+last_updated = "2022-08-26"
 
 # functions	----------
 
@@ -64,15 +67,15 @@ def filter_align(align, mx, filters, ref, log):
 		year = mx["date"].dt.isocalendar().year
 		week = mx["date"].dt.isocalendar().week
 		mx["iso_year"] = year.astype(str)
-		mx["iso_week"] = week.astype(str)
-		mx["iso_date"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--")
+		mx["iso_week_nr"] = week.astype(str)
+		mx["iso_week"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--")
 		isoyear = mx.pop("iso_year")
-		isoweek = mx.pop("iso_week")
-		isodate = mx.pop("iso_date")
+		isoweek = mx.pop("iso_week_nr")
+		isodate = mx.pop("iso_week")
 		mx.insert(index_no + 1, "iso_year", isoyear)
-		mx.insert(index_no + 2, "iso_week", isoweek)
-		mx.insert(index_no + 3, "iso_date", isodate)
-		
+		mx.insert(index_no + 2, "iso_week_nr", isoweek)
+		mx.insert(index_no + 3, "iso_week", isodate)
+
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)
 	
@@ -109,7 +112,26 @@ def filter_align(align, mx, filters, ref, log):
 					mx = mx[mx["date"] <= cond] 
 				elif val == "<":
 					mx = mx[mx["date"] < cond]
-						
+			elif col == "iso_week":
+				if "date" in mx.columns:
+					year = cond.split("W")[0]
+					week = cond.split("W")[1]
+					cond = pandas.to_datetime(date.fromisocalendar(int(year), int(week), 1))
+					mx["date"] = mx["date"].astype("datetime64[ns]")
+					if val == "==":
+						mx = mx[mx["date"] == cond]  
+					elif val == "!=":
+						mx = mx[mx["date"] != cond] 
+					elif val == ">":
+						mx = mx[mx["date"] > cond] 
+					elif val == ">=":
+						mx = mx[mx["date"] >= cond] 
+					elif val == "<=":
+						mx = mx[mx["date"] <= cond] 
+					elif val == "<":
+						mx = mx[mx["date"] < cond]			
+				else:
+					print("\tCannot apply the 'iso_week' filter because column 'date' was not found in the metadata!")
 			else:
 				if val == "==":
 					mx = mx[mx[col] == cond]
@@ -136,22 +158,32 @@ def filter_align(align, mx, filters, ref, log):
 			flt_alignment.append(record)
 		elif record.id not in samples and record.id == ref and ref != "none":
 			flt_alignment.append(record)
-	
+
 	return flt_alignment
 	
 
 def core2mx(core, vcf, coords, log):
 	""" transform the final alignment into a matrix
 	input: alignment
-	out: dataframe"""
+	out: dataframe 
+	"""
 	
 	align_len = len(core[0].seq)
 	
 	# column names
-	vcf_file = pandas.read_table(vcf)
-	if coords != "":
-		vcf_file["POS"] = vcf_file["POS"].replace(coords)
-	
+	if vcf != "":
+		vcf_file = pandas.read_table(vcf)
+		if coords != "":
+			vcf_file["POS"] = vcf_file["POS"].replace(coords)
+		pos_id = list(vcf_file["POS"])
+	else:
+		pos_id = []
+		for i in range(1,align_len + 1):
+			if coords != "":
+				pos_id.append(coords[i])
+			else:
+				pos_id.append(i)
+		
 	# chunk details
 	start = 0
 	chunk_size = 100
@@ -178,14 +210,13 @@ def core2mx(core, vcf, coords, log):
 		end += chunk_size
 	
 	col_id = ["#ID"]
-	pos_id = list(vcf_file["POS"])
 	final_colnames = col_id + pos_id
 	final_df.columns = final_colnames
 	
 	return final_df
 	
 		
-def clean_mx(mx, gaps, log):
+def clean_mx(mx, gaps, all_gaps, log):
 	""" clean alignment matrix
 	input: matrix
 	output: matrix
@@ -202,13 +233,13 @@ def clean_mx(mx, gaps, log):
 		values = df[col].values.tolist()
 		if len(set(values)) == 1:
 			df = df.drop(columns=col)
-		elif "-" in values and not gaps:
+		elif "-" in values and not gaps and not all_gaps:
 			df = df.drop(columns=col)
 		elif len(set(values)) == 2 and "0" in set(values):
 			df = df.drop(columns=col)
-		elif len(set(values)) == 2 and "-" in set(values):
+		elif len(set(values)) == 2 and "-" in set(values) and not all_gaps:
 			mx = mx.drop(columns=col)
-		elif len(set(values)) == 3 and "-" in set(values) and "0" in set(values):
+		elif len(set(values)) == 3 and "-" in set(values) and "0" in set(values) and not all_gaps:
 			mx = mx.drop(columns=col)
 	print("\tAlignment 1st round comprises " + str(len(df.index)) + " samples and " + str(len(df.columns) - 1) + " positions.")
 	print("\tAlignment 1st round comprises " + str(len(df.index)) + " samples and " + str(len(df.columns) - 1) + " positions.", file = log)
@@ -216,7 +247,7 @@ def clean_mx(mx, gaps, log):
 	return df
 	
 
-def clean_position(mx, atcg, gaps, log):
+def clean_position(mx, atcg, gaps, all_gaps, log):
 	""" remove gaps and conserved positions
 	input: alignment
 	output: alignment no gaps or conserved positions
@@ -230,7 +261,7 @@ def clean_position(mx, atcg, gaps, log):
 	print("\tSites with < " + str(atcg*100) + "% ATCG will also be removed...", file = log)
 	for col in mx.columns[1:]:
 		values = mx[col].values.tolist()
-		if "-" in values and not gaps:
+		if "-" in values and not gaps and not all_gaps:
 			mx = mx.drop(columns=col)
 		elif len(set(values)) == 1:
 			mx = mx.drop(columns=col)
@@ -238,9 +269,9 @@ def clean_position(mx, atcg, gaps, log):
 			mx = mx.drop(columns=col)
 		elif (len(values)-values.count("0"))/len(values) < atcg:
 			mx = mx.drop(columns=col)
-		elif len(set(values)) == 2 and "-" in set(values):
+		elif len(set(values)) == 2 and "-" in set(values) and not all_gaps:
 			mx = mx.drop(columns=col)
-		elif len(set(values)) == 3 and "-" in set(values) and "0" in set(values):
+		elif len(set(values)) == 3 and "-" in set(values) and "0" in set(values) and not all_gaps:
 			mx = mx.drop(columns=col)
 			
 	print("\tCleaned alignment comprises " + str(len(mx.index)) + " samples and " + str(len(mx.columns) - 1) + " positions.")
@@ -328,7 +359,7 @@ if __name__ == "__main__":
     
 	# argument options
     
-	parser = argparse.ArgumentParser(prog="partitioning_HC.py", formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent("""\
+	parser = argparse.ArgumentParser(prog="alignment_processing.py", formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent("""\
 									###############################################################################             
 									#                                                                             #
 									#                          alignment_processing.py                            #
@@ -337,36 +368,36 @@ if __name__ == "__main__":
 									                            
 									alignment_processing.py cleans a multiple sequence alignment and transforms it
 									into a profile matrix that can be used as input to partitioning_grapetree.py
-									or to partitioning_HC.py.
+									or to partitioning_HC.py. Currently, it only works for ATCG alignments!
 									
 									Conserved positions and those with 1 gaps will always be removed (unless you
-									specify the argument '--keep-gaps').							
+									specify the argument '--keep-gaps' or '--keep-all-gaps').							
 									
 									Note: This script takes advantage of SNP-sites. Do not forget to cite its 
 									authors as well!
 									
 									-----------------------------------------------------------------------------"""))
 	
-	group0 = parser.add_argument_group("Processing alignment", "Specifications to clean a multiple sequence alignment")
+	group0 = parser.add_argument_group("Processing alignment", "Specifications to clean a multiple sequence alignment (nucleotide only, news coming soon!)")
 	group0.add_argument("-align", "--alignment", dest="alignment", default="", required=True, type=str, help="[MANDATORY] Input multiple sequence alignment (fasta format)")
 	group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
-	group0.add_argument("--sample-ATCG-content", dest="ATCG_content", required=False, default=0.0, help="[OPTIONAL: Useful to remove samples with excess of missing data] Minimum proportion (\
-						between 0 and 1) of ATCG in informative sites of the alignment per sample (e.g. '--ATCG-content 1.0' will only keep samples without N's or any non-ATCG code in \
-						informative sites) NOTE: This argument works on samples (i.e. rows) and will be applied after gap and conserved positions removal and before '--site-ATCG-content'! \
-						[default: 0 - keep all samples]")
 	group0.add_argument("--site-ATCG-content", dest="N_content", required=False, default=0.0, help="[OPTIONAL: Useful to remove informative sites with excess of missing data] Minimum proportion \
 						(between 0 and 1) of ATCG per informative site of the alignment (e.g. '--site-ATCG-content 1.0' will only keep positions without N's or any non-ATCG code, i.e. a core \
 						SNP alignment) NOTE: This argument works on alignment positions (i.e. columns)! [default: 0.0 - content of missing data is not considered during alignment cleaning]")
-	group0.add_argument("--remove-reference", dest="remove_ref", required=False, action="store_true", help="Set only if you want to remove the reference sequence of the alignment (reference \
+	group0.add_argument("--sample-ATCG-content", dest="ATCG_content", required=False, default=0.0, help="[OPTIONAL: Useful to remove samples with excess of missing data] Minimum proportion (\
+						between 0 and 1) of ATCG in informative sites of the alignment per sample (e.g. '--ATCG-content 1.0' will only keep samples without N's or any non-ATCG code in \
+						informative sites) NOTE: This argument works on samples (i.e. rows) and will be applied after '--site-ATCG-content'! [default: 0 - keep all samples]")
+	group0.add_argument("--remove-reference", dest="remove_ref", required=False, action="store_true", help="Set only if you want to remove the reference sequence from the alignment (reference \
 						name must be provided with the argument '--reference').")
-	group0.add_argument("--keep-gaps", dest="keep_gaps", required=False, action="store_true", help="Set only if you want that columns with gaps are not removed just because they have a gap.")	
+	group0.add_argument("-r", "--reference", dest="reference", required=False, type=str, default = "none", help="[OPTIONAL] Name of reference sequence. Required if '--remove-reference' and/or \
+						'--use-reference-coords' specified.")
+	group0.add_argument("--keep-gaps", dest="keep_gaps", required=False, action="store_true", help="Set only if you want that informative sites are kept even if they have a gap.")	
+	group0.add_argument("--keep-all-gaps", dest="keep_all_gaps", required=False, action="store_true", help="Set only if you want that all sites with gaps are considered as informative.")	
 	group0.add_argument("--use-alignment-coords", dest="use_align", required=False, action="store_true", help="Set only if you want that column names in the final matrix represent the initial \
 						alignment coordinates. Note: Depending on the alignment size, this argument can make alignment processing very slow!")	
 	group0.add_argument("--use-reference-coords", dest="use_ref", required=False, action="store_true", help="Set only if you want that column names in the final matrix represent the reference \
 						coordinates (reference name must be provided with the argument '--reference') Note: Depending on the alignment size, this argument can make alignment processing very \
 						slow!")	
-	group0.add_argument("-r", "--reference", dest="reference", required=False, type=str, default = "none", help="[OPTIONAL] Name of reference sequence. Required if '--remove-reference' and/or \
-						'--use-reference-coords' specified.")
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to apply sample subset.")
 	group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples of the alignment that must \
 						be included in the matrix. This must be specified within quotation marks in the following format 'column< >operation< >condition' (e.g. 'country == Portugal'). When \
@@ -385,8 +416,10 @@ if __name__ == "__main__":
 	
 	print("\n-------------------- alignment_processing.py --------------------\n")
 	print("\n-------------------- alignment_processing.py --------------------\n", file = log)
-	print(" ".join(sys.argv))
-	print(" ".join(sys.argv), file = log)
+	print("version", version, "last updated on", last_updated, "\n")
+	print("version", version, "last updated on", last_updated, "\n", file = log)
+	print(" ".join(sys.argv), "\n")
+	print(" ".join(sys.argv), "\n", file = log)
 	
 	if args.remove_ref and args.reference == "none":
 		print("'--remove-reference' specified, but I do not know what is the reference id :-(")
@@ -470,36 +503,48 @@ if __name__ == "__main__":
 			print("Removing reference sequence: " + str(args.reference))
 			print("Removing reference sequence: " + str(args.reference), file = log)
 			alignment = rm_ref(alignment, args.reference)
-		print("Trimming the alignment with SNP-sites:")
-		print("Trimming the alignment with SNP-sites:", file = log)
-		print("\tsnp-sites tmp.fasta > tmp_flt.fasta")
-		print("\tsnp-sites tmp.fasta > tmp_flt.fasta", file = log)
-		SeqIO.write(alignment, "tmp.fasta", "fasta")
-		os.system("snp-sites tmp.fasta > tmp_flt.fasta")
-		os.system("snp-sites -v tmp.fasta > tmp_flt.vcf")
-		os.system("rm tmp.fasta")
-		alignment = AlignIO.read("tmp_flt.fasta", "fasta")
-		os.system("grep -v '##' tmp_flt.vcf >  tmp.vcf")
-		os.system("rm tmp_flt.fasta tmp_flt.vcf")
-		print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)))
-		print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)), file = log)
 		
-		# alignment matrix
-		
-		print("Getting the alignment matrix...")
-		print("Getting the alignment matrix...", file = log)
-		if args.use_ref:
-			mx = core2mx(alignment, "tmp.vcf", coords, log)
-			os.system("rm tmp.vcf")
+		if not args.keep_all_gaps:
+			print("Trimming the alignment with SNP-sites:")
+			print("Trimming the alignment with SNP-sites:", file = log)
+			print("\tsnp-sites tmp.fasta > tmp_flt.fasta")
+			print("\tsnp-sites tmp.fasta > tmp_flt.fasta", file = log)
+			SeqIO.write(alignment, "tmp.fasta", "fasta")
+			os.system("snp-sites tmp.fasta > tmp_flt.fasta")
+			os.system("snp-sites -v tmp.fasta > tmp_flt.vcf")
+			os.system("rm tmp.fasta")
+			alignment = AlignIO.read("tmp_flt.fasta", "fasta")
+			os.system("grep -v '##' tmp_flt.vcf >  tmp.vcf")
+			os.system("rm tmp_flt.fasta tmp_flt.vcf")
+			print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)))
+			print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)), file = log)
+					
+			# alignment matrix
+			
+			print("Getting the alignment matrix...")
+			print("Getting the alignment matrix...", file = log)
+			if args.use_ref:
+				mx = core2mx(alignment, "tmp.vcf", coords, log)
+				os.system("rm tmp.vcf")
+			else:
+				mx = core2mx(alignment, "tmp.vcf", "", log)
+				os.system("rm tmp.vcf")
+
 		else:
-			mx = core2mx(alignment, "tmp.vcf", "", log)
-			os.system("rm tmp.vcf")
+			# alignment matrix
+			
+			print("Getting the alignment matrix...")
+			print("Getting the alignment matrix...", file = log)
+			if args.use_ref:
+				mx = core2mx(alignment, "", coords, log)
+			else:
+				mx = core2mx(alignment, "", "", log)
 		
 		# additional cleaning
 			
-		print("Removing conserved positions and positions with gaps (1st round)...")
-		print("Removing conserved positions and positions with gaps (1st round)...", file = log)
-		mx = clean_mx(mx, args.keep_gaps, log)
+		print("Clean the alignment (1st round)...")
+		print("Clean the alignment (1st round)...", file = log)
+		mx = clean_mx(mx, args.keep_gaps, args.keep_all_gaps, log)
 				
 		# assess number of ATCG's per sample
 		
@@ -511,9 +556,9 @@ if __name__ == "__main__":
 			print("Cannot proceed because " + str(len(mx_Ns.index)) + " samples were kept in the alignment!", file = log)
 			sys.exit()
 
-		print("Removing conserved positions and positions with gaps (2nd round)...")
-		print("Removing conserved positions and positions with gaps (2nd round)...", file = log)
-		mx = clean_position(mx_Ns, float(args.N_content), args.keep_gaps, log)
+		print("Clean the alignment (2nd round)...")
+		print("Clean the alignment (2nd round)...", file = log)
+		mx = clean_position(mx_Ns, float(args.N_content), args.keep_gaps, args.keep_all_gaps, log)
 			
 		if len(mx.index) <= 1:
 			print("Cannot proceed because " + str(len(mx.index)) + " samples were kept in the alignment!")
@@ -525,7 +570,7 @@ if __name__ == "__main__":
 			sys.exit()	
 	
 	# outputs
-	
+
 	mx.to_csv(args.out + "_align_profile.tsv", index = False, header=True, sep ="\t")
 	df2fa(mx, args.out + "_align_profile.fasta")
 	if args.pos_int:

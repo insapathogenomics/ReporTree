@@ -4,23 +4,19 @@
 Obtain metadata summary reports
 By Veronica Mixao
 @INSA
-A) obtain summary report for the variable lineage during December 2021 with the number of samples, coutry, and country distribution
-metadata_report.py -m METADATA -o OUTPUT --columns_summary_report n_sequence,n_country,country -f "date >= 2021-12-02;date <= 2021-12-31" --metadata2report lineage
-B) obtain summary report for the variable lineage and all the partitions of a partitions table with the number of samples, country, and country distribution
-metadata_report.py -m METADATA -p PARTITIONS -o OUTPUT --columns_summary_report n_sequence,n_country,country --partitions2report all --metadata2report lineage
 """
 
 
 import os
-import pandas
-import argparse
 import sys
+import argparse
 import textwrap
-from datetime import datetime
+import pandas
+from pandas.api.types import is_datetime64_any_dtype as is_datetime
+from datetime import datetime, date
 
-import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
-
+version = "1.0.0"
+last_updated = "2022-08-26"
 
 # functions	----------
 
@@ -137,7 +133,26 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 						c_filtered = c_filtered[c_filtered["date"] <= cond] 
 					elif val == "<":
 						c_filtered = c_filtered[c_filtered["date"] < cond]
-						
+				elif col == "iso_week":
+					if "date" in mx_metadata.columns:
+						year = cond.split("W")[0]
+						week = cond.split("W")[1]
+						cond = pandas.to_datetime(date.fromisocalendar(int(year), int(week), 1))
+						c_filtered["date"] = c_filtered["date"].astype("datetime64[ns]")
+						if val == "==":
+							c_filtered = c_filtered[c_filtered["date"] == cond]  
+						elif val == "!=":
+							c_filtered = c_filtered[c_filtered["date"] != cond] 
+						elif val == ">":
+							c_filtered = c_filtered[c_filtered["date"] > cond] 
+						elif val == ">=":
+							c_filtered = c_filtered[c_filtered["date"] >= cond] 
+						elif val == "<=":
+							c_filtered = c_filtered[c_filtered["date"] <= cond] 
+						elif val == "<":
+							c_filtered = c_filtered[c_filtered["date"] < cond]		
+					else:
+						print("\tCannot apply the 'iso_week' filter because column 'date' was not found in the metadata!")
 				else:
 					if val == "==":
 						c_filtered = c_filtered[c_filtered[col] == cond]
@@ -220,7 +235,7 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 								if stat in complete_metadata.columns: # get summary of the variable
 									if stat != sample_column and stat != "n_" + sample_column:
 										col = stat
-										observations = flt_data[col].values.tolist()
+										observations = list(flt_data[col])		
 										counter = {}
 										for obs in set(observations):
 											counter[obs] = observations.count(obs)
@@ -317,11 +332,12 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 						if stat in complete_metadata.columns: # get summary of the variable
 							if stat == sample_column:
 								col = stat
-								observations = flt_data[col].values.tolist()
+								observations = list(flt_data[col])
 								joint = ",".join(observations)
 							else:
 								col = stat
-								observations = flt_data[col].values.tolist()
+								observations = list(flt_data[col])		
+														
 								counter = {}
 								for obs in set(observations):
 									counter[obs] = observations.count(obs)
@@ -543,7 +559,7 @@ def col_list(metadata, partitions):
 # running the script	----------
 
 if __name__ == "__main__":
-    
+	
 	# argument options
     
 	parser = argparse.ArgumentParser(prog="metadata_report.py", formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent("""\
@@ -606,7 +622,7 @@ if __name__ == "__main__":
 	parser.add_argument("--list", dest="list_col_summary", required=False, action="store_true", help="[OPTIONAL] This option lists all the possible columns that you can use in \
 						'--columns_summary_report' considering your input. NOTE!! The objective of this argument is to help you with the input of '--columns_summary_report'. So, it will not run \
 						metadata_report.py main functions!!")
-	parser.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="[OPTIONAL] [OPTIONAL] Partitions file in .tsv format - \
+	parser.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="[OPTIONAL] Partitions file in .tsv format - \
 						'partition' represents the threshold at which clustering information was obtained")
 	parser.add_argument("-o", "--output", dest="output", required=False, default="metadataReport", type=str, help="[OPTIONAL] Tag for output file name (default = metadataReport)")
 	parser.add_argument("--columns_summary_report", dest="columns_summary_report", required=False, default="n_sequence,lineage,n_country,country,n_region,first_seq_date,last_seq_date,timespan_days", type=str, help="\
@@ -654,8 +670,10 @@ if __name__ == "__main__":
 	
 	print("\n-------------------- metadata_report.py --------------------\n")
 	print("\n-------------------- metadata_report.py --------------------\n", file = log)
-	print(" ".join(sys.argv))
-	print(" ".join(sys.argv), file = log)
+	print("version", version, "last updated on", last_updated, "\n")
+	print("version", version, "last updated on", last_updated, "\n", file = log)
+	print(" ".join(sys.argv), "\n")
+	print(" ".join(sys.argv), "\n", file = log)
 	
 
 	# analysis of the partitions file

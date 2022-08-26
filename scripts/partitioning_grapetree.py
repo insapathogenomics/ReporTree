@@ -6,23 +6,23 @@ It requires a MODIFIED version of GrapeTree available at https://github.com/insa
 Note: This script takes advantage of GrapeTree -> do not forget to cite its authors as well!!
 By Veronica Mixao
 @INSA
-A) Minimum-spanning tree of the provided allele matrix and partitions for thresholds 5,8, and 10 to 20
-partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME --method MSTreeV2 --missing 0 --n_proc 5 -thr 5,8,10-20 
-B) Minimum-spanning tree for a subset of the provided allele matrix and all partitions
-partitioning_grapetree.py -a ALLELE_PROFILE -o OUTPUT_NAME --method MSTreeV2 --missing 0 --n_proc 5 -thr max -m METADATA -f "column_metadata<>operation<>value"
 """
 
-
-import pandas
-import argparse
 import sys
-import textwrap
 import os
+import argparse
+import textwrap
+import pandas
+from datetime import date
 
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 partitioning_grapetree_script = os.path.realpath(__file__)
 grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapetree.py"
 
+version = "1.0.0"
+last_updated = "2022-08-26"
 
 # defining parameters ----------
 
@@ -62,19 +62,20 @@ parser = argparse.ArgumentParser(prog="partitioning_grapetree.py", formatter_cla
 group0 = parser.add_argument_group("Partitioning with GrapeTree", "Specifications to get and cut minimum spanning trees")
 group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=True, type=str, help="[MANDATORY] Input profile matrix (can either be an allele matrix or a SNP matrix)")
 group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
-group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci/positions called for SNP/allele matrices (e.g. \
-					'--loci-called 0.95' will only keep in the profile matrix samples with > 95%% of alleles/positions, i.e. <= 5%% missing data). Code for missing data: 0.")
 group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
 					proportion of samples per site/loci without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
-					'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment positions/loci (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
+					'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment loci/positions (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
+group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci/positions called for allele/SNP matrices (e.g. \
+					'--loci-called 0.95' will only keep in the profile matrix samples with > 95%% of alleles/positions, i.e. <= 5%% missing data). Applied after '--site-inclusion' argument! \
+					Code for missing data: 0.")
 group0.add_argument("--method", dest="grapetree_method", default="MSTreeV2", help="\"MSTreeV2\" [DEFAULT]\n Alternative:\"MSTree (goeBURST)\"\n")
 group0.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 					with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
 group0.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="[EXPERIMENTAL] a better support of wgMLST schemes (check GrapeTree github for details).")
 group0.add_argument("--n_proc",  dest="number_of_processes", type=int, default=5, help="Number of CPU processes in parallel use. [5]")
 group0.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="[OPTIONAL] Partition thresholds for clustering definition. Different thresholds can be comma-separated \
-					(e.g. 5,8,16). Ranges can be specified with an hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 1 \
-					to max")
+					(e.g. 5,8,16). Ranges can be specified with an hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 0 \
+					to max. Note: Threshold values are inclusive, i.e. '-thr 7' will consider samples with <= 7 differences as belonging to the same cluster!")
 group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to select the samples to reconstruct the minimum \
 					spanning tree according to the '--filter' argument")
 group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples of the allele matrix that must \
@@ -85,7 +86,7 @@ group0.add_argument("-f", "--filter", dest="filter_column", required=False, defa
 group0.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
 					-thr 5,8,10-30, the tree will be cut at 50,80,100,110,120,...,300). Currently, the default is 1, which is equivalent to 1 allele/SNP distance. [1.0]")
 group0.add_argument("--matrix-4-grapetree", dest="matrix4grapetree", required=False, action="store_true", help="Output an additional allele profile matrix with the header ready for GrapeTree \
-					visualization. Set only if you WANT the file")	
+					visualization. Set only if you WANT the file!")	
 						
 args = parser.parse_args()
 
@@ -97,8 +98,10 @@ log = open(log_name, "a+")
 	
 print("\n-------------------- partitioning_grapetree.py --------------------\n")
 print("\n-------------------- partitioning_grapetree.py --------------------\n", file = log)
-print(" ".join(sys.argv))
-print(" ".join(sys.argv), file = log)
+print("version", version, "last updated on", last_updated, "\n")
+print("version", version, "last updated on", last_updated, "\n", file = log)
+print(" ".join(sys.argv), "\n")
+print(" ".join(sys.argv), "\n", file = log)
 
 
 # filtering allele matrix	----------
@@ -118,14 +121,14 @@ if args.metadata != "" and args.filter_column != "" and ".fasta" not in args.all
 		year = mx["date"].dt.isocalendar().year
 		week = mx["date"].dt.isocalendar().week
 		mx["iso_year"] = year.astype(str)
-		mx["iso_week"] = week.astype(str)
-		mx["iso_date"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--")
+		mx["iso_week_nr"] = week.astype(str)
+		mx["iso_week"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--")
 		isoyear = mx.pop("iso_year")
-		isoweek = mx.pop("iso_week")
-		isodate = mx.pop("iso_date")
+		isoweek = mx.pop("iso_week_nr")
+		isodate = mx.pop("iso_week")
 		mx.insert(index_no + 1, "iso_year", isoyear)
-		mx.insert(index_no + 2, "iso_week", isoweek)
-		mx.insert(index_no + 3, "iso_date", isodate)
+		mx.insert(index_no + 2, "iso_week_nr", isoweek)
+		mx.insert(index_no + 3, "iso_week", isodate)
 	
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)
@@ -163,7 +166,26 @@ if args.metadata != "" and args.filter_column != "" and ".fasta" not in args.all
 					mx = mx[mx["date"] <= cond] 
 				elif val == "<":
 					mx = mx[mx["date"] < cond]
-						
+			elif col == "iso_week":
+				if "date" in mx.columns:
+					year = cond.split("W")[0]
+					week = cond.split("W")[1]
+					cond = pandas.to_datetime(date.fromisocalendar(int(year), int(week), 1))
+					mx["date"] = mx["date"].astype("datetime64[ns]")
+					if val == "==":
+						mx = mx[mx["date"] == cond]  
+					elif val == "!=":
+						mx = mx[mx["date"] != cond] 
+					elif val == ">":
+						mx = mx[mx["date"] > cond] 
+					elif val == ">=":
+						mx = mx[mx["date"] >= cond] 
+					elif val == "<=":
+						mx = mx[mx["date"] <= cond] 
+					elif val == "<":
+						mx = mx[mx["date"] < cond]		
+				else:
+					print("\tCannot apply the 'iso_week' filter because the column 'date' was not found in the metadata!")
 			else:
 				if val == "==":
 					mx = mx[mx[col] == cond]
@@ -230,7 +252,7 @@ if args.samples_called != 0.0 and not os.path.exists(args.out + "_align_profile.
 	print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
 		
 
-# cleaning allele matrix	----------
+# cleaning allele matrix (rows)	----------
 
 if args.loci_called != "":
 	print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...")
@@ -255,8 +277,8 @@ if args.loci_called != "":
 	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
 	
 	allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
-	allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
-	allele_filename = args.out + "_flt_matrix.tsv"
+	allele_mx.to_csv(args.out + "_flt_samples_matrix.tsv", index = False, header=True, sep ="\t")
+	allele_filename = args.out + "_flt_samples_matrix.tsv"
 	report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
 	
 	
@@ -292,14 +314,14 @@ print("\nProcessing clustering threshold...", file = log)
 distances = []
 range_def = []
 
-with open(args.out + ".dist", "r") as groups:
+with open(args.out + "_dist.tsv", "r") as groups:
 	group = groups.readlines()
 	for line in group:
 		lin = line.split("\n")
 		s1,s2,d = lin[0].split("\t")
 		distances.append(int(d))
-	min_distance = 1
-	max_distance = max(distances) + 2
+	min_distance = 0
+	max_distance = max(distances) + 1
 		
 distance_magnitude = args.dist
 
@@ -375,13 +397,13 @@ for min_r,max_r in range_def:
 			i = 0 #cluster name definer
 			checked_samples = set() #samples that have been checked
 			
-			with open(args.out + ".dist", "r") as group_file:
+			with open(args.out + "_dist.tsv", "r") as group_file:
 				group = group_file.readlines()
 				for line in group:
 					lin = line.split("\n")
 					s1,s2,d = lin[0].split("\t") #sample1,sample2,distance
 
-					if int(d) < partition: #they are a cluster
+					if int(d) <= partition: #they are a cluster
 						if s1 not in checked_samples and s2 not in checked_samples: #s1,s2 do not have an assigned cluster and should be added to clusters dictionary with same key
 							i += 1
 							clusters[i] = set()
@@ -469,7 +491,7 @@ with open(args.out + "_clusterComposition.tsv", "w+") as clusterComposition:
 			elif len(cluster_composition) == 1:
 				singleton_counter += 1
 				name = "singleton_" + str(singleton_counter)
-			elif len(cluster_composition) > 1:
+			else:
 				cluster_counter += 1
 				name = "cluster_" + str(cluster_counter)
 				
