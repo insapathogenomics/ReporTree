@@ -345,16 +345,16 @@ if __name__ == "__main__":
 	group0 = parser.add_argument_group("ReporTree", "ReporTree input/output file specifications")
 	group0.add_argument("-a", "--allele-profile", dest="allele_profile", default="", required=False, type=str, help="[OPTIONAL] Input allele/SNP profile matrix (tsv format)")
 	group0.add_argument("-align", "--alignment", dest="alignment", default="", required=False, type=str, help="[OPTIONAL] Input multiple sequence alignment (fasta format)")
-	group0.add_argument("-vcf", "--vcf", dest="vcf", default="", required=False, type=str, help="[OPTIONAL] Single-column list of VCF files (txt format). This file must comprise the full PATH to \
-						each vcf file.")
-	group0.add_argument("-var", "--variants", dest="variants", default="", required=False, type=str, help="[OPTIONAL] Input table (tsv format) with sample name in the first column and a \
-						comma-separated list of variants in the second column with the following regular expression: '\w(\d+)\w' ")
 	group0.add_argument("-d_mx", "--distance_matrix", dest="distance_matrix", default="", required=False, type=str, help="[OPTIONAL] Input pairwise distance matrix (tsv format)")
 	group0.add_argument("-t", "--tree", dest="tree", default="", required=False, type=str, help="[OPTIONAL] Input tree (newick format)")
 	group0.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="[OPTIONAL] Partitions file (tsv format) - 'partition' represents the threshold at \
 						which clustering information was obtained")
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, type=str, default = "none", help="[MANDATORY] Metadata file (tsv format). To take the most profit of ReporTree \
 						functionalities, you must provide this file.")
+	group0.add_argument("-vcf", "--vcf", dest="vcf", default="", required=False, type=str, help="[OPTIONAL] Single-column list of VCF files (txt format). This file must comprise the full PATH to \
+						each vcf file.")
+	group0.add_argument("-var", "--variants", dest="variants", default="", required=False, type=str, help="[OPTIONAL] Input table (tsv format) with sample name in the first column and a \
+						comma-separated list of variants in the second column with the following regular expression: '\w(\d+)\w' ")
 	group0.add_argument("-out", "--output", dest="output", required=False, default="ReporTree", type=str, help="[OPTIONAL] Tag for output file name (default = ReporTree)")
 	group0.add_argument("--list", dest="list_col_summary", required=False, action="store_true", help=" [OPTIONAL] If after your command line you specify this option, ReporTree will list all the \
 						possible columns that you can use as input in '--columns_summary_report'. NOTE!! The objective of this argument is to help you with the input of '--columns_summary_report'. \
