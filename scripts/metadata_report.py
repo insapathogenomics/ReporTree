@@ -16,7 +16,7 @@ from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from datetime import datetime, date
 
 version = "1.0.0"
-last_updated = "2022-08-26"
+last_updated = "2022-09-12"
 
 # functions	----------
 
@@ -63,9 +63,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		print("\tWARNING!! You have duplicated samples in the metadata table! I cannot continue!", file = log)
 		sys.exit()
 	
-	if partitions is "":
-		c = mx_metadata.set_index(mx_metadata.columns[0], drop = True)
-	else:
+	if isinstance(partitions, pandas.DataFrame):
 		mx_partitions = pandas.DataFrame(data = partitions, dtype = str)
 		sample_column_part = mx_partitions.columns[0]
 
@@ -91,6 +89,9 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 				else:
 					print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!")
 					print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!", file = log)
+		
+	else:
+		c = mx_metadata.set_index(mx_metadata.columns[0], drop = True)
 		
 		
 	# filtering table according to specifications
@@ -174,7 +175,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 	new_metadata = c_filtered
 	
 	# check for missing samples
-	if partitions is not "":
+	if isinstance(partitions, pandas.DataFrame):
 		missing_in_metadata = set(partitions_samples) - set(metadata_samples)
 		missing_in_partitions = set(metadata_samples) - set(partitions_samples)
 		
@@ -207,7 +208,7 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 	complete_metadata = complete_metadata.fillna("EMPTY")
 	
 	if partitions2report == "all":
-		if partitions is not "":
+		if isinstance(partitions, pandas.DataFrame):
 			partitions2report = ",".join(partitions.columns.tolist()[1:])			
 	
 	absent_columns = []
