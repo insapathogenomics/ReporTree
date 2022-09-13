@@ -16,7 +16,7 @@ from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_
 from scipy.spatial.distance import squareform
 
 version = "1.0.0"
-last_updated = "2022-08-26"
+last_updated = "2022-08-29"
 
 # functions	----------
 
@@ -186,29 +186,19 @@ def get_partitions(clustering, threshold, log):
     return clusters
 
 
-def get_cluster_composition(partitions):
+def get_cluster_composition(outfile, partitions):
 	""" get summary of cluster composition 
 	input: clusters dataframe
 	output: summary dataframe 
 	"""
 	
-	summary = {"partition": [], "cluster": [], "cluster_length": [], "samples": []}
-	order_columns = ["partition", "cluster", "cluster_length", "samples"]
-	
-	for col in partitions.columns:
-		if col != "sequence":
-			clusters = partitions[col].values.tolist()
-			for cluster in set(clusters):
-				flt_data = partitions[partitions[col] == cluster] # filter the dataframe
-				summary["partition"].append(col)
-				summary["cluster"].append(str(cluster))
-				summary["cluster_length"].append(len(flt_data["sequence"].values.tolist()))
-				summary["samples"].append(",".join(flt_data["sequence"].values.tolist()))
-	
-	summary_df = pandas.DataFrame(data = summary, columns = order_columns)
-	
-	return summary_df		
-	
+	with open(outfile, "w+") as output:
+		print("#partition\tcluster\tcluster_length\tsamples", file = output)
+		for partition in partitions.keys():
+			for cluster in partitions[partition].keys():
+				for cluster_length in partitions[partition][cluster].keys():
+					print(partition + "\t" + cluster + "\t" + str(cluster_length) + "\t" + ",".join(partitions[partition][cluster][cluster_length]), file = output)
+					
 
 def get_newick(node, parent_dist, leaf_names, newick='') -> str:
     """
@@ -466,11 +456,15 @@ if __name__ == "__main__":
 		print("\tDefining clusters...")
 		print("\tDefining clusters...", file = log)
 		
+		cluster_details = {}
+		
 		if threshold == "all":
 			print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist))
 			print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist), file = log)
 			for thr in range(0,int(max_dist) + 1):
 				partition = method + "-" + str(thr) + "x" + str(args.dist)
+				if partition not in cluster_details.keys():
+					cluster_details[partition] = {}
 				info_clusters = list(fcluster(hc_matrix, t = int(thr) * args.dist, criterion = "distance"))
 				# change cluster name according to cluster size
 				counter = {}
@@ -481,8 +475,17 @@ if __name__ == "__main__":
 					if counter[info_clusters[i]] == 1:
 						singleton_counter += 1
 						info_clusters[i] = "singleton_" + str(singleton_counter)
+						if info_clusters[i] not in cluster_details[partition].keys():
+							cluster_details[partition][info_clusters[i]] = {}
+							cluster_details[partition][info_clusters[i]][1] = []
+						cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
 					else:
+						cluster_size = counter[info_clusters[i]]
 						info_clusters[i] = "cluster_" + str(info_clusters[i])
+						if info_clusters[i] not in cluster_details[partition].keys():
+							cluster_details[partition][info_clusters[i]] = {}
+							cluster_details[partition][info_clusters[i]][cluster_size] = []
+						cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
 				clustering[partition] = info_clusters
 		else:
 			if "-" in threshold:
@@ -496,6 +499,8 @@ if __name__ == "__main__":
 				print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist), file = log)
 				for thr in range(min_thr,max_thr):
 					partition = method + "-" + str(thr) + "x" + str(args.dist)
+					if partition not in cluster_details.keys():
+						cluster_details[partition] = {}
 					info_clusters = list(fcluster(hc_matrix, t = thr * args.dist, criterion = "distance"))
 					# change cluster name according to cluster size
 					counter = {}
@@ -506,11 +511,22 @@ if __name__ == "__main__":
 						if counter[info_clusters[i]] == 1:
 							singleton_counter += 1
 							info_clusters[i] = "singleton_" + str(singleton_counter)
+							if info_clusters[i] not in cluster_details[partition].keys():
+								cluster_details[partition][info_clusters[i]] = {}
+								cluster_details[partition][info_clusters[i]][1] = []
+							cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
 						else:
+							cluster_size = counter[info_clusters[i]]
 							info_clusters[i] = "cluster_" + str(info_clusters[i])
+							if info_clusters[i] not in cluster_details[partition].keys():
+								cluster_details[partition][info_clusters[i]] = {}
+								cluster_details[partition][info_clusters[i]][cluster_size] = []
+							cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
 					clustering[partition] = info_clusters
 			else:
 				partition = method + "-" + str(threshold) + "x" + str(args.dist)
+				if partition not in cluster_details.keys():
+					cluster_details[partition] = {}
 				print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist))
 				print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist), file = log)
 				info_clusters = list(fcluster(hc_matrix, t = int(threshold) * args.dist, criterion = "distance"))
@@ -523,8 +539,17 @@ if __name__ == "__main__":
 					if counter[info_clusters[i]] == 1:
 						singleton_counter += 1
 						info_clusters[i] = "singleton_" + str(singleton_counter)
+						if info_clusters[i] not in cluster_details[partition].keys():
+							cluster_details[partition][info_clusters[i]] = {}
+							cluster_details[partition][info_clusters[i]][1] = []
+						cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
 					else:
+						cluster_size = counter[info_clusters[i]]
 						info_clusters[i] = "cluster_" + str(info_clusters[i])
+						if info_clusters[i] not in cluster_details[partition].keys():
+							cluster_details[partition][info_clusters[i]] = {}
+							cluster_details[partition][info_clusters[i]][cluster_size] = []
+						cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
 				clustering[partition] = info_clusters
 
 
@@ -540,8 +565,8 @@ if __name__ == "__main__":
 	
 	print("Creating cluster composition file...")
 	print("Creating cluster composition file...", file = log)
-	cluster_composition = get_cluster_composition(df_clustering)
-	cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
+	cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
+	#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
 
 print("\npartitioning_HC.py is done!")
 print("\npartitioning_HC.py is done!", file = log)
