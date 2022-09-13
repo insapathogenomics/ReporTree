@@ -18,7 +18,7 @@ import pandas
 import glob
 
 version = "1.0.0"
-last_updated = "2022-08-26"
+last_updated = "2022-09-12"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -209,24 +209,25 @@ def col_list(args):
 	return cols_output,methods_output
 	
 
-def loci_called2metadata(metadata, out, thr, analysis):
+def loci_called2metadata(metadata_original, out, thr, analysis):
 	""" adds column with percentage of called loci
 	to metadata table """
 	
-	metadata = pandas.read_table(metadata, dtype = str)
+	metadata = pandas.read_table(metadata_original, dtype = str)
 	loci = pandas.read_table(out + "_" + analysis + "_report.tsv")
 	a = metadata.set_index(metadata.columns[0], drop = True)
 	b = loci.set_index(loci.columns[0], drop = True)
+	
+	b["QUAL_called"] = b["pct_called"]
+	b["QUAL_called"].where(b["QUAL_called"] <= float(thr), "PASS", inplace = True)
+	b["QUAL_called"].where(b["QUAL_called"].astype(str) == "PASS", "excluded", inplace = True)
 
-	c = pandas.concat([a, b["pct_called"]], axis=1)
+	c = pandas.concat([a, b["pct_called"], b["QUAL_called"]], axis=1)
 	c = c.reset_index(drop = False)
 	c.rename(columns={c.columns[0]: metadata.columns[0]}, inplace=True)
-	c["QUAL_called"] = c["pct_called"]
-	c["QUAL_called"].where(c["QUAL_called"] <= float(thr), "PASS", inplace = True)
-	c["QUAL_called"].where(c["QUAL_called"].astype(str) == "PASS", "excluded", inplace = True)
-
+	
 	complete_metadata = pandas.DataFrame(data = c)
-	complete_metadata.to_csv(out +  "_metadata_w_" + analysis + "_called.tsv", index = False, header=True, sep = "\t")
+	complete_metadata.to_csv(metadata_original, index = False, header=True, sep = "\t")
 
 
 def filter_samples_interest(samples, matrix, out):
@@ -272,7 +273,7 @@ def filter_samples_interest(samples, matrix, out):
 			if len(found) == 0:
 				print("*All samples of interest are singletons in all thresholds used!", file = outfile)
 			elif len(found) != len(samples_of_interest):
-				print("*Sample(s) " + ",".join(set(samples.split(",")) - found) + " does not belong to any of the identified clusters!", file = outfile)
+				print("*Sample(s) " + ",".join(set(samples_of_interest) - found) + " does not belong to any of the identified clusters!", file = outfile)
 
 	
 # running the pipeline	----------
@@ -1013,18 +1014,11 @@ if __name__ == "__main__":
 			print("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...")
 			print("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...", file = log)
 			partitions2report_final = "all"
-
-		# if allele matrix was filtered, add this info in metadata
-		metadata = args.metadata
-		if os.path.exists(args.output + "_loci_report.tsv") and metadata != "none":
-			loci_called2metadata(metadata, args.output, args.loci_called, "loci")
-			metadata = args.output + "_metadata_w_loci_called.tsv"
-		elif os.path.exists(args.output + "_pos_report.tsv") and metadata != "none":
-			loci_called2metadata(metadata, args.output, args.ATCG_content, "pos")
-			metadata = args.output + "_metadata_w_pos_called.tsv"
+			
 			
 		# getting metadata report
 		if args.metadata != "none":
+			metadata = args.metadata
 			if args.mx_transpose:
 				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
@@ -1033,10 +1027,8 @@ if __name__ == "__main__":
 				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
-			log = open(log_name, "a+")
 		
-			if metadata != args.metadata: # deleting metadata with loci called because this info is in main metadata
-				os.system("rm " + metadata)
+			log = open(log_name, "a+")
 			
 			# samples of interest
 			s_of_interest = args.sample_of_interest
@@ -1044,6 +1036,14 @@ if __name__ == "__main__":
 				print("\tFiltering partitions_summary.tsv according to samples of interest...")
 				print("\tFiltering partitions_summary.tsv according to samples of interest...", file = log)
 				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output)
+		
+		
+			# if allele matrix was filtered, add this info in metadata
+			metadata = args.output + "_metadata_w_partitions.tsv"
+			if os.path.exists(args.output + "_loci_report.tsv"):
+				loci_called2metadata(metadata, args.output, args.loci_called, "loci")
+			elif os.path.exists(args.output + "_pos_report.tsv"):
+				loci_called2metadata(metadata, args.output, args.ATCG_content, "pos")
 			
 			
 	## only metadata	--------------------
