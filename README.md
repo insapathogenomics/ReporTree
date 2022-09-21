@@ -78,7 +78,7 @@ _TIP: Users can interactively visualize and explore the ReporTree derived cluste
 
 ## Installation and dependencies
 
-Dependencies:
+### Dependencies:
 - [TreeCluster](https://github.com/niemasd/TreeCluster) v1.0.3
 - [A modified version of GrapeTree](https://github.com/insapathogenomics/GrapeTree)
 - [Biopython](https://biopython.org)
@@ -87,7 +87,7 @@ Dependencies:
 - [cgmlst-dists](https://github.com/tseemann/cgmlst-dists)
 - [vcf2mst](https://github.com/genpat-it/vcf2mst)
 
-Installation:
+### Installation with conda:
 ```bash
 conda create -n reportree -c anaconda -c bioconda -c etetoolkit python=3.8 biopython=1.77 pandas=1.1.3 numpy=1.19.2 grapetree=2.1 treecluster=1.0.3 ete3 scikit-learn cgmlst-dists
 git clone https://github.com/insapathogenomics/ReporTree
@@ -97,6 +97,20 @@ git clone https://github.com/insapathogenomics/ComparingPartitions
 git clone https://github.com/genpat-it/vcf2mst.git
 ```
 
+Run ReporTree:
+```bash
+python reportree.py -h
+```
+
+### Installation with Docker
+```bash
+docker pull insapathogenomics/reportree:1.0.0
+```
+
+Run ReporTree:
+```bash
+docker run insapathogenomics/reportree:1.0.0 reportree.py -h
+```
 
 ## Usage
 
