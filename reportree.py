@@ -1,7 +1,8 @@
 #!/usr/bin/env	python3
 
 """
-Obtain clustering information at different partition thresholds of minimum-spanning trees, distance matrices or rooted trees and summary reports of the genetic clusters (or other metadata).
+Obtain clustering information
+
 By Veronica Mixao
 @INSA
 """
@@ -16,6 +17,8 @@ from datetime import date
 import pandas
 import glob
 
+version = "1.0.0"
+last_updated = "2022-09-21"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -206,30 +209,50 @@ def col_list(args):
 	return cols_output,methods_output
 	
 
-def loci_called2metadata(metadata, out, thr, analysis):
+def loci_called2metadata(metadata_original, out, thr, analysis):
 	""" adds column with percentage of called loci
 	to metadata table """
 	
-	metadata = pandas.read_table(metadata, dtype = str)
+	metadata = pandas.read_table(metadata_original, dtype = str)
 	loci = pandas.read_table(out + "_" + analysis + "_report.tsv")
 	a = metadata.set_index(metadata.columns[0], drop = True)
 	b = loci.set_index(loci.columns[0], drop = True)
+	
+	b["QUAL_called"] = b["pct_called"]
+	b["QUAL_called"].where(b["QUAL_called"] <= float(thr), "PASS", inplace = True)
+	b["QUAL_called"].where(b["QUAL_called"].astype(str) == "PASS", "excluded", inplace = True)
 
-	c = pandas.concat([a, b["pct_called"]], axis=1)
+	c = pandas.concat([a, b["pct_called"], b["QUAL_called"]], axis=1)
 	c = c.reset_index(drop = False)
 	c.rename(columns={c.columns[0]: metadata.columns[0]}, inplace=True)
-	c["QUAL_called"] = c["pct_called"]
-	c["QUAL_called"].where(c["QUAL_called"] <= float(thr), "PASS", inplace = True)
-	c["QUAL_called"].where(c["QUAL_called"].astype(str) =="PASS", "excluded", inplace = True)
-
+	
 	complete_metadata = pandas.DataFrame(data = c)
-	complete_metadata.to_csv(out +  "_metadata_w_" + analysis + "_called.tsv", index = False, header=True, sep = "\t")
+	complete_metadata.to_csv(metadata_original, index = False, header=True, sep = "\t")
 
 
-def filter_samples_interest(samples, matrix, out):
+def filter_samples_interest(samples, matrix, partitions, out):
 	""" filter partitions summary """
 	
+	if "," in samples:
+		samples_of_interest = samples.split(",")
+	elif ".tsv" in samples or ".txt" in samples or ".csv" in samples:
+		samples_of_interest = []
+		with open(samples, "r") as input_file:
+			infile = input_file.readlines()
+			for line in infile:
+				l = line.split("\n")[0]
+				if "," in l:
+					samples_of_interest = l.split(",")
+				else:
+					samples_of_interest.append(l)
+	else:
+		print("You did not provide a valid input for samples of interest!!")
+		sys.exit()
+				
 	found = set()
+	
+	partitions_mx = pandas.read_table(partitions)
+	
 	with open(matrix, "r") as mx:
 		with open(out + "_SAMPLES_OF_INTEREST_partitions_summary.tsv", "w+") as outfile:
 			i = 0
@@ -242,7 +265,7 @@ def filter_samples_interest(samples, matrix, out):
 				else:
 					samples_cluster = l[3].split(",")
 					samples_observed = []
-					for sample in samples.split(","):
+					for sample in samples_of_interest:
 						if sample in samples_cluster:
 							samples_observed.append(sample)
 							found.add(sample)
@@ -250,11 +273,23 @@ def filter_samples_interest(samples, matrix, out):
 						print(",".join(samples_observed) + "\t" + lin[0], file = outfile)
 				i += 1
 			
-			if len(found) == 0:
-				print("*All samples of interest are singletons in all thresholds used!", file = outfile)
-			elif len(found) != len(samples):
-				print("*Sample(s) " + ",".join(set(samples.split(",")) - found) + " are singletons in all thresholds used!", file = outfile)
-	
+			if len(found) != len(samples_of_interest):
+				not_found = set(samples_of_interest) - found
+				samples_analyzed = list(partitions_mx[partitions_mx.columns[0]])
+				
+				singletons = []
+				do_not_exist = []
+				for sample in not_found:
+					if sample in samples_analyzed:
+						singletons.append(sample)
+					else:
+						do_not_exist.append(sample)
+				
+				if len(singletons) > 0:
+					print("*Sample(s) " + ",".join(singletons) + " are singletons at all thresholds used!", file = outfile)
+				if len(do_not_exist) > 0:
+					print("**Sample(s) " + ",".join(do_not_exist) + " were not found in the partitions table! Please check if they were provided in the input file.", file = outfile)
+
 	
 # running the pipeline	----------
 
@@ -272,9 +307,9 @@ if __name__ == "__main__":
 									ReporTree aims to answer the need of:
 									
 									-obtaining genetic clusters at any distance thresholds of a rooted tree (e.g. 
-									SNP-scaled tree) or of a minimum spanning tree/distance matrix (derived from an 
-									allele/SNP profile, an alignment, or a list of genetic variants)
-									
+									SNP-scaled tree), SNP or cg/wgMLST allele matrix, VCF files, sequence 
+									alignment, or distance matrix
+
 									-obtaining summary reports with the statistics/trends (e.g. timespan, location,
 									cluster/group size and composition, age distribution etc.) for the derived 
 									genetic clusters or for any other provided grouping variable (such as, clade, 
@@ -325,16 +360,16 @@ if __name__ == "__main__":
 	group0 = parser.add_argument_group("ReporTree", "ReporTree input/output file specifications")
 	group0.add_argument("-a", "--allele-profile", dest="allele_profile", default="", required=False, type=str, help="[OPTIONAL] Input allele/SNP profile matrix (tsv format)")
 	group0.add_argument("-align", "--alignment", dest="alignment", default="", required=False, type=str, help="[OPTIONAL] Input multiple sequence alignment (fasta format)")
-	group0.add_argument("-vcf", "--vcf", dest="vcf", default="", required=False, type=str, help="[OPTIONAL] Single-column list of VCF files (txt format). This file must comprise the full PATH to \
-						each vcf file.")
-	#group0.add_argument("-var", "--variants", dest="variants", default="", required=False, type=str, help="[OPTIONAL] Input table where the first column has sample name and the second one is a \
-	#					comma-separated list of variants (tsv format)")
 	group0.add_argument("-d_mx", "--distance_matrix", dest="distance_matrix", default="", required=False, type=str, help="[OPTIONAL] Input pairwise distance matrix (tsv format)")
 	group0.add_argument("-t", "--tree", dest="tree", default="", required=False, type=str, help="[OPTIONAL] Input tree (newick format)")
 	group0.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="[OPTIONAL] Partitions file (tsv format) - 'partition' represents the threshold at \
 						which clustering information was obtained")
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, type=str, default = "none", help="[MANDATORY] Metadata file (tsv format). To take the most profit of ReporTree \
 						functionalities, you must provide this file.")
+	group0.add_argument("-vcf", "--vcf", dest="vcf", default="", required=False, type=str, help="[OPTIONAL] Single-column list of VCF files (txt format). This file must comprise the full PATH to \
+						each vcf file.")
+	group0.add_argument("-var", "--variants", dest="variants", default="", required=False, type=str, help="[OPTIONAL] Input table (tsv format) with sample name in the first column and a \
+						comma-separated list of variants in the second column with the following regular expression: '\w(\d+)\w' ")
 	group0.add_argument("-out", "--output", dest="output", required=False, default="ReporTree", type=str, help="[OPTIONAL] Tag for output file name (default = ReporTree)")
 	group0.add_argument("--list", dest="list_col_summary", required=False, action="store_true", help=" [OPTIONAL] If after your command line you specify this option, ReporTree will list all the \
 						possible columns that you can use as input in '--columns_summary_report'. NOTE!! The objective of this argument is to help you with the input of '--columns_summary_report'. \
@@ -362,7 +397,8 @@ if __name__ == "__main__":
 	
 	group2 = parser.add_argument_group("Processing profiles", "Processing profiles")
 	group2.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum proportion of loci/positions called for SNP/allele matrices (e.g. \
-						'--loci-called 0.95' will only keep in the profile matrix samples with > 95%% of alleles/positions, i.e. <= 5%% missing data). Code for missing data: 0.")
+						'--loci-called 0.95' will only keep in the profile matrix samples with > 95%% of alleles/positions, i.e. <= 5%% missing data). Applied after '--site-inclusion' \
+						argument! Code for missing data: 0.")
 	
 	
 	# alignment processing
@@ -387,9 +423,10 @@ if __name__ == "__main__":
 						with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
 	group4.add_argument("--n_proc",  dest="number_of_processes", type=int, default=5, help="Number of CPU processes in parallel use. [5]")
 	group4.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="Partition threshold for clustering definition. Different thresholds can be comma-separated (e.g. 5,8,16). \
-						Ranges can be specified with a hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 1 to max")
+						Ranges can be specified with a hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 0 to max. Note: \
+						Threshold values are inclusive, i.e. '-thr 7' will consider samples with <= 7 differences as belonging to the same cluster!")
 	group4.add_argument("--matrix-4-grapetree", dest="matrix4grapetree", required=False, action="store_true", help="Output an additional allele profile matrix with the header ready for GrapeTree \
-						visualization. Set only if you WANT the file")
+						visualization. Set only if you WANT the file!")
 	group4.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="[EXPERIMENTAL] a better support of wgMLST schemes (check GrapeTree github for details).")
 	
 	
@@ -398,8 +435,9 @@ if __name__ == "__main__":
 	group5 = parser.add_argument_group("Partitioning with HC", "Specifications to genetic clusters with hierarchical clustering")
 	group5.add_argument("--HC-threshold", dest="HCmethod_threshold", required=False, default="single", help="List of HC methods and thresholds to include in the analysis (comma-separated). To \
 						get clustering at all possible thresholds for a given method, write the method name (e.g. single). To get clustering at a specific threshold, indicate the threshold with \
-						a hyphen (e.g. single-10). To get clustering at a specific range, indicate the range with a hyphen (e.g. single-2-10). Default: single (Possible methods: single, \
-						complete, average, weighted, centroid, median, ward)")
+						a hyphen (e.g. single-10). To get clustering at a specific range, indicate the range with a hyphen (e.g. single-2-10). Note: Threshold values are inclusive, i.e. \
+						'--HC-threshold single-7' will consider samples with <= 7 differences as belonging to the same cluster! Default: single (Possible methods: single, complete, average, \
+						weighted, centroid, median, ward)")
 											
 						
 	## partitioning treecluster
@@ -491,8 +529,10 @@ if __name__ == "__main__":
 
 	print("\n******************** running reportree.py ********************\n")
 	print("\n******************** running reportree.py ********************\n", file = log)
-	print(" ".join(sys.argv))
-	print(" ".join(sys.argv), file = log)
+	print("version", version, "last updated on", last_updated, "\n")
+	print("version", version, "last updated on", last_updated, "\n", file = log)
+	print(" ".join(sys.argv), "\n")
+	print(" ".join(sys.argv), "\n", file = log)
 	
 	start = datetime.datetime.now()
 	print("start:", start)
@@ -528,10 +568,10 @@ if __name__ == "__main__":
 			print("\nVCF and partitions files specified... I am confused :-(\n", file = log)
 			sys.exit()
 		
-		#elif args.variants != "": # variants was provided -> need to get partitions again?
-		#	print("\nVariants list and partitions files specified... I am confused :-(\n")
-		#	print("\nVariants list and partitions files specified... I am confused :-(\n", file = log)
-		#	sys.exit()
+		elif args.variants != "": # variants was provided -> need to get partitions again?
+			print("\nVariants list and partitions files specified... I am confused :-(\n")
+			print("\nVariants list and partitions files specified... I am confused :-(\n", file = log)
+			sys.exit()
 		
 		elif args.distance_matrix != "": # distance mx was provided -> need to get partitions again?
 			print("\nDistance matrix and partitions files specified... I am confused :-(\n")
@@ -598,10 +638,10 @@ if __name__ == "__main__":
 			print("\nTree and VCF files specified... I am confused :-(\n", file = log)
 			sys.exit()
 		
-		#elif args.variants != "": # variants was provided -> grapetree, HC or treecluster
-		#	print("\nTree and variants list files specified... I am confused :-(\n")
-		#	print("\nTree and variants list files specified... I am confused :-(\n", file = log)
-		#	sys.exit()
+		elif args.variants != "": # variants was provided -> grapetree, HC or treecluster
+			print("\nTree and variants list files specified... I am confused :-(\n")
+			print("\nTree and variants list files specified... I am confused :-(\n", file = log)
+			sys.exit()
 		
 		elif args.distance_matrix != "": # distance mx was provided -> grapetree, HC or treecluster
 			print("\nTree and distance matrix specified... I am confused :-(\n")
@@ -609,8 +649,8 @@ if __name__ == "__main__":
 			sys.exit()
 		
 		else: # can continue using tree and run treecluster and metadata report
-			print("\nTree file provided -> will run partitioning_treecluster.py and metadata_report.py:\n")
-			print("\nTree file provided -> will run partitioning_treecluster.py and metadata_report.py:\n", file = log)
+			print("\nTree file provided -> will run partitioning_treecluster.py:\n")
+			print("\nTree file provided -> will run partitioning_treecluster.py:\n", file = log)
 			log.close()
 			
 			# running partitioning treecluster
@@ -685,13 +725,12 @@ if __name__ == "__main__":
 			if s_of_interest != "all":
 				print("\tFiltering partitions_summary.tsv according to samples of interest...")
 				print("\tFiltering partitions_summary.tsv according to samples of interest...", file = log)
-				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output)
+				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output + "_partitions.tsv", args.output)
 
 	
 	## others provided	--------------------
 		
-	#elif args.allele_profile != "" or args.alignment != "" or args.vcf != "" or args.variants != "" or args.distance_matrix != "":
-	elif args.allele_profile != "" or args.alignment != "" or args.vcf != "" or args.distance_matrix != "":
+	elif args.allele_profile != "" or args.alignment != "" or args.vcf != "" or args.variants != "" or args.distance_matrix != "":
 		distance_matrix_input = False
 		if args.allele_profile != "": # ALLELE ---> DIRECT INPUT
 			if args.alignment != "": 
@@ -704,10 +743,10 @@ if __name__ == "__main__":
 				print("\nProfiles and VCF files specified... I am confused :-(\n", file = log)
 				sys.exit()
 			
-			#elif args.variants != "": 
-			#	print("\nProfiles and variants list files specified... I am confused :-(\n")
-			#	print("\nProfiles and variants list files specified... I am confused :-(\n", file = log)
-			#	sys.exit()
+			elif args.variants != "": 
+				print("\nProfiles and variants list files specified... I am confused :-(\n")
+				print("\nProfiles and variants list files specified... I am confused :-(\n", file = log)
+				sys.exit()
 			
 			elif args.distance_matrix != "": 
 				print("\nProfiles and distance matrix specified... I am confused :-(\n")
@@ -717,8 +756,8 @@ if __name__ == "__main__":
 			else: # can continue using the allele profile
 				analysis = args.analysis
 				profile = args.allele_profile
-				print("\nProfiles file provided -> will run partitioning_" + analysis + ".py and metadata_report.py:\n")
-				print("\nProfiles file provided -> will run partitioning_" + analysis + ".py and metadata_report.py:\n", file = log)
+				print("\nProfiles file provided -> will run partitioning_" + analysis + ".py:\n")
+				print("\nProfiles file provided -> will run partitioning_" + analysis + ".py:\n", file = log)
 				log.close()
 		
 		elif args.alignment != "": # ALIGNMENT ---> PROCESS INPUT
@@ -727,10 +766,10 @@ if __name__ == "__main__":
 				print("\nAlignment and VCF files specified... I am confused :-(\n", file = log)
 				sys.exit()
 			
-			#elif args.variants != "": 
-			#	print("\nAlignment and variants list files specified... I am confused :-(\n")
-			#	print("\nAlignment and variants list files specified... I am confused :-(\n", file = log)
-			#	sys.exit()
+			elif args.variants != "": 
+				print("\nAlignment and variants list files specified... I am confused :-(\n")
+				print("\nAlignment and variants list files specified... I am confused :-(\n", file = log)
+				sys.exit()
 			
 			if args.distance_matrix != "": # needs to be elif
 				print("\nAlignment and distance matrix specified... I am confused :-(\n")
@@ -739,8 +778,8 @@ if __name__ == "__main__":
 			
 			else: # can continue using the alignment
 				analysis = args.analysis
-				print("\nAlignment file provided -> will run partitioning_" + analysis + ".py and metadata_report.py:\n")
-				print("\nAlignment file provided -> will run partitioning_" + analysis + ".py and metadata_report.py:\n", file = log)
+				print("\nAlignment file provided -> will run alignment_processing.py and partitioning_" + analysis + ".py:\n")
+				print("\nAlignment file provided -> will run alignment_processing.py and partitioning_" + analysis + ".py:\n", file = log)
 				log.close()
 				
 				# processing alignment
@@ -780,27 +819,26 @@ if __name__ == "__main__":
 							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
 							" + str(args.ATCG_content) + " -r " + args.reference + " --site-ATCG-content " + str(args.N_content))
 						
-				if os.path.exists(args.output + "_profile.tsv"):
-					profile = args.output + "_profile.tsv"
+				if os.path.exists(args.output + "_align_profile.tsv"):
+					profile = args.output + "_align_profile.tsv"
 				else:
 					sys.exit()
 				
 		elif args.vcf != "": # VCF ---> PROCESS INPUT WITH VCF2MST
-			#if args.variants != "": 
-			#	print("\nVCF and variants list files specified... I am confused :-(\n")
-			#	print("\nVCF and variants list files specified... I am confused :-(\n", file = log)
-			#	sys.exit()
+			if args.variants != "": 
+				print("\nVCF and variants list files specified... I am confused :-(\n")
+				print("\nVCF and variants list files specified... I am confused :-(\n", file = log)
+				sys.exit()
 			
-			#elif args.distance_matrix != "":
-			if args.distance_matrix != "":
+			elif args.distance_matrix != "":
 				print("\nVCF and distance matrix specified... I am confused :-(\n")
 				print("\nVCF and distance matrix specified... I am confused :-(\n", file = log)
 				sys.exit()
 			
 			else: # can continue using the VCF
 				analysis = args.analysis
-				print("\nVCF file provided -> will run vcf2mst, partitioning_" + analysis + ".py and metadata_report.py:\n")
-				print("\nVCF file provided -> will run vcf2mst, partitioning_" + analysis + ".py and metadata_report.py:\n", file = log)
+				print("\nVCF file provided -> will run vcf2mst and partitioning_" + analysis + ".py:\n")
+				print("\nVCF file provided -> will run vcf2mst and partitioning_" + analysis + ".py:\n", file = log)
 				print("\n-------------------- vcf2mst --------------------\n")
 				print("\n-------------------- vcf2mst --------------------\n", file = log)
 				print("perl " + reportree_path + "/scripts/vcf2mst/vcf2mst.pl " + args.vcf + " " + args.output + "_profile.tsv vcf -out profile")
@@ -814,30 +852,31 @@ if __name__ == "__main__":
 				else:
 					sys.exit()
 					
-		# elif args.variants != "": # LIST ---> PROCESS INPUT WITH VCF2MST
-		#	if args.distance_matrix != "":
-		#		print("\nVariants list and distance matrix specified... I am confused :-(\n")
-		#		print("\nVariants list and distance matrix specified... I am confused :-(\n", file = log)
-		#		sys.exit()
-		#	else: # can continue using the variants list
-		#		analysis = args.analysis
-		#		print("\nVariants list provided -> will run vcf2mst, partitioning_" + analysis + ".py and metadata_report.py:\n")
-		#		print("\nVariants file provided -> will run vcf2mst, partitioning_" + analysis + ".py and metadata_report.py:\n", file = log)
-		#		log.close()
-		#		
-		#		os.system("perl " + reportree_path + "/scripts/vcf2mst/vcf2mst.pl " + args.variants + " " + args.output + "_profile.tsv vcf -out profile")
-		#		
-		#		if os.path.exists(args.output + "_profile.tsv"):
-		#			profile = args.output + "_profile.tsv"
-		#		else:
-		#			sys.exit()
+		elif args.variants != "": # LIST ---> PROCESS INPUT WITH VCF2MST
+			if args.distance_matrix != "":
+				print("\nVariants list and distance matrix specified... I am confused :-(\n")
+				print("\nVariants list and distance matrix specified... I am confused :-(\n", file = log)
+				sys.exit()
+			else: # can continue using the variants list
+				analysis = args.analysis
+				print("\nVariants list provided -> will run vcf2mst and partitioning_" + analysis + ".py:\n")
+				print("\nVariants file provided -> will run vcf2mst and partitioning_" + analysis + ".py:\n", file = log)
+				log.close()
+				
+				os.system("perl " + reportree_path + "/scripts/vcf2mst/vcf2mst.pl " + args.variants + " " + args.output + "_profile.tsv tsv -out profile -tsv-sample-pos 0 \
+				-tsv-mutationslist-find pos -tsv-mutationslist-pos 1 -tsv-mutation-pos-regexp '\w(\d+)\w'")
+				
+				if os.path.exists(args.output + "_profile.tsv"):
+					profile = args.output + "_profile.tsv"
+				else:
+					sys.exit()
 		
 		elif args.distance_matrix != "": # DISTANCE MATRIX ---> DIRECT INPUT
 			analysis = "HC"
 			distance_matrix_input = True
 			profile = args.distance_matrix
-			print("\nDistance matrix provided -> will run partitioning_" + analysis + ".py and metadata_report.py:\n")
-			print("\nDistance matrix provided -> will run partitioning_" + analysis + ".py and metadata_report.py:\n", file = log)
+			print("\nDistance matrix provided -> will run partitioning_" + analysis + ".py:\n")
+			print("\nDistance matrix provided -> will run partitioning_" + analysis + ".py:\n", file = log)
 			log.close()
 			
 		
@@ -990,18 +1029,11 @@ if __name__ == "__main__":
 			print("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...")
 			print("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...", file = log)
 			partitions2report_final = "all"
-
-		# if allele matrix was filtered, add this info in metadata
-		metadata = args.metadata
-		if os.path.exists(args.output + "_loci_report.tsv"):
-			loci_called2metadata(metadata, args.output, args.loci_called, "loci")
-			metadata = args.output + "_metadata_w_loci_called.tsv"
-		elif os.path.exists(args.output + "_pos_report.tsv") :
-			loci_called2metadata(metadata, args.output, args.ATCG_content, "pos")
-			metadata = args.output + "_metadata_w_pos_called.tsv"
+			
 			
 		# getting metadata report
 		if args.metadata != "none":
+			metadata = args.metadata
 			if args.mx_transpose:
 				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
@@ -1010,17 +1042,23 @@ if __name__ == "__main__":
 				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
-			log = open(log_name, "a+")
 		
-			if metadata != args.metadata: # deleting metadata with loci called because this info is in main metadata
-				os.system("rm " + metadata)
+			log = open(log_name, "a+")
 			
 			# samples of interest
 			s_of_interest = args.sample_of_interest
 			if s_of_interest != "all":
 				print("\tFiltering partitions_summary.tsv according to samples of interest...")
 				print("\tFiltering partitions_summary.tsv according to samples of interest...", file = log)
-				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output)
+				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output + "_partitions.tsv", args.output)
+		
+		
+			# if allele matrix was filtered, add this info in metadata
+			metadata = args.output + "_metadata_w_partitions.tsv"
+			if os.path.exists(args.output + "_loci_report.tsv"):
+				loci_called2metadata(metadata, args.output, args.loci_called, "loci")
+			elif os.path.exists(args.output + "_pos_report.tsv"):
+				loci_called2metadata(metadata, args.output, args.ATCG_content, "pos")
 			
 			
 	## only metadata	--------------------
@@ -1043,7 +1081,7 @@ if __name__ == "__main__":
 		print("\nYOU NEED TO SPECIFY SOMETHING VALID... OTHERWISE, I DO NOT KNOW WHAT TO DO!!!!!!\n")
 		sys.exit()
 		
-		
+	
 	# done	----------
 	
 	end = datetime.datetime.now()
