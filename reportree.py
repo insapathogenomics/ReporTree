@@ -18,7 +18,7 @@ import pandas
 import glob
 
 version = "1.0.0"
-last_updated = "2022-09-12"
+last_updated = "2022-09-21"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -230,7 +230,7 @@ def loci_called2metadata(metadata_original, out, thr, analysis):
 	complete_metadata.to_csv(metadata_original, index = False, header=True, sep = "\t")
 
 
-def filter_samples_interest(samples, matrix, out):
+def filter_samples_interest(samples, matrix, partitions, out):
 	""" filter partitions summary """
 	
 	if "," in samples:
@@ -250,6 +250,9 @@ def filter_samples_interest(samples, matrix, out):
 		sys.exit()
 				
 	found = set()
+	
+	partitions_mx = pandas.read_table(partitions)
+	
 	with open(matrix, "r") as mx:
 		with open(out + "_SAMPLES_OF_INTEREST_partitions_summary.tsv", "w+") as outfile:
 			i = 0
@@ -270,10 +273,22 @@ def filter_samples_interest(samples, matrix, out):
 						print(",".join(samples_observed) + "\t" + lin[0], file = outfile)
 				i += 1
 			
-			if len(found) == 0:
-				print("*All samples of interest are singletons in all thresholds used!", file = outfile)
-			elif len(found) != len(samples_of_interest):
-				print("*Sample(s) " + ",".join(set(samples_of_interest) - found) + " does not belong to any of the identified clusters!", file = outfile)
+			if len(found) != len(samples_of_interest):
+				not_found = set(samples_of_interest) - found
+				samples_analyzed = list(partitions_mx[partitions_mx.columns[0]])
+				
+				singletons = []
+				do_not_exist = []
+				for sample in not_found:
+					if sample in samples_analyzed:
+						singletons.append(sample)
+					else:
+						do_not_exist.append(sample)
+				
+				if len(singletons) > 0:
+					print("*Sample(s) " + ",".join(singletons) + " are singletons at all thresholds used!", file = outfile)
+				if len(do_not_exist) > 0:
+					print("**Sample(s) " + ",".join(do_not_exist) + " were not found in the partitions table!", file = outfile)
 
 	
 # running the pipeline	----------
@@ -710,7 +725,7 @@ if __name__ == "__main__":
 			if s_of_interest != "all":
 				print("\tFiltering partitions_summary.tsv according to samples of interest...")
 				print("\tFiltering partitions_summary.tsv according to samples of interest...", file = log)
-				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output)
+				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output + "_partitions.tsv", args.output)
 
 	
 	## others provided	--------------------
@@ -1035,7 +1050,7 @@ if __name__ == "__main__":
 			if s_of_interest != "all":
 				print("\tFiltering partitions_summary.tsv according to samples of interest...")
 				print("\tFiltering partitions_summary.tsv according to samples of interest...", file = log)
-				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output)
+				filter_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output + "_partitions.tsv", args.output)
 		
 		
 			# if allele matrix was filtered, add this info in metadata
