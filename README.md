@@ -17,12 +17,14 @@ _ReporTree can help you to:_
 
 In summary, ReporTree facilitates and accelerates the production of surveillance-oriented reports, thus contributing to a sustainable and efficient public health genomics-informed pathogen surveillance.
 
-
-_2022.09.13 - NEWS!! ReporTree can take a list 
-_2022.06.25 - ReporTree can take VCF files as input!_
-
-
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO CITE THEM!_
+
+## News!
+
+#### 2022.09.21 - ReporTree v1.0.0
+This is the first release of ReporTree. For those who have already been using this tool, we warn you that ReporTree has suffered a major update in the last few days and we highlight the:     
+- _Change in the bahavior of the '-thr' argument_  
+Until now, this was a threshold with an "exclusive" behavior, i.e., when specifying '-thr 7', samples at a distance < 7 would correspond to the same cluster. In the new version, the behavior of the this argument has been harmonized for all clustering options of ReporTree pipeline, and now this threshold presents an "inclusive" behavior in all of them, i.e. samples at a distance **<= 7** correspond to the same cluster.
 
 
 ## Implementation
@@ -42,6 +44,8 @@ Allele/SNP profile matrix which will be used to obtain genetic clusters from a M
 Sequence alignment which will be converted into a profile and used to obtain genetic clusters  
 **OR**  
 VCF which will be converted into a profile and used to obtain genetic clusters    
+**OR**   
+TSV with a list of mutations per samples which will be converted into a profile and used to obtain genetic clusters    
 **OR**     
 Distance matrix which will be used to obtain genetic clusters       
 **OR**  
@@ -62,6 +66,7 @@ _In the following table we summarize the different options that ReporTree provid
 _TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) or the dendrogram resulting from hierarchical clustering at [auspice.us](https://auspice.us) or the MST resulting from GrapeTree at [GrapeTree](https://github.com/achtman-lab/GrapeTree). With these tools your dataset is visualised from the client-side in the browser._
 
 - partitions_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters present in partitions.tsv (note: singletons are not reported in this file but indicated in metadata_w_partitions.tsv)
+- SAMPLES_OF_INTEREST_partitions_summary.tsv - similar to partitions_summary.tsv but exclusively for the samples of interest     
 - variable_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for any (and as many) grouping variable present in metadata_w_partitions.tsv (such as, clade, lineage, ST, vaccination status, etc.)
 - partitions.tsv - genetic clusters obtained for each user-selected partition threshold
 - freq_matrix.tsv - frequencies of grouping variable present in metadata_w_partitions.tsv (e.g. lineage, ST, etc.) across another grouping variable (e.g. iso_week, country, etc.)
@@ -80,7 +85,7 @@ Dependencies:
 - [Pandas](https://pandas.pydata.org)
 - [Ete3](http://etetoolkit.org)
 - [cgmlst-dists](https://github.com/tseemann/cgmlst-dists)
-- [vcf2mst](https://github.com/vmixao/vcf2mst)
+- [vcf2mst](https://github.com/genpat-it/vcf2mst)
 
 Installation:
 ```bash
@@ -89,7 +94,7 @@ git clone https://github.com/insapathogenomics/ReporTree
 cd ReporTree/scripts/
 git clone https://github.com/insapathogenomics/GrapeTree
 git clone https://github.com/insapathogenomics/ComparingPartitions
-git clone https://github.com/vmixao/vcf2mst.git
+git clone https://github.com/genpat-it/vcf2mst.git
 ```
 
 
@@ -105,10 +110,6 @@ ReporTree:
                         [OPTIONAL] Input allele/SNP profile matrix (tsv format)
   -align ALIGNMENT, --alignment ALIGNMENT
                         [OPTIONAL] Input multiple sequence alignment (fasta format)
-  -vcf VCF, --vcf VCF   [OPTIONAL] Single-column list of VCF files (txt format). This file must comprise the full PATH to each vcf file.
-  -var VARIANTS, --variants VARIANTS
-                        [OPTIONAL] Input table (tsv format) with sample name in the first column and a comma-separated list of variants in the second column with the following regular expression:
-                        '\w(\d+)\w'
   -d_mx DISTANCE_MATRIX, --distance_matrix DISTANCE_MATRIX
                         [OPTIONAL] Input pairwise distance matrix (tsv format)
   -t TREE, --tree TREE  [OPTIONAL] Input tree (newick format)
@@ -116,6 +117,10 @@ ReporTree:
                         [OPTIONAL] Partitions file (tsv format) - 'partition' represents the threshold at which clustering information was obtained
   -m METADATA, --metadata METADATA
                         [MANDATORY] Metadata file (tsv format). To take the most profit of ReporTree functionalities, you must provide this file.
+  -vcf VCF, --vcf VCF   [OPTIONAL] Single-column list of VCF files (txt format). This file must comprise the full PATH to each vcf file.
+  -var VARIANTS, --variants VARIANTS
+                        [OPTIONAL] Input table (tsv format) with sample name in the first column and a comma-separated list of variants in the second column with the following regular expression:
+                        '\w(\d+)\w'
   -out OUTPUT, --output OUTPUT
                         [OPTIONAL] Tag for output file name (default = ReporTree)
   --list                [OPTIONAL] If after your command line you specify this option, ReporTree will list all the possible columns that you can use as input in '--columns_summary_report'. NOTE!! The
