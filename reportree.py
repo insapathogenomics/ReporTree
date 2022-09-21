@@ -288,7 +288,7 @@ def filter_samples_interest(samples, matrix, partitions, out):
 				if len(singletons) > 0:
 					print("*Sample(s) " + ",".join(singletons) + " are singletons at all thresholds used!", file = outfile)
 				if len(do_not_exist) > 0:
-					print("**Sample(s) " + ",".join(do_not_exist) + " were not found in the partitions table!", file = outfile)
+					print("**Sample(s) " + ",".join(do_not_exist) + " were not found in the partitions table! Please check if they were provided in the input file.", file = outfile)
 
 	
 # running the pipeline	----------
