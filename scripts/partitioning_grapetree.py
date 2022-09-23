@@ -20,9 +20,11 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 partitioning_grapetree_script = os.path.realpath(__file__)
 grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapetree.py"
+python = sys.executable
 
 version = "1.0.0"
-last_updated = "2022-08-26"
+last_updated = "2022-09-23"
+
 
 # defining parameters ----------
 
@@ -298,13 +300,13 @@ print("Running GrapeTree...")
 print("Running GrapeTree...", file = log)
 
 if args.wgmlst == True:
-	print("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST")
-	print("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST", file = log)
-	os.system("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST")
+	print(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST")
+	print(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST", file = log)
+	os.system(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " --wgMLST")
 else:
-	print("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes))
-	print("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes), file = log)
-	os.system("python " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes))
+	print(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes))
+	print(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes), file = log)
+	os.system(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes))
 
 
 # defining the threshold range ----------
