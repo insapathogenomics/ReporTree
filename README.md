@@ -102,6 +102,9 @@ Run ReporTree:
 python reportree.py -h
 ```
 
+_Note: Although you are installing GrapeTree in the conda enviroment, it is necessary to have the github repository with the modified version in the scripts/ directory._     
+
+
 ### Installation with Docker
 ```bash
 docker pull insapathogenomics/reportree:1.0.0
