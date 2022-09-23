@@ -18,10 +18,11 @@ import pandas
 import glob
 
 version = "1.0.0"
-last_updated = "2022-09-21"
+last_updated = "2022-09-23"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
+python = sys.executable
 
 
 # functions	----------
@@ -592,10 +593,10 @@ if __name__ == "__main__":
 				print("\t'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...", file = log)
 				log.close()
 				if args.keep_redundants:
-					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.partitions + " -t " + args.output + " -o1 " +  str(args.order) + " -a stability -n \
+					os.system(python + " " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.partitions + " -t " + args.output + " -o1 " +  str(args.order) + " -a stability -n \
 					" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " --keep-redundants -log " + log_name)
 				else:
-					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.partitions + " -t " + args.output + " -o1 " +  str(args.order) + " -a stability -n \
+					os.system(python + " " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.partitions + " -t " + args.output + " -o1 " +  str(args.order) + " -a stability -n \
 					" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
 				log = open(log_name, "a+")
 				
@@ -610,11 +611,11 @@ if __name__ == "__main__":
 			# getting metadata report
 			if args.metadata != "none":
 				if args.mx_transpose:
-					os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
+					os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
 					" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 					--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
 				else:
-					os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
+					os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
 					" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 					 --frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
 			log = open(log_name, "a+")
@@ -656,17 +657,17 @@ if __name__ == "__main__":
 			# running partitioning treecluster
 			if args.root_dist_by_node == False:
 				if args.support != "-inf":
-					os.system("python " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " --root-dist-by-node -d " + str(args.dist) + " \
+					os.system(python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " --root-dist-by-node -d " + str(args.dist) + " \
 					--method-threshold " + args.method_threshold + " --support " + str(args.support))
 				else:
-					os.system("python " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " --root-dist-by-node -d " + str(args.dist) + " \
+					os.system(python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " --root-dist-by-node -d " + str(args.dist) + " \
 					--method-threshold " + args.method_threshold)
 			else:
 				if args.support != "-inf":
-					os.system("python " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " -d " + str(args.dist) + " --method-threshold \
+					os.system(python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " -d " + str(args.dist) + " --method-threshold \
 					" + args.method_threshold + " --support " + str(args.support))
 				else:
-					os.system("python " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " -d " + str(args.dist) + " --method-threshold \
+					os.system(python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " -d " + str(args.dist) + " --method-threshold \
 					" + args.method_threshold)
 			log = open(log_name, "a+")
 		
@@ -683,10 +684,10 @@ if __name__ == "__main__":
 					filter_partitions_table(method, args.output + "_partitions.tsv")
 					log.close()
 					if args.keep_redundants:
-						os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 tmp.tsv -t " + args.output + "_" + method + " -o1 " + str(args.order) + " -a stability -n \
+						os.system(python + " " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 tmp.tsv -t " + args.output + "_" + method + " -o1 " + str(args.order) + " -a stability -n \
 						" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " --keep-redundants -log " + log_name)
 					else:
-						os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 tmp.tsv -t " + args.output + "_" + method + " -o1 " + str(args.order) + " -a stability -n \
+						os.system(python + " " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 tmp.tsv -t " + args.output + "_" + method + " -o1 " + str(args.order) + " -a stability -n \
 						" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
 					os.system("rm tmp.tsv")
 			else:
@@ -711,11 +712,11 @@ if __name__ == "__main__":
 		# getting metadata report
 		if args.metadata != "none":
 			if args.mx_transpose:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
+				os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
 			else:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
+				os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
 			log = open(log_name, "a+")
@@ -787,36 +788,36 @@ if __name__ == "__main__":
 				if args.subset:
 					if args.remove_ref:
 						if args.use_ref:
-							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " -m \
+							os.system(python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " -m \
 							" + args.metadata + " -f \"" + args.filter_column + "\" --sample-ATCG-content " + str(args.ATCG_content) + " -r " + args.reference + " --remove-reference \
 							--site-ATCG-content " + str(args.N_content) + " --use-reference-coords")
 						else:
-							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " -m \
+							os.system(python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " -m \
 							" + args.metadata + " -f \"" + args.filter_column + "\" --sample-ATCG-content " + str(args.ATCG_content) + " -r " + args.reference + " --remove-reference \
 							--site-ATCG-content " + str(args.N_content))
 					else:
 						if args.use_ref:
-							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " -m \
+							os.system(python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " -m \
 							" + args.metadata + " -f \"" + args.filter_column + "\" --sample-ATCG-content " + str(args.ATCG_content) + " -r " + args.reference + " --site-ATCG-content \
 							" + str(args.N_content) + " --use-reference-coords")
 						else:
-							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " -m \
+							os.system(python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " -m \
 							" + args.metadata + " -f \"" + args.filter_column + "\" --sample-ATCG-content " + str(args.ATCG_content) + " -r " + args.reference + " --site-ATCG-content \
 							" + str(args.N_content))
 				else:
 					if args.remove_ref:
 						if args.use_ref:
-							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
+							os.system(python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
 							" + str(args.ATCG_content) + " -r " + args.reference + " --remove-reference --site-ATCG-content " + str(args.N_content) + " --use-reference-coords")
 						else:
-							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
+							os.system(python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
 							" + str(args.ATCG_content) + " -r " + args.reference + " --remove-reference --site-ATCG-content " + str(args.N_content))
 					else:
 						if args.use_ref:
-							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
+							os.system(python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
 							" + str(args.ATCG_content) + " -r " + args.reference + " --site-ATCG-content " + str(args.N_content) + " --use-reference-coords")
 						else:
-							os.system("python " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
+							os.system(python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content \
 							" + str(args.ATCG_content) + " -r " + args.reference + " --site-ATCG-content " + str(args.N_content))
 						
 				if os.path.exists(args.output + "_align_profile.tsv"):
@@ -887,77 +888,77 @@ if __name__ == "__main__":
 				if args.matrix4grapetree == True:
 					if args.wgmlst == True:
 						if args.subset == True:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
 							-f \"" + args.filter_column + "\" --matrix-4-grapetree" +  " --site-inclusion " + str(args.N_content))
 						else:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree \
 							 --site-inclusion " + str(args.N_content))
 					else:
 						if args.subset == True:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
 							-f \"" + args.filter_column + "\" --matrix-4-grapetree --site-inclusion " + str(args.N_content))
 						else:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree  --site-inclusion \
 							" + str(args.N_content))
 				else:
 					if args.wgmlst == True:
 						if args.subset == True:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
 							-f \"" + args.filter_column + "\" --site-inclusion " + str(args.N_content))
 						else:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) +  " --site-inclusion \
 							" + str(args.N_content))
 					else:
 						if args.subset == True:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
 							-f \"" + args.filter_column + "\" --site-inclusion " + str(args.N_content))
 						else:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) +  " --site-inclusion " + str(args.N_content))
 			else:
 				if args.matrix4grapetree == True:
 					if args.wgmlst == True:
 						if args.subset == True:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
 							-f \"" + args.filter_column + "\" --matrix-4-grapetree --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
 						else:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree \
 							 --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
 					else:
 						if args.subset == True:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
 							-f \"" + args.filter_column + "\" --matrix-4-grapetree --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
 						else:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree \
 							--loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
 				else:
 					if args.wgmlst == True:
 						if args.subset == True:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
 							-f \"" + args.filter_column + "\" --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
 						else:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --loci-called \
 							" + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
 					else:
 						if args.subset == True:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
 							-f \"" + args.filter_column + "\" --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
 						else:
-							os.system("python " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --loci-called \
 							" + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))		
 			log = open(log_name, "a+")
@@ -969,24 +970,24 @@ if __name__ == "__main__":
 			if not distance_matrix_input:
 				if args.loci_called != "":
 					if args.subset == True:
-						os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+						os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 						-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\" --loci-called " + args.loci_called + " --site-inclusion " + str(args.N_content))
 					else:
-						os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+						os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 						-d " + str(args.dist) + " --loci-called " + str(args.loci_called) + " --site-inclusion " + str(args.N_content))
 				else:
 					if args.subset == True:
-						os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+						os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 						-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\"" + " --site-inclusion " + str(args.N_content))
 					else:
-						os.system("python " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+						os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 						-d " + str(args.dist) + " --site-inclusion " + str(args.N_content))
 			else:
 				if args.subset == True:
-					os.system("python " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+					os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 					-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + " --site-inclusion " + str(args.N_content))
 				else:
-					os.system("python " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+					os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 					-d " + str(args.dist) + " --site-inclusion " + str(args.N_content))
 			log = open(log_name, "a+")
 		
@@ -1007,10 +1008,10 @@ if __name__ == "__main__":
 				print("\t'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...", file = log)
 				log.close()
 				if args.keep_redundants:
-					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.output + "_partitions.tsv -t " + args.output + " -o1 " + str(args.order) + " -a \
+					os.system(python + " " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.output + "_partitions.tsv -t " + args.output + " -o1 " + str(args.order) + " -a \
 					stability -n " + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " --keep-redundants -log " + log_name)
 				else:
-					os.system("python " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.output + "_partitions.tsv -t " + args.output + " -o1 " + str(args.order) + " -a \
+					os.system(python + " " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + args.output + "_partitions.tsv -t " + args.output + " -o1 " + str(args.order) + " -a \
 					stability -n " + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name)
 			else:
 				if args.threshold == "max" and args.dist != 1.0:
@@ -1035,11 +1036,11 @@ if __name__ == "__main__":
 		if args.metadata != "none":
 			metadata = args.metadata
 			if args.mx_transpose:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
+				os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
 			else:
-				os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
+				os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 				--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
 		
@@ -1068,11 +1069,11 @@ if __name__ == "__main__":
 		print("\nOnly metadata file provided -> only metadata_report.py will be run:\n", file = log)
 		log.close()
 		if args.mx_transpose:
-			os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
+			os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
 			" + args.columns_summary_report + " --partitions2report " + args.partitions2report + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 			--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' --mx-transpose")
 		else:
-			os.system("python " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
+			os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -o " + args.output + " --columns_summary_report \
 			" + args.columns_summary_report + " --partitions2report " + args.partitions2report + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 			--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\'")
 		log = open(log_name, "a+")
