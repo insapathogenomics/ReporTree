@@ -1,4 +1,4 @@
-sample	country	region	source	date	iso_year	iso_week_nr	iso_week	ST	note	MST-5x1.0	MST-8x1.0	MST-15x1.0
+sample	country	region	source	date	iso_year	iso_week_nr	iso_week	ST	note	MST-4x1.0	MST-7x1.0	MST-14x1.0
 sample_0001	A	A1	clinical	2021-11-21	2021	46	2021W46	na	not_real_data_test_only	cluster_37	cluster_92	cluster_102
 sample_0002	B	B1	clinical	2021-10-11	2021	41	2021W41	na	not_real_data_test_only	singleton_394	singleton_314	singleton_227
 sample_0003	C	B1	clinical	2021-10-24	2021	42	2021W42	388	not_real_data_test_only	singleton_325	singleton_245	singleton_158

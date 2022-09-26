@@ -1,24 +1,32 @@
 
 ******************** running reportree.py ********************
 
-../../ReporTree/reportree.py -m Listeria_input_metadata.tsv -a Listeria_input_alleles.tsv --columns_summary_report n_sample,source,n_country,country,n_region,region,first_seq_date,last_seq_date,timespan_days,ST --metadata2report ST,source,iso_year -thr 5,8,15 --frequency-matrix ST,iso_year --count-matrix ST,iso_year --matrix-4-grapetree --mx-transpose -out Listeria_outbreak_level_example
-start: 2022-02-23 14:09:53.315958
+version 1.0.0 last updated on 2022-09-23 
 
-Allelic profiles file provided -> will run partitioning_grapetree.py and metadata_report.py:
+/Users/veronicamixao/ReporTree/reportree.py -m input/Listeria_input_metadata.tsv -a input/Listeria_input_alleles.tsv --columns_summary_report n_sample,source,n_country,country,n_region,region,first_seq_date,last_seq_date,timespan_days,ST --metadata2report ST,source,iso_year -thr 4,7,14 --frequency-matrix ST,iso_year --count-matrix ST,iso_year --matrix-4-grapetree --mx-transpose -out output/Listeria_outbreak_level_example --analysis grapetree 
+
+start: 2022-09-26 11:55:54.270093
+
+Profiles file provided -> will run partitioning_grapetree.py:
 
 
 -------------------- partitioning_grapetree.py --------------------
 
-/mnt/extra_disk_02/TEMP_SARS_CoV_2/ReporTree/ReporTree/scripts/partitioning_grapetree.py -a Listeria_input_alleles.tsv -o Listeria_outbreak_level_example --method MSTreeV2 --missing 0 --n_proc 5 -thr 5,8,15 -d 1.0 --matrix-4-grapetree
+version 1.0.0 last updated on 2022-09-23 
+
+/Users/veronicamixao/ReporTree/scripts/partitioning_grapetree.py -a input/Listeria_input_alleles.tsv -o output/Listeria_outbreak_level_example --method MSTreeV2 --missing 0 --n_proc 5 -thr 4,7,14 -d 1.0 --matrix-4-grapetree --site-inclusion 0.0 
+
+Keeping only sites/loci with information in >= 0.0% of the samples...
+	From the 1748 loci/positions, 1748 were kept in the matrix.
 Running GrapeTree...
-python /mnt/extra_disk_02/TEMP_SARS_CoV_2/ReporTree/ReporTree/scripts/GrapeTree/grapetree.py -p Listeria_input_alleles.tsv -m MSTreeV2 -o Listeria_outbreak_level_example --missing 0 --n_proc 5
+/Users/veronicamixao/miniconda3/envs/REPORTREE/bin/python /Users/veronicamixao/ReporTree/scripts/GrapeTree/grapetree.py -p output/Listeria_outbreak_level_example_clean_missing_matrix.tsv -m MSTreeV2 -o output/Listeria_outbreak_level_example --missing 0 --n_proc 5
 
 Processing clustering threshold...
 Getting redundant sample information...
 Defining clusters...
-	Calculating clustering in range 5 6 with a distance of 1.0
-	Calculating clustering in range 8 9 with a distance of 1.0
-	Calculating clustering in range 15 16 with a distance of 1.0
+	Calculating clustering in range 4 5 with a distance of 1.0
+	Calculating clustering in range 7 8 with a distance of 1.0
+	Calculating clustering in range 14 15 with a distance of 1.0
 Creating cluster composition file...
 Creating sample partitions file...
 
@@ -26,8 +34,11 @@ partitioning_grapetree.py is done!
 
 -------------------- metadata_report.py --------------------
 
-/mnt/extra_disk_02/TEMP_SARS_CoV_2/ReporTree/ReporTree/scripts/metadata_report.py -m Listeria_input_metadata.tsv -p Listeria_outbreak_level_example_partitions.tsv -o Listeria_outbreak_level_example --columns_summary_report n_sample,source,n_country,country,n_region,region,first_seq_date,last_seq_date,timespan_days,ST --partitions2report all --metadata2report ST,source,iso_year -f  --frequency-matrix ST,iso_year --count-matrix ST,iso_year --mx-transpose
-Getting information from the partitions table: Listeria_outbreak_level_example_partitions.tsv
+version 1.0.0 last updated on 2022-09-12 
+
+/Users/veronicamixao/ReporTree/scripts/metadata_report.py -m input/Listeria_input_metadata.tsv -p output/Listeria_outbreak_level_example_partitions.tsv -o output/Listeria_outbreak_level_example --columns_summary_report n_sample,source,n_country,country,n_region,region,first_seq_date,last_seq_date,timespan_days,ST --partitions2report all --metadata2report ST,source,iso_year -f  --frequency-matrix ST,iso_year --count-matrix ST,iso_year --mx-transpose 
+
+Getting information from the partitions table: output/Listeria_outbreak_level_example_partitions.tsv
 Getting metadata information...
 		Samples present in partitions table but missing in metadata table: 
 		Samples not present in partitions table but present in metadata table: 
@@ -44,5 +55,5 @@ metadata_report.py is done!
 ReporTree is done! If you found any issue please contact us!!
 
 
-End: 2022-02-23 14:10:07.541000
-Time elapsed: 0:00:14.225042
+End: 2022-09-26 11:56:28.217412
+Time elapsed: 0:00:33.947319
