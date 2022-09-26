@@ -310,7 +310,7 @@ reportree.py -m metadata.tsv -t tree.nw -out output -d dist --method-threshold m
 ### How to run ReporTree with an allele matrix as input and obtain the genetic clusters from a MST?
 
 ```bash
-reportree.py -m metadata.tsv -a allele_matrix.tsv -out output -d dist --method MSTreeV2 -thr 5,8,15 --matrix-4-grapetree --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 -AdjW adjusted_wallace -n n --analysis grapetree
+reportree.py -m metadata.tsv -a allele_matrix.tsv -out output -d dist --method MSTreeV2 -thr 4,7,14 --matrix-4-grapetree --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 -AdjW adjusted_wallace -n n --analysis grapetree
 ```
 
 ### How to run ReporTree with an alignment as input and obtain the genetic clusters with hierarchical clustering?
@@ -329,7 +329,7 @@ ReporTree is currently applied to generate weekly reports about SARS-CoV-2 varia
 
 ### Outbreak detection - bacterial foodborne pathogen (e.g. _Listeria monocytogenes_) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#outbreak-detection---bacterial-foodborne-pathogen-eg-listeria-monocytogenes)
 
-ReporTree can facilitate the routine surveillance and outbreak investigation of bacterial pathogens, such as foodborne pathogens. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#outbreak-detection---bacterial-foodborne-pathogen-eg-listeria-monocytogenes), we provide a simple example of the usage of ReporTree to rapidly identify and characterize potential Listeriosis outbreaks. With a single command, ReporTree builds a MST from cgMLST data and **automatically extracts genetic clusters at three high resolution levels (<5, <8, <15 allelic differences)**, and provides comprehensive reports about the sample collection (e.g. ST sequence count/frequency per year, etc).  
+ReporTree can facilitate the routine surveillance and outbreak investigation of bacterial pathogens, such as foodborne pathogens. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#outbreak-detection---bacterial-foodborne-pathogen-eg-listeria-monocytogenes), we provide a simple example of the usage of ReporTree to rapidly identify and characterize potential Listeriosis outbreaks. With a single command, ReporTree builds a MST from cgMLST data and **automatically extracts genetic clusters at three high resolution levels (<=4, <=7, <=14 allelic differences)**, and provides comprehensive reports about the sample collection (e.g. ST sequence count/frequency per year, etc).  
 
 
 ### Large-scale genetic clustering and linkage to antibiotic resistance data (e.g. _Neisseria gonorrhoeae_) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#large-scale-genetic-clustering-and-linkage-to-antibiotic-resistance-data-eg-neisseria-gonorrhoeae)
