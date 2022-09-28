@@ -86,6 +86,7 @@ _TIP: Users can interactively visualize and explore the ReporTree derived cluste
 - [Ete3](http://etetoolkit.org)
 - [cgmlst-dists](https://github.com/tseemann/cgmlst-dists)
 - [vcf2mst](https://github.com/genpat-it/vcf2mst)
+- [snp-sites](https://github.com/sanger-pathogens/snp-sites)
 
 ### Installation with conda:
 ```bash
