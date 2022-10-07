@@ -17,8 +17,8 @@ from datetime import date
 import pandas
 import glob
 
-version = "1.0.0"
-last_updated = "2022-09-23"
+version = "1.0.1"
+last_updated = "2022-10-07"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -247,8 +247,8 @@ def filter_samples_interest(samples, matrix, partitions, out):
 				else:
 					samples_of_interest.append(l)
 	else:
-		print("You did not provide a valid input for samples of interest!!")
-		sys.exit()
+		samples_of_interest = []
+		samples_of_interest.append(samples)
 				
 	found = set()
 	
