@@ -20,6 +20,8 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO CITE THEM!_
 
 ## News!
+#### 2022.10.14 - release docker image insapathogenomics/reportree:1.0.1
+This new docker image fixes a bug in the installation of snp-sites, which was affecting the alignment processing.   
 
 #### 2022.09.21 - ReporTree v1.0.0
 This is the first release of ReporTree. For those who have already been using this tool, we warn you that ReporTree has suffered a major update in the last few days and we highlight the:     
@@ -108,12 +110,12 @@ _Note: Although you are installing GrapeTree in the conda enviroment, it is nece
 
 ### Installation with Docker
 ```bash
-docker pull insapathogenomics/reportree:1.0.0
+docker pull insapathogenomics/reportree:1.0.1
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:1.0.0 reportree.py -h
+docker run insapathogenomics/reportree:1.0.1 reportree.py -h
 ```
 
 ## Usage
