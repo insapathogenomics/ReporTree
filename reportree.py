@@ -985,7 +985,7 @@ if __name__ == "__main__":
 			else:
 				if args.subset == True:
 					os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-					-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + " --site-inclusion " + str(args.N_content))
+					-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\" --site-inclusion " + str(args.N_content))
 				else:
 					os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 					-d " + str(args.dist) + " --site-inclusion " + str(args.N_content))
