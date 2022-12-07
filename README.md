@@ -23,7 +23,7 @@ _Note: this tool relies on the usage of programs/modules of other developers. DO
 #### 2022.12.06 - ReporTree v1.1.0
 This new version of ReporTree has new features:
 - _New argument: '--pct_threshold'_    
-Specific for analyses using GrapeTree. With this argument you can specify the threshold for cluster definition as the proportion of allelic/SNP differences in the final allelic schema size or number of informative positions. This option is particularly useful for dynamic wgMLST analyses.
+Specific for analyses using GrapeTree. With this argument you can specify the threshold for cluster definition as the proportion of allelic/SNP differences in the final allelic schema size or number of informative positions. This option is particularly useful for dynamic wgMLST analyses, i.e., analyses in which ReporTree is requested to automatically use a sub-schema of the initial wgMLST schema comprising the loci called in all the isolates under analysis. By maximizing the shared genome, this dynamic approach might allow increasing the resolution power.
 - _New argument: '--pct-HC-threshold'_     
 Similar to the previous one, but specific for analyses using Hierarchical Clustering.
 - _New argument: '--root'_     
@@ -34,7 +34,7 @@ This new docker image fixes a bug in the installation of snp-sites, which was af
 
 #### 2022.09.21 - ReporTree v1.0.0
 This is the first release of ReporTree. For those who have already been using this tool, we warn you that ReporTree has suffered a major update in the last few days and we highlight the:     
-- _Change in the bahavior of the '-thr' argument_  
+- _Change in the behavior of the '-thr' argument_  
 Until now, this was a threshold with an "exclusive" behavior, i.e., when specifying '-thr 7', samples at a distance < 7 would correspond to the same cluster. In the new version, the behavior of the this argument has been harmonized for all clustering options of ReporTree pipeline, and now this threshold presents an "inclusive" behavior in all of them, i.e. samples at a distance **<= 7** correspond to the same cluster.
 
 
