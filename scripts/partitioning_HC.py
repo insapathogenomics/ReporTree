@@ -15,8 +15,8 @@ from datetime import date
 from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_tree
 from scipy.spatial.distance import squareform
 
-version = "1.0.0"
-last_updated = "2022-08-29"
+version = "1.1.0"
+last_updated = "2022-12-06"
 
 # functions	----------
 
@@ -257,10 +257,13 @@ if __name__ == "__main__":
 	group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=False, type=str, help="[OPTIONAL] Input allele profile matrix (can either be an allele matrix or a SNP matrix)")
 	group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
 	group0.add_argument("--HC-threshold", dest="method_threshold", required=False, default="single", 
-						help="List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, just write \
+						help="[OPTIONAL] List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, just write \
 						the method name (e.g. single). To get clustering at a specific threshold, indicate the threshold with a hyphen (e.g. single-10). To get clustering at a specific \
 						range, indicate the range with a hyphen (e.g. single-2-10). Note: Threshold values are inclusive, i.e. '--HC-threshold single-7' will consider samples with <= 7 \
 						differences as belonging to the same cluster! Default: single (List of possible methods: single, complete, average, weighted, centroid, median, ward)")
+	group0.add_argument("--pct-HC-threshold", dest="pct_HCmethod_threshold", required=False, default="none", help="[OPTIONAL] Similar to '--HC-threshold' but the partition threshold for cluster definition \
+						is set as the proportion of differences to the final allelic schema size or number of informative positions, e.g. '--pct-HC-threshold single-0.005' corresponds to a \
+						threshold of 5 allelic/SNP differences in a matrix with 1000 loci/sites under analysis. Ranges CANNOT be specified.")
 	group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
 						proportion of samples per site/loci without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
 						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment loci/positions (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
@@ -375,6 +378,7 @@ if __name__ == "__main__":
 		
 		# convert ATCG to integers
 		conv_nucl(allele_mx)
+		total_size = len(allele_mx.columns) - 1
 		
 		
 		# run cgmlst-dists
@@ -428,14 +432,47 @@ if __name__ == "__main__":
 	
 	clustering = {"sequence": distance_mx.columns.tolist()}
 	
+	combinations2run = {}
+	pct_correspondence = {}
+	
+	if args.pct_HCmethod_threshold != "none":
+		print("\n\tCorrespondence between percentage and number of differences:")
+		print("\n\tCorrespondence between percentage and number of differences:", file = log)
+		print("\n\t#METHOD\tPERCENTAGE\tDIFFERENCES")
+		print("\n\t#METHOD\tPERCENTAGE\tDIFFERENCES", file = log)
+		for combination_pct in args.pct_HCmethod_threshold.split(","):
+			method = combination_pct.split("-")[0]
+			threshold_pct = combination_pct.split("-",1)[1]
+			threshold = str(int(int(total_size) * float(threshold_pct)))
+			info_run = threshold,"pct"
+			
+			if method not in combinations2run.keys():
+				combinations2run[method] = []
+			combinations2run[method].append(info_run)
+
+			if threshold not in pct_correspondence.keys():
+				pct_correspondence[threshold] = []
+			if str(threshold_pct) not in pct_correspondence[threshold]:
+				pct_correspondence[threshold].append(str(threshold_pct))
+				print("\t" + str(float(threshold_pct)*100) + "\t" + str(threshold))
+				print("\t" + str(float(threshold_pct)*100) + "\t" + str(threshold), file = log)
+		
 	for combination in args.method_threshold.split(","):
 		if "-" not in combination:
 			method = combination
-			threshold = "all"
+			if method not in combinations2run.keys():
+				threshold = "all"
+				info_run = threshold,"general"
+				combinations2run[method].append(info_run)
 		else:
 			method = combination.split("-")[0]
-			threshold = combination.split("-",1)[1]
-		
+			threshold = str(combination.split("-",1)[1])
+			info_run = threshold,"general"
+			combinations2run[method].append(info_run)
+	
+	cluster_details = {}
+	
+	for method in combinations2run.keys():
 		print("Hierarchical clustering with method: " + method + "...")
 		print("Hierarchical clustering with method: " + method + "...", file = log)
 		hc_matrix, max_dist = hcluster(condensed_dist_mx, method, log)
@@ -456,52 +493,16 @@ if __name__ == "__main__":
 		print("\tDefining clusters...")
 		print("\tDefining clusters...", file = log)
 		
-		cluster_details = {}
 		
-		if threshold == "all":
-			print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist))
-			print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist), file = log)
-			for thr in range(0,int(max_dist) + 1):
-				partition = method + "-" + str(thr) + "x" + str(args.dist)
-				if partition not in cluster_details.keys():
-					cluster_details[partition] = {}
-				info_clusters = list(fcluster(hc_matrix, t = int(thr) * args.dist, criterion = "distance"))
-				# change cluster name according to cluster size
-				counter = {}
-				singleton_counter = 0
-				for cluster in set(info_clusters):
-					counter[cluster] = info_clusters.count(cluster)
-				for i in range(len(info_clusters)):
-					if counter[info_clusters[i]] == 1:
-						singleton_counter += 1
-						info_clusters[i] = "singleton_" + str(singleton_counter)
-						if info_clusters[i] not in cluster_details[partition].keys():
-							cluster_details[partition][info_clusters[i]] = {}
-							cluster_details[partition][info_clusters[i]][1] = []
-						cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
-					else:
-						cluster_size = counter[info_clusters[i]]
-						info_clusters[i] = "cluster_" + str(info_clusters[i])
-						if info_clusters[i] not in cluster_details[partition].keys():
-							cluster_details[partition][info_clusters[i]] = {}
-							cluster_details[partition][info_clusters[i]][cluster_size] = []
-						cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
-				clustering[partition] = info_clusters
-		else:
-			if "-" in threshold:
-				min_thr = int(threshold.split("-")[0])
-				max_thr = int(threshold.split("-")[1]) + 1
-				
-				if max_thr > max_dist:
-					max_thr = str(max_dist)
-				
-				print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist))
-				print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist), file = log)
-				for thr in range(min_thr,max_thr):
+		for threshold,request in combinations2run[method]:
+			if threshold == "all":
+				print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist))
+				print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist), file = log)
+				for thr in range(0,int(max_dist) + 1):
 					partition = method + "-" + str(thr) + "x" + str(args.dist)
 					if partition not in cluster_details.keys():
 						cluster_details[partition] = {}
-					info_clusters = list(fcluster(hc_matrix, t = thr * args.dist, criterion = "distance"))
+					info_clusters = list(fcluster(hc_matrix, t = int(thr) * args.dist, criterion = "distance"))
 					# change cluster name according to cluster size
 					counter = {}
 					singleton_counter = 0
@@ -524,34 +525,99 @@ if __name__ == "__main__":
 							cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
 					clustering[partition] = info_clusters
 			else:
-				partition = method + "-" + str(threshold) + "x" + str(args.dist)
-				if partition not in cluster_details.keys():
-					cluster_details[partition] = {}
-				print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist))
-				print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist), file = log)
-				info_clusters = list(fcluster(hc_matrix, t = int(threshold) * args.dist, criterion = "distance"))
-				# change cluster name according to cluster size
-				counter = {}
-				singleton_counter = 0
-				for cluster in set(info_clusters):
-					counter[cluster] = info_clusters.count(cluster)
-				for i in range(len(info_clusters)):
-					if counter[info_clusters[i]] == 1:
-						singleton_counter += 1
-						info_clusters[i] = "singleton_" + str(singleton_counter)
-						if info_clusters[i] not in cluster_details[partition].keys():
-							cluster_details[partition][info_clusters[i]] = {}
-							cluster_details[partition][info_clusters[i]][1] = []
-						cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
-					else:
-						cluster_size = counter[info_clusters[i]]
-						info_clusters[i] = "cluster_" + str(info_clusters[i])
-						if info_clusters[i] not in cluster_details[partition].keys():
-							cluster_details[partition][info_clusters[i]] = {}
-							cluster_details[partition][info_clusters[i]][cluster_size] = []
-						cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
-				clustering[partition] = info_clusters
-
+				if "-" in threshold:
+					min_thr = int(threshold.split("-")[0])
+					max_thr = int(threshold.split("-")[1]) + 1
+					
+					if max_thr > max_dist:
+						max_thr = str(max_dist)
+					
+					print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist))
+					print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist), file = log)
+					for thr in range(min_thr,max_thr):
+						partition = method + "-" + str(thr) + "x" + str(args.dist)
+						if partition not in cluster_details.keys():
+							cluster_details[partition] = {}
+						info_clusters = list(fcluster(hc_matrix, t = thr * args.dist, criterion = "distance"))
+						# change cluster name according to cluster size
+						counter = {}
+						singleton_counter = 0
+						for cluster in set(info_clusters):
+							counter[cluster] = info_clusters.count(cluster)
+						for i in range(len(info_clusters)):
+							if counter[info_clusters[i]] == 1:
+								singleton_counter += 1
+								info_clusters[i] = "singleton_" + str(singleton_counter)
+								if info_clusters[i] not in cluster_details[partition].keys():
+									cluster_details[partition][info_clusters[i]] = {}
+									cluster_details[partition][info_clusters[i]][1] = []
+								cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
+							else:
+								cluster_size = counter[info_clusters[i]]
+								info_clusters[i] = "cluster_" + str(info_clusters[i])
+								if info_clusters[i] not in cluster_details[partition].keys():
+									cluster_details[partition][info_clusters[i]] = {}
+									cluster_details[partition][info_clusters[i]][cluster_size] = []
+								cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
+						clustering[partition] = info_clusters
+				else:
+					if request == "general":
+						partition = method + "-" + str(threshold) + "x" + str(args.dist)
+						if partition not in cluster_details.keys():
+							cluster_details[partition] = {}
+						print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist))
+						print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist), file = log)
+						info_clusters = list(fcluster(hc_matrix, t = int(threshold) * args.dist, criterion = "distance"))
+						# change cluster name according to cluster size
+						counter = {}
+						singleton_counter = 0
+						for cluster in set(info_clusters):
+							counter[cluster] = info_clusters.count(cluster)
+						for i in range(len(info_clusters)):
+							if counter[info_clusters[i]] == 1:
+								singleton_counter += 1
+								info_clusters[i] = "singleton_" + str(singleton_counter)
+								if info_clusters[i] not in cluster_details[partition].keys():
+									cluster_details[partition][info_clusters[i]] = {}
+									cluster_details[partition][info_clusters[i]][1] = []
+								cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
+							else:
+								cluster_size = counter[info_clusters[i]]
+								info_clusters[i] = "cluster_" + str(info_clusters[i])
+								if info_clusters[i] not in cluster_details[partition].keys():
+									cluster_details[partition][info_clusters[i]] = {}
+									cluster_details[partition][info_clusters[i]][cluster_size] = []
+								cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
+						clustering[partition] = info_clusters
+					elif request == "pct":
+						partition = method + "-" + str(threshold) + "_(" + "_".join(pct_correspondence[threshold]) + ")"
+						if partition not in cluster_details.keys():
+							cluster_details[partition] = {}
+						print("\tCalculating clustering for threshold " + method + "-" + str(threshold) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[threshold]))
+						print("\tCalculating clustering for threshold " + method + "-" + str(threshold) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[threshold]), file = log)
+						info_clusters = list(fcluster(hc_matrix, t = int(threshold), criterion = "distance"))
+						# change cluster name according to cluster size
+						counter = {}
+						singleton_counter = 0
+						for cluster in set(info_clusters):
+							counter[cluster] = info_clusters.count(cluster)
+						for i in range(len(info_clusters)):
+							if counter[info_clusters[i]] == 1:
+								singleton_counter += 1
+								info_clusters[i] = "singleton_" + str(singleton_counter)
+								if info_clusters[i] not in cluster_details[partition].keys():
+									cluster_details[partition][info_clusters[i]] = {}
+									cluster_details[partition][info_clusters[i]][1] = []
+								cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
+							else:
+								cluster_size = counter[info_clusters[i]]
+								info_clusters[i] = "cluster_" + str(info_clusters[i])
+								if info_clusters[i] not in cluster_details[partition].keys():
+									cluster_details[partition][info_clusters[i]] = {}
+									cluster_details[partition][info_clusters[i]][cluster_size] = []
+								cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
+						clustering[partition] = info_clusters
+				
 
 	# output partitions
 	

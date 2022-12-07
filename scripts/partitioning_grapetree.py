@@ -22,8 +22,8 @@ partitioning_grapetree_script = os.path.realpath(__file__)
 grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapetree.py"
 python = sys.executable
 
-version = "1.0.0"
-last_updated = "2022-09-23"
+version = "1.1.0"
+last_updated = "2022-12-06"
 
 
 # defining parameters ----------
@@ -78,6 +78,11 @@ group0.add_argument("--n_proc",  dest="number_of_processes", type=int, default=5
 group0.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="[OPTIONAL] Partition thresholds for clustering definition. Different thresholds can be comma-separated \
 					(e.g. 5,8,16). Ranges can be specified with an hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 0 \
 					to max. Note: Threshold values are inclusive, i.e. '-thr 7' will consider samples with <= 7 differences as belonging to the same cluster!")
+group0.add_argument("-pct_thr", "--pct_threshold", dest="pct_threshold", default = "none", help="[[OPTIONAL] Similar to 'thr' but values are indicated as the proportion of differences to the \
+					final allelic schema size or number of informative positions, e.g. '-pct_thr 0.005' corresponds to a threshold of 5 allelic/SNP differences in a matrix with 1000 \
+					loci/sites under analysis). Different values can be comma-separated (e.g. 0.005,0.01,0.1). Ranges CANNOT be specified. This option is particularly useful for dynamic \
+					wgMLST analysis for which the size of the schema under analysis is contigent on dataset diversity. Note: This argument can be specified even if you used the '-thr' \
+					argument.")
 group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to select the samples to reconstruct the minimum \
 					spanning tree according to the '--filter' argument")
 group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples of the allele matrix that must \
@@ -87,6 +92,8 @@ group0.add_argument("-f", "--filter", dest="filter_column", required=False, defa
 					so, do not leave spaces before and after commas/semicolons.")
 group0.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
 					-thr 5,8,10-30, the tree will be cut at 50,80,100,110,120,...,300). Currently, the default is 1, which is equivalent to 1 allele/SNP distance. [1.0]")
+group0.add_argument("--hamming", dest="hamming", required=False, action="store_true", help="Set only if you WANT a pairwise distance matrix calculated with hamming distance! Note: this is an \
+					extra file that can be output just for your own interest - this matrix will not be used for clustering.")	
 group0.add_argument("--matrix-4-grapetree", dest="matrix4grapetree", required=False, action="store_true", help="Output an additional allele profile matrix with the header ready for GrapeTree \
 					visualization. Set only if you WANT the file!")	
 						
@@ -215,6 +222,7 @@ if args.metadata != "" and args.filter_column != "" and ".fasta" not in args.all
 	print("\tFrom the " + str(initial_samples) + " samples, " + str(final_samples) + " were kept in the matrix...", file = log)
 	allele_mx_filtered.to_csv(args.out + "_subset_matrix.tsv", index = False, header=True, sep ="\t")
 	allele_filename = args.out + "_subset_matrix.tsv"
+	total_size = len(allele_mx_filtered.columns) - 1
 	
 elif args.metadata != "" and args.filter_column == "":
 	print("Metadata file was provided but no filter was found... I am confused :-(")
@@ -230,6 +238,7 @@ else:
 	sample_column = "sequence"
 	allele_filename = args.allele_profile
 	allele_mx = pandas.read_table(allele_filename, dtype = str)
+	total_size = len(allele_mx.columns) - 1
 
 
 # cleaning allele matrix (columns)
@@ -252,6 +261,7 @@ if args.samples_called != 0.0 and not os.path.exists(args.out + "_align_profile.
 	pos_t1 = len(mx_allele.columns[1:])
 	print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
 	print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
+	total_size = len(mx_allele.columns) - 1
 		
 
 # cleaning allele matrix (rows)	----------
@@ -282,7 +292,7 @@ if args.loci_called != "":
 	allele_mx.to_csv(args.out + "_flt_samples_matrix.tsv", index = False, header=True, sep ="\t")
 	allele_filename = args.out + "_flt_samples_matrix.tsv"
 	report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
-	
+	total_size = len(allele_mx.columns) - 1
 	
 # preparing allele matrix for grapetree	----------
 
@@ -292,7 +302,27 @@ if args.matrix4grapetree:
 	if first_col[0] != "#":
 		mx_allele = mx_allele.rename(columns={first_col: "#" + first_col})
 		mx_allele.to_csv(args.out + "_alleles_4_grapetree.tsv", index = False, header=True, sep ="\t")
+
+
+# getting distance matrix - hamming	----------
+
+if args.hamming:	
+	print("Getting the pairwise distance matrix with cgmlst-dists...")
+	print("Getting the pairwise distance matrix with cgmlst-dists...", file = log)
+			
+			
+	# convert ATCG to integers
+	alleles = allele_mx.replace({"N": "0", "A": "1", "C": "2", "T": "3", "G": "4", "n": "0", "a": "1", "c": "2", "t": "3", "g": "4"})
+	alleles.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
+			
 		
+	# run cgmlst-dists
+	os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist_hamming.tsv")
+	os.system("rm temporary_profile.tsv")
+	temp_df = pandas.read_table(args.out + "_dist_hamming.tsv", dtype = str)
+	temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
+	temp_df.to_csv(args.out + "_dist_hamming.tsv", sep = "\t", index = None)
+					
 		
 # running grapetree	----------
 
@@ -313,6 +343,7 @@ else:
 
 print("\nProcessing clustering threshold...")
 print("\nProcessing clustering threshold...", file = log)
+
 distances = []
 range_def = []
 
@@ -326,6 +357,9 @@ with open(args.out + "_dist.tsv", "r") as groups:
 	max_distance = max(distances) + 1
 		
 distance_magnitude = args.dist
+
+
+## look at specific thresholds
 
 if args.threshold != "max":
 	if "," in args.threshold:
@@ -356,10 +390,36 @@ if args.threshold != "max":
 			range_def.append(r)
 
 else:
-	r = min_distance,max_distance
-	range_def.append(r)
-		
+	if args.pct_threshold == "none":
+		r = min_distance,max_distance
+		range_def.append(r)
 
+
+## look at pct thresholds
+
+range_def_pct = []
+pct_correspondence = {}
+if args.pct_threshold != "none":
+	print("\n\tCorrespondence between percentage and number of differences:")
+	print("\n\tCorrespondence between percentage and number of differences:", file = log)
+	print("\n\t#PERCENTAGE\tDIFFERENCES")
+	print("\n\t#PERCENTAGE\tDIFFERENCES", file = log)
+	pcts = args.pct_threshold.split(",")
+	for pct in pcts:
+		pct_threshold = int(float(pct)*float(total_size))
+		print("\t" + str(float(pct)*100) + "\t" + str(pct_threshold))
+		print("\t" + str(float(pct)*100) + "\t" + str(pct_threshold), file = log)
+		min_range = pct_threshold
+		max_range = pct_threshold + 1
+		r = min_range,max_range
+		range_def_pct.append(r)		
+		if pct_threshold not in pct_correspondence.keys():
+			pct_correspondence[pct_threshold] = []
+		pct_correspondence[pct_threshold].append(str(pct))
+
+all_thresholds = {"general" : range_def, "pct" : range_def_pct}
+		
+	
 # processing redundant info ----------
 
 print("Getting redundant sample information...")
@@ -388,86 +448,101 @@ info = {} #dictionary with all the partitions -> info[partition][cluster] = set(
 order_partitions = [] #list of partitions... useful to write the dataframe with pandas
 order_partitions.append(sample_column)
 
-for min_r,max_r in range_def:
-	print("\tCalculating clustering in range",min_r,max_r,"with a distance of",distance_magnitude)
-	print("\tCalculating clustering in range",min_r,max_r,"with a distance of",distance_magnitude, file = log)
-	for partition_value in range(min_r,max_r):
-		partition = partition_value * distance_magnitude
-		if partition <= max_distance:
-			order_partitions.append("MST-" + str(partition_value) + "x" + str(distance_magnitude))
-			clusters = {} #dictionary with the different clusters -> clusters[cluster] = set(sample1, sample2,...)
-			i = 0 #cluster name definer
-			checked_samples = set() #samples that have been checked
-			
-			with open(args.out + "_dist.tsv", "r") as group_file:
-				group = group_file.readlines()
-				for line in group:
-					lin = line.split("\n")
-					s1,s2,d = lin[0].split("\t") #sample1,sample2,distance
+for thr_type in all_thresholds.keys():
+	range_list = all_thresholds[thr_type]
+	if len(range_list) > 0:
+		for min_r,max_r in range_list:
+			if thr_type == "general":
+				print("\tCalculating clustering in range",min_r,max_r,"with a distance of",distance_magnitude)
+				print("\tCalculating clustering in range",min_r,max_r,"with a distance of",distance_magnitude, file = log)
+			elif thr_type == "pct":
+				print("\tCalculating clustering for partition " + str(min_r) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[int(min_r)]))
+				print("\tCalculating clustering for partition " + str(min_r) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[int(min_r)]), file = log)
+			for partition_value in range(min_r,max_r):
+				if thr_type == "general":
+					partition = partition_value * distance_magnitude
+				elif thr_type == "pct":
+					partition = partition_value
+				if partition <= max_distance:
+					if thr_type == "general":
+						order_partitions.append("MST-" + str(partition_value) + "x" + str(distance_magnitude))
+					elif thr_type == "pct":
+						order_partitions.append("MST-" + str(partition_value) + "_(" + "_".join(pct_correspondence[int(min_r)]) + ")")
+					clusters = {} #dictionary with the different clusters -> clusters[cluster] = set(sample1, sample2,...)
+					i = 0 #cluster name definer
+					checked_samples = set() #samples that have been checked
+					
+					with open(args.out + "_dist.tsv", "r") as group_file:
+						group = group_file.readlines()
+						for line in group:
+							lin = line.split("\n")
+							s1,s2,d = lin[0].split("\t") #sample1,sample2,distance
 
-					if int(d) <= partition: #they are a cluster
-						if s1 not in checked_samples and s2 not in checked_samples: #s1,s2 do not have an assigned cluster and should be added to clusters dictionary with same key
-							i += 1
-							clusters[i] = set()
-							clusters[i].add(s1)
-							clusters[i].add(s2)
-							checked_samples.add(s1)
-							checked_samples.add(s2)
-						else:
-							if s1 in checked_samples and s2 not in checked_samples: #s1 has been assigned to a cluster before
-								for cluster in clusters.keys():
-									if s1 in clusters[cluster]: #finding the cluster where s1 belongs
-										clusters[cluster].add(s2) #add s2
-										checked_samples.add(s2)
-							else:
-								if s2 in checked_samples and s1 not in checked_samples: #s2 has been assigned to a cluster before
-									for cluster in clusters.keys():
-										if s2 in clusters[cluster]: #finding the cluster where s2 belongs
-											clusters[cluster].add(s1) #add s1
-											checked_samples.add(s1)
-								else: 
-									if s1 in checked_samples and s2 in checked_samples: #both samples have been assigned to a cluster before
-										for cluster in clusters.keys():
-											if s1 in clusters[cluster]:
-												cluster_s1 = cluster
-											if s2 in clusters[cluster]:
-												cluster_s2 = cluster
-										if cluster_s1 != cluster_s2: #was it the same cluster? 
-											i += 1
-											clusters[i] = clusters[cluster_s1] | clusters[cluster_s2] #union of the two clusters
-											del clusters[cluster_s1] #delete previous clusters
-											del clusters[cluster_s2] #delete previous clusters
-					else: #they are not a cluster
-						if s1 not in checked_samples and s2 not in checked_samples: #they have not a cluster assigned yet
-							i += 1
-							clusters[i] = set()
-							clusters[i].add(s1) #create cluster for s1
-							i += 1
-							clusters[i] = set()
-							clusters[i].add(s2) #create cluster for s2
-							checked_samples.add(s1)
-							checked_samples.add(s2)
-						else:
-							if s1 in checked_samples and s2 not in checked_samples: #s1 has been assigned to a cluster before
-								i += 1
-								clusters[i] = set()
-								clusters[i].add(s2) #create a cluster just for s2
-								checked_samples.add(s2)
-							else:
-								if s2 in checked_samples and s1 not in checked_samples: #s2 has been assigned to a cluster before
+							if int(d) <= partition: #they are a cluster
+								if s1 not in checked_samples and s2 not in checked_samples: #s1,s2 do not have an assigned cluster and should be added to clusters dictionary with same key
 									i += 1
 									clusters[i] = set()
-									clusters[i].add(s1) #create a cluster just for s2
+									clusters[i].add(s1)
+									clusters[i].add(s2)
 									checked_samples.add(s1)
+									checked_samples.add(s2)
 								else:
-									if s1 in checked_samples and s2 in checked_samples: #both samples have been assigned to a cluster before
+									if s1 in checked_samples and s2 not in checked_samples: #s1 has been assigned to a cluster before
 										for cluster in clusters.keys():
-											if s1 in clusters[cluster]:
-												cluster_s1 = cluster
-											if s2 in clusters[cluster]:
-												cluster_s2 = cluster
-
-		info["MST-" + str(partition_value) + "x" + str(distance_magnitude)] = clusters
+											if s1 in clusters[cluster]: #finding the cluster where s1 belongs
+												clusters[cluster].add(s2) #add s2
+												checked_samples.add(s2)
+									else:
+										if s2 in checked_samples and s1 not in checked_samples: #s2 has been assigned to a cluster before
+											for cluster in clusters.keys():
+												if s2 in clusters[cluster]: #finding the cluster where s2 belongs
+													clusters[cluster].add(s1) #add s1
+													checked_samples.add(s1)
+										else: 
+											if s1 in checked_samples and s2 in checked_samples: #both samples have been assigned to a cluster before
+												for cluster in clusters.keys():
+													if s1 in clusters[cluster]:
+														cluster_s1 = cluster
+													if s2 in clusters[cluster]:
+														cluster_s2 = cluster
+												if cluster_s1 != cluster_s2: #was it the same cluster? 
+													i += 1
+													clusters[i] = clusters[cluster_s1] | clusters[cluster_s2] #union of the two clusters
+													del clusters[cluster_s1] #delete previous clusters
+													del clusters[cluster_s2] #delete previous clusters
+							else: #they are not a cluster
+								if s1 not in checked_samples and s2 not in checked_samples: #they have not a cluster assigned yet
+									i += 1
+									clusters[i] = set()
+									clusters[i].add(s1) #create cluster for s1
+									i += 1
+									clusters[i] = set()
+									clusters[i].add(s2) #create cluster for s2
+									checked_samples.add(s1)
+									checked_samples.add(s2)
+								else:
+									if s1 in checked_samples and s2 not in checked_samples: #s1 has been assigned to a cluster before
+										i += 1
+										clusters[i] = set()
+										clusters[i].add(s2) #create a cluster just for s2
+										checked_samples.add(s2)
+									else:
+										if s2 in checked_samples and s1 not in checked_samples: #s2 has been assigned to a cluster before
+											i += 1
+											clusters[i] = set()
+											clusters[i].add(s1) #create a cluster just for s2
+											checked_samples.add(s1)
+										else:
+											if s1 in checked_samples and s2 in checked_samples: #both samples have been assigned to a cluster before
+												for cluster in clusters.keys():
+													if s1 in clusters[cluster]:
+														cluster_s1 = cluster
+													if s2 in clusters[cluster]:
+														cluster_s2 = cluster
+				if thr_type == "general":
+					info["MST-" + str(partition_value) + "x" + str(distance_magnitude)] = clusters
+				elif thr_type == "pct":
+					info["MST-" + str(partition_value) + "_(" + "_".join(pct_correspondence[int(min_r)]) + ")"] = clusters
 
 
 info_sample = {} #dictionary with all the samples -> info_sample[sample][partition] = cluster
@@ -515,12 +590,20 @@ typing[sample_column] = []
 
 for sample in info_sample.keys():
 	typing[sample_column].append(sample)
-	for min_r,max_r in range_def:
-		for partition_value in range(min_r,max_r):
-			partition = partition_value * distance_magnitude
-			if "MST-" + str(partition_value) + "x" + str(distance_magnitude) not in typing.keys():
-				typing["MST-" + str(partition_value) + "x" + str(distance_magnitude)] = []
-			typing["MST-" + str(partition_value) + "x" + str(distance_magnitude)].append(info_sample[sample]["MST-" + str(partition_value) + "x" + str(distance_magnitude)])
+	for thr_type in all_thresholds.keys():
+		range_list = all_thresholds[thr_type]
+		for min_r,max_r in range_list:
+			for partition_value in range(min_r,max_r):
+				if thr_type == "general":
+					partition = partition_value * distance_magnitude
+					if "MST-" + str(partition_value) + "x" + str(distance_magnitude) not in typing.keys():
+						typing["MST-" + str(partition_value) + "x" + str(distance_magnitude)] = []
+					typing["MST-" + str(partition_value) + "x" + str(distance_magnitude)].append(info_sample[sample]["MST-" + str(partition_value) + "x" + str(distance_magnitude)])
+				elif thr_type == "pct":
+					partition = partition_value
+					if "MST-" + str(partition_value) + "_(" + "_".join(pct_correspondence[int(min_r)]) + ")" not in typing.keys():
+						typing["MST-" + str(partition_value) + "_(" + "_".join(pct_correspondence[int(min_r)]) + ")"] = []
+					typing["MST-" + str(partition_value) + "_(" + "_".join(pct_correspondence[int(min_r)]) + ")"].append(info_sample[sample]["MST-" + str(partition_value) + "_(" + "_".join(pct_correspondence[int(min_r)]) + ")"])
 
 matrix = pandas.DataFrame(data = typing, columns = order_partitions)
 matrix.to_csv(args.out + "_partitions.tsv", index = False, header=True, sep ="\t")

@@ -17,18 +17,26 @@ import textwrap
 import pandas
 import ete3 as ete
 
-version = "1.0.0"
-last_updated = "2022-08-26"
+version = "1.1.0"
+last_updated = "2022-12-06"
 
 treecluster = "TreeCluster.py"
 
 
 # functions	----------
 
-def get_distances(nw):
+def get_distances(nw, root):
 	""" estimate distances """
 	
 	t = ete.Tree(nw)
+	
+	if root != "no":
+		if root == "midpoint":
+			root_point = t.get_midpoint_outgroup()
+			t.set_outgroup(root_point)
+		else:
+			root_point = t.get_leaves_by_name(root)[0]
+			t.set_outgroup(root_point)
 
 	distances = []
 
@@ -208,6 +216,8 @@ if __name__ == "__main__":
 	group0.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
 						--method-threshold avg_clade-2, the avg_clade threshold will be set at 20). This argument is particularly useful for non- SNP-scaled trees to set the distance that may \
 						correspond to 1 SNP difference. Currently, the default is 1, which is equivalent to 1 SNP distance. NEWS COMING SOON!![1.0]")
+	group0.add_argument("-r", "--root", dest="root", required=False, default="no", help="Set root of the input tree. Specify the leaf name to use as output. Alternatively, write \
+						'midpoint', if you want to apply midpoint rooting method.")
 	
 	
 	args = parser.parse_args()
@@ -237,7 +247,7 @@ if __name__ == "__main__":
 	
 	print("Assessing tree specificities...")
 	print("Assessing tree specificities...", file = log)
-	min_dist, max_dist, distances = get_distances(args.tree)
+	min_dist, max_dist, distances = get_distances(args.tree, args.root)
 	min_dist = args.dist # default minimum distance is 1 because the script works better with snp trees
 	
 	print("\tThreshold magnitude is " + str(min_dist))
