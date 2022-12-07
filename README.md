@@ -119,18 +119,23 @@ _Note: Although you are installing GrapeTree in the conda enviroment, it is nece
 
 ### Installation with Docker
 ```bash
-docker pull insapathogenomics/reportree:1.0.1
+docker pull insapathogenomics/reportree:latest
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:1.0.1 reportree.py -h
+docker run insapathogenomics/reportree:latest reportree.py -h
 ```
 
 ## Usage
 
 ```bash
   -h, --help            show this help message and exit
+
+Version:
+  ReporTree version
+
+  -v, --version         Print version and exit
 
 ReporTree:
   ReporTree input/output file specifications
@@ -199,9 +204,16 @@ Partitioning with GrapeTree:
   --n_proc NUMBER_OF_PROCESSES
                         Number of CPU processes in parallel use. [5]
   -thr THRESHOLD, --threshold THRESHOLD
-                        Partition threshold for clustering definition. Different thresholds can be comma-separated (e.g. 5,8,16). Ranges can be specified with a hyphen (e.g. 5,8,10-20). If this option
-                        is not set, the script will perform clustering for all the values in the range 0 to max. Note: Threshold values are inclusive, i.e. '-thr 7' will consider samples with <= 7
-                        differences as belonging to the same cluster!
+                        [OPTIONAL] Partition threshold for clustering definition (integer). Different thresholds can be comma-separated (e.g. 5,8,16). Ranges can be specified with a hyphen (e.g.
+                        5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 0 to max. If you prefer to exclusively use the '-pct_thr' argument,
+                        please set '-thr none'. Note: Threshold values are inclusive, i.e. '-thr 7' will consider samples with <= 7 differences as belonging to the same cluster!
+  -pct_thr PCT_THRESHOLD, --pct_threshold PCT_THRESHOLD
+                        [OPTIONAL] Similar to 'thr' but values are indicated as the proportion of differences to the final allelic schema size or number of informative positions, e.g. '-pct_thr 0.005'
+                        corresponds to a threshold of 5 allelic/SNP differences in a matrix with 1000 loci/sites under analysis). Different values can be comma-separated (e.g. 0.005,0.01,0.1). Ranges
+                        CANNOT be specified. This option is particularly useful for dynamic wgMLST analysis for which the size of the schema under analysis is contigent on dataset diversity. Note: This
+                        argument can be specified even if you used the '-thr' argument.
+  --hamming             Set only if you WANT a pairwise distance matrix calculated with hamming distance even when the analysis is GrapeTree! Note: this is an extra file that can be output just for your
+                        own interest - this matrix will not be used for clustering.
   --matrix-4-grapetree  Output an additional allele profile matrix with the header ready for GrapeTree visualization. Set only if you WANT the file!
   --wgMLST              [EXPERIMENTAL] a better support of wgMLST schemes (check GrapeTree github for details).
 
@@ -209,10 +221,15 @@ Partitioning with HC:
   Specifications to genetic clusters with hierarchical clustering
 
   --HC-threshold HCMETHOD_THRESHOLD
-                        List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, write the method name (e.g.
-                        single). To get clustering at a specific threshold, indicate the threshold with a hyphen (e.g. single-10). To get clustering at a specific range, indicate the range with a hyphen
-                        (e.g. single-2-10). Note: Threshold values are inclusive, i.e. '--HC-threshold single-7' will consider samples with <= 7 differences as belonging to the same cluster! Default:
-                        single (Possible methods: single, complete, average, weighted, centroid, median, ward)
+                        [OPTIONAL] List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, write the method name
+                        (e.g. single). To get clustering at a specific threshold, indicate the threshold with a hyphen (e.g. single-10). To get clustering at a specific range, indicate the range with a
+                        hyphen (e.g. single-2-10). If you prefer to exclusively use the '--pct-HC-threshold' argument, please set '--HC-threshold none'. Note: Threshold values are inclusive, i.e. '--HC-
+                        threshold single-7' will consider samples with <= 7 differences as belonging to the same cluster! Default: single (Possible methods: single, complete, average, weighted,
+                        centroid, median, ward)
+  --pct-HC-threshold PCT_HCMETHOD_THRESHOLD
+                        [OPTIONAL] Similar to '--HC-threshold' but the partition threshold for cluster definition is set as the proportion of differences to the final allelic schema size or number of
+                        informative positions, e.g. '--pct-HC-threshold single-0.005' corresponds to a threshold of 5 allelic/SNP differences in a matrix with 1000 loci/sites under analysis. Ranges
+                        CANNOT be specified.
 
 Partitioning with TreeCluster:
   Specifications to cut the tree with TreeCluster
@@ -225,6 +242,8 @@ Partitioning with TreeCluster:
   --support SUPPORT     [OPTIONAL: see TreeCluster github for details] Branch support threshold
   --root-dist-by-node   [OPTIONAL] Set only if you WANT to cut the tree with root_dist method at each tree node distance to the root (similar to root_dist at all levels but just for informative
                         distances)
+  -root ROOT, --root ROOT
+                        Set root of the input tree. Specify the leaf name to use as output. Alternatively, write 'midpoint', if you want to apply midpoint rooting method.
 
 ReporTree metadata report:
   Specific parameters to report clustering/grouping information associated to metadata
