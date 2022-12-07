@@ -17,9 +17,18 @@ _ReporTree can help you to:_
 
 In summary, ReporTree facilitates and accelerates the production of surveillance-oriented reports, thus contributing to a sustainable and efficient public health genomics-informed pathogen surveillance.
 
-_Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO CITE THEM!_
+_Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
 ## News!
+#### 2022.12.06 - ReporTree v1.1.0
+This new version of ReporTree has new features:
+- _New argument: '--pct_threshold'_    
+Specific for analyses using GrapeTree. With this argument you can specify the threshold for cluster definition as the proportion of allelic/SNP differences in the final allelic schema size or number of informative positions. This option is particularly useful for dynamic wgMLST analyses.
+- _New argument: '--pct-HC-threshold'_     
+Similar to the previous one, but specific for analyses using Hierarchical Clustering.
+- _New argument: '--root'_     
+Specific for analyses using TreeCluster (i.e. tree as input). With this argument you can specify the name of a sample that should be used as outgroup to root your tree or root the tree at midpoint.
+
 #### 2022.10.14 - release docker image insapathogenomics/reportree:1.0.1
 This new docker image fixes a bug in the installation of snp-sites, which was affecting the alignment processing.   
 
