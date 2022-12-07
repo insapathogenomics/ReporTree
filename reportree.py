@@ -17,8 +17,8 @@ from datetime import date
 import pandas
 import glob
 
-version = "1.0.1"
-last_updated = "2022-10-07"
+version = "1.1.0"
+last_updated = "2022-12-06"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -358,6 +358,9 @@ if __name__ == "__main__":
 	
 	## general parameters
 	
+	versioning = parser.add_argument_group("Version", "ReporTree version")
+	versioning.add_argument("-v", "--version", dest="version", action="store_true", help="Print version and exit")
+	
 	group0 = parser.add_argument_group("ReporTree", "ReporTree input/output file specifications")
 	group0.add_argument("-a", "--allele-profile", dest="allele_profile", default="", required=False, type=str, help="[OPTIONAL] Input allele/SNP profile matrix (tsv format)")
 	group0.add_argument("-align", "--alignment", dest="alignment", default="", required=False, type=str, help="[OPTIONAL] Input multiple sequence alignment (fasta format)")
@@ -423,9 +426,17 @@ if __name__ == "__main__":
 	group4.add_argument("--missing", dest="handler", default=0, type=int, help="ONLY FOR MSTree. \n0: [DEFAULT] ignore missing data in pairwise comparison. \n1: remove column \
 						with missing data. \n2: treat missing data as an allele. \n3: use absolute number of allelic differences.")
 	group4.add_argument("--n_proc",  dest="number_of_processes", type=int, default=5, help="Number of CPU processes in parallel use. [5]")
-	group4.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="Partition threshold for clustering definition. Different thresholds can be comma-separated (e.g. 5,8,16). \
-						Ranges can be specified with a hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 0 to max. Note: \
-						Threshold values are inclusive, i.e. '-thr 7' will consider samples with <= 7 differences as belonging to the same cluster!")
+	group4.add_argument("-thr", "--threshold", dest="threshold", default = "max", help="[OPTIONAL] Partition threshold for clustering definition (integer). Different thresholds can be comma-separated (e.g. 5,8,16). \
+						Ranges can be specified with a hyphen (e.g. 5,8,10-20). If this option is not set, the script will perform clustering for all the values in the range 0 to max. If you \
+						prefer to exclusively use the '-pct_thr' argument, please set '-thr none'. Note: Threshold values are inclusive, i.e. '-thr 7' will consider samples with <= 7 differences \
+						as belonging to the same cluster!")
+	group4.add_argument("-pct_thr", "--pct_threshold", dest="pct_threshold", default = "none", help="[OPTIONAL] Similar to 'thr' but values are indicated as the proportion of differences to the \
+						final allelic schema size or number of informative positions, e.g. '-pct_thr 0.005' corresponds to a threshold of 5 allelic/SNP differences in a matrix with 1000 \
+						loci/sites under analysis). Different values can be comma-separated (e.g. 0.005,0.01,0.1). Ranges CANNOT be specified. This option is particularly useful for dynamic \
+						wgMLST analysis for which the size of the schema under analysis is contigent on dataset diversity. Note: This argument can be specified even if you used the '-thr' \
+						argument.")
+	group4.add_argument("--hamming", dest="hamming", required=False, action="store_true", help="Set only if you WANT a pairwise distance matrix calculated with hamming distance even when \
+						the analysis is GrapeTree! Note: this is an extra file that can be output just for your own interest - this matrix will not be used for clustering.")	
 	group4.add_argument("--matrix-4-grapetree", dest="matrix4grapetree", required=False, action="store_true", help="Output an additional allele profile matrix with the header ready for GrapeTree \
 						visualization. Set only if you WANT the file!")
 	group4.add_argument("--wgMLST", dest="wgmlst", default=False, action="store_true", help="[EXPERIMENTAL] a better support of wgMLST schemes (check GrapeTree github for details).")
@@ -434,75 +445,89 @@ if __name__ == "__main__":
 	## partitioning hierarchical clustering
 	
 	group5 = parser.add_argument_group("Partitioning with HC", "Specifications to genetic clusters with hierarchical clustering")
-	group5.add_argument("--HC-threshold", dest="HCmethod_threshold", required=False, default="single", help="List of HC methods and thresholds to include in the analysis (comma-separated). To \
+	group5.add_argument("--HC-threshold", dest="HCmethod_threshold", required=False, default="single", help="[OPTIONAL] List of HC methods and thresholds to include in the analysis (comma-separated). To \
 						get clustering at all possible thresholds for a given method, write the method name (e.g. single). To get clustering at a specific threshold, indicate the threshold with \
-						a hyphen (e.g. single-10). To get clustering at a specific range, indicate the range with a hyphen (e.g. single-2-10). Note: Threshold values are inclusive, i.e. \
-						'--HC-threshold single-7' will consider samples with <= 7 differences as belonging to the same cluster! Default: single (Possible methods: single, complete, average, \
-						weighted, centroid, median, ward)")
+						a hyphen (e.g. single-10). To get clustering at a specific range, indicate the range with a hyphen (e.g. single-2-10). If you prefer to exclusively use the \
+						'--pct-HC-threshold' argument, please set '--HC-threshold none'. Note: Threshold values are inclusive, i.e. '--HC-threshold single-7' will consider samples with <= 7 \
+						differences as belonging to the same cluster! Default: single (Possible methods: single, complete, average, weighted, centroid, median, ward)")
+	group5.add_argument("--pct-HC-threshold", dest="pct_HCmethod_threshold", required=False, default="none", help="[OPTIONAL] Similar to '--HC-threshold' but the partition threshold for cluster definition \
+						is set as the proportion of differences to the final allelic schema size or number of informative positions, e.g. '--pct-HC-threshold single-0.005' corresponds to a \
+						threshold of 5 allelic/SNP differences in a matrix with 1000 loci/sites under analysis. Ranges CANNOT be specified.")
 											
 						
 	## partitioning treecluster
 	
-	group5 = parser.add_argument_group("Partitioning with TreeCluster", "Specifications to cut the tree with TreeCluster")
-	group5.add_argument("--method-threshold", dest="method_threshold", required=False, default="root_dist,avg_clade-1", 
+	group6 = parser.add_argument_group("Partitioning with TreeCluster", "Specifications to cut the tree with TreeCluster")
+	group6.add_argument("--method-threshold", dest="method_threshold", required=False, default="root_dist,avg_clade-1", 
 						help="List of TreeCluster methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, write \
 						the method name (e.g. root_dist). To get clustering at a specific threshold, indicate the threshold with a hyphen (e.g. root_dist-10). To get clustering at a specific \
 						range, indicate the range with a hyphen (e.g. root_dist-2-10). Default: root_dist,avg_clade-1 (List of possible methods: avg_clade, leaf_dist_max, leaf_dist_min, length, \
 						length_clade, max, max_clade, root_dist, single_linkage, single_linkage_cut, single_linkage_union) Warning!! So far, ReporTree was only tested with avg_clade and \
 						root_dist!")
-	group5.add_argument("--support", dest="support", required=False, default="-inf", help="[OPTIONAL: see TreeCluster github for details] Branch support threshold") 
-	group5.add_argument("--root-dist-by-node", dest="root_dist_by_node", required=False, action="store_false", help="[OPTIONAL] Set only if you WANT to cut the tree with root_dist method at each tree \
+	group6.add_argument("--support", dest="support", required=False, default="-inf", help="[OPTIONAL: see TreeCluster github for details] Branch support threshold") 
+	group6.add_argument("--root-dist-by-node", dest="root_dist_by_node", required=False, action="store_false", help="[OPTIONAL] Set only if you WANT to cut the tree with root_dist method at each tree \
 						node distance to the root (similar to root_dist at all levels but just for informative distances)")
+	group6.add_argument("-root", "--root", dest="root", required=False, default="no", help="Set root of the input tree. Specify the leaf name to use as output. Alternatively, write 'midpoint', \
+						if you want to apply midpoint rooting method.")
 	
 	
 	## reportree
 	
-	group6 = parser.add_argument_group("ReporTree metadata report", "Specific parameters to report clustering/grouping information associated to metadata")
-	group6.add_argument("--columns_summary_report", dest="columns_summary_report", required=False, default="n_sequence,lineage,n_country,country,n_region,first_seq_date,last_seq_date,timespan_days", type=str, help="Columns \
+	group7 = parser.add_argument_group("ReporTree metadata report", "Specific parameters to report clustering/grouping information associated to metadata")
+	group7.add_argument("--columns_summary_report", dest="columns_summary_report", required=False, default="n_sequence,lineage,n_country,country,n_region,first_seq_date,last_seq_date,timespan_days", type=str, help="Columns \
 						(i.e. variables of metadata) to get statistics for the derived genetic clusters or for other grouping variables defined in --metadata2report (comma-separated). If the \
 						name of the column is provided, the different observations and the respective percentage are reported. If 'n_column' is specified, the number of the different \
 						observations is reported. For example, if 'n_country' and 'country'  are specified, the summary will report the number of countries and their distribution (percentage) \
 						per cluster/group. Exception: if a 'date' column is in the metadata, it can also report first_seq_date, last_seq_date, timespan_days. Check '--list' argument for some help. \
 						Default = n_sequence,lineage,n_country,country,n_region,first_seq_date,last_seq_date,timespan_days [the order of the list will be the order of the columns in the report]")
-	group6.add_argument("--partitions2report", dest="partitions2report", required=False, default="all", type=str, help="Columns of the partitions table to include in a joint report \
+	group7.add_argument("--partitions2report", dest="partitions2report", required=False, default="all", type=str, help="Columns of the partitions table to include in a joint report \
 						(comma-separated). Other alternatives: 'all' == all partitions; 'stability_regions' == first partition of each stability region as determined by \
 						comparing_partitions_v2.py. Note: 'stability_regions' can only be inferred when partitioning TreeCluster or GrapeTree is run for all possible thresholds or when a \
 						similar partitions table is provided (i.e. sequential partitions obtained with the same clustering method) [all]. Check '--list' argument for some help")
-	group6.add_argument("--metadata2report", dest="metadata2report", required=False, default="none", help="Columns of the metadata table for which a separated summary report must be provided \
+	group7.add_argument("--metadata2report", dest="metadata2report", required=False, default="none", help="Columns of the metadata table for which a separated summary report must be provided \
 						(comma-separated)")
-	group6.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples to analyze. This must be specified \
+	group7.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples to analyze. This must be specified \
 						within quotation marks in the following format 'column< >operation< >condition' (e.g. 'country == Portugal'). When more than one condition is specified for a given column, \
 						they must be separated with commas (e.g 'country == Portugal,Spain,France'). When filters include more than one column, they must be separated with semicolon (e.g. \
 						'country == Portugal,Spain,France;date > 2018-01-01;date < 2022-01-01'). White spaces are important in this argument, so, do not leave spaces before and after \
 						commas/semicolons.")
-	group6.add_argument("--sample_of_interest", dest="sample_of_interest", required=False, default="all", help="Comma-separated list of samples of interest for which summary reports will be \
+	group7.add_argument("--sample_of_interest", dest="sample_of_interest", required=False, default="all", help="Comma-separated list of samples of interest for which summary reports will be \
 						created. If none provided, only the summary reports comprising all samples will be generated.")
-	group6.add_argument("--frequency-matrix", dest="frequency_matrix", required=False, default="no", help="[OPTIONAL] Metadata column names for which a frequency matrix will be generated. This \
+	group7.add_argument("--frequency-matrix", dest="frequency_matrix", required=False, default="no", help="[OPTIONAL] Metadata column names for which a frequency matrix will be generated. This \
 						must be specified within quotation marks in the following format 'variable1,variable2'. Variable1 is the variable for which frequencies will be calculated (e.g. for \
 						'lineage,iso_week' the matrix reports the percentage of samples that correspond to each lineage per iso_week). If you want more than one matrix you can separate the \
 						different requests with semicolon (e.g. 'lineage,iso_week;country,lineage'). If you want a higher detail in your variable2 and decompose it into two columns you use a \
 						colon (e.g. lineage,country:iso_week will report the percentage of samples that correspond to each lineage per iso_week in each country)")
-	group6.add_argument("--count-matrix", dest="count_matrix", required=False, default="no", help="[OPTIONAL] Same as '--frequency-matrix' but outputs counts and not frequencies")
-	group6.add_argument("--mx-transpose", dest="mx_transpose", required=False, action="store_true", help="[OPTIONAL] Set ONLY if you want that the variable1 specified in '--frequency-matrix' \
+	group7.add_argument("--count-matrix", dest="count_matrix", required=False, default="no", help="[OPTIONAL] Same as '--frequency-matrix' but outputs counts and not frequencies")
+	group7.add_argument("--mx-transpose", dest="mx_transpose", required=False, action="store_true", help="[OPTIONAL] Set ONLY if you want that the variable1 specified in '--frequency-matrix' \
 						or in '--count-matrix' corresponds to the matrix first column.")
-					
+	#group7.add_argument("--json", dest="json", required=False, action="store_true", help="[OPTIONAL] Set ONLY if you want that the updated metadata file, including the partitions, is output in \
+	#					json format.")
+						
 						
 	## comparing partitions
 	
-	group7 = parser.add_argument_group("Stability regions", "Congruence analysis of cluster composition at all possible partitions to determine regions of cluster stability (automatically run if you set --partitions2report 'stability_regions'). WARNING! This option is planned to handle sequential partitions obtained with the same clustering method, such as a partitions table derived from cg/wgMLST data (from 1 to max allele threshold). Use it at your own risk, if you provide your own partitions table.")
-	group7.add_argument("-AdjW", "--AdjustedWallace", dest="AdjustedWallace", action= "store", default=0.99, help="Threshold of Adjusted Wallace score to consider an observation for method \
+	group8 = parser.add_argument_group("Stability regions", "Congruence analysis of cluster composition at all possible partitions to determine regions of cluster stability (automatically run if you set --partitions2report 'stability_regions'). WARNING! This option is planned to handle sequential partitions obtained with the same clustering method, such as a partitions table derived from cg/wgMLST data (from 1 to max allele threshold). Use it at your own risk, if you provide your own partitions table.")
+	group8.add_argument("-AdjW", "--AdjustedWallace", dest="AdjustedWallace", action= "store", default=0.99, help="Threshold of Adjusted Wallace score to consider an observation for method \
 						stability analysis [0.99]")
-	group7.add_argument("-n", "--n_obs", dest="n_obs", action="store", default=5, help="Minimum number of sequencial observations that pass the Adjusted Wallace score to be considered a \
+	group8.add_argument("-n", "--n_obs", dest="n_obs", action="store", default=5, help="Minimum number of sequencial observations that pass the Adjusted Wallace score to be considered a \
 						'stability region' (i.e. a threshold range in which cluster composition is similar) [5]")
-	group7.add_argument("-o", "--order", dest="order", action= "store", default=0, required=False, help="[Set only if you provide your own partitions table] Partitions order in the partitions \
+	group8.add_argument("-o", "--order", dest="order", action= "store", default=0, required=False, help="[Set only if you provide your own partitions table] Partitions order in the partitions \
 						table (0: min -> max; 1: max -> min) [0]")
-	group7.add_argument("--keep-redundants", dest="keep_redundants", action= "store_true", help="Set ONLY if you want to keep all samples of each cluster of the most discriminatory partition\
+	group8.add_argument("--keep-redundants", dest="keep_redundants", action= "store_true", help="Set ONLY if you want to keep all samples of each cluster of the most discriminatory partition\
 						 (by default redundant samples are removed to avoid the influence of cluster size)")
 	
 						 
 	args = parser.parse_args()
 
 
+	# check if version	----------
+	
+	if args.version:
+		print("version:", version, "\nlast_updated:", last_updated)
+		sys.exit()
+		
+		
 	# check if the user wants the list of columns	----------
 	
 	if args.list_col_summary and args.metadata != "none":
@@ -610,6 +635,7 @@ if __name__ == "__main__":
 			
 			# getting metadata report
 			if args.metadata != "none":
+				metadata = args.output + "_metadata_w_partitions.tsv"
 				if args.mx_transpose:
 					os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.partitions + " -o " + args.output + " --columns_summary_report \
 					" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
@@ -658,17 +684,17 @@ if __name__ == "__main__":
 			if args.root_dist_by_node == False:
 				if args.support != "-inf":
 					os.system(python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " --root-dist-by-node -d " + str(args.dist) + " \
-					--method-threshold " + args.method_threshold + " --support " + str(args.support))
+					--method-threshold " + args.method_threshold + " --support " + str(args.support) + " --root " + args.root)
 				else:
 					os.system(python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " --root-dist-by-node -d " + str(args.dist) + " \
-					--method-threshold " + args.method_threshold)
+					--method-threshold " + args.method_threshold + " --root " + args.root)
 			else:
 				if args.support != "-inf":
 					os.system(python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " -d " + str(args.dist) + " --method-threshold \
-					" + args.method_threshold + " --support " + str(args.support))
+					" + args.method_threshold + " --support " + str(args.support) + " --root " + args.root)
 				else:
 					os.system(python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " -d " + str(args.dist) + " --method-threshold \
-					" + args.method_threshold)
+					" + args.method_threshold + " --root " + args.root)
 			log = open(log_name, "a+")
 		
 		# running comparing partitions
@@ -711,6 +737,7 @@ if __name__ == "__main__":
 
 		# getting metadata report
 		if args.metadata != "none":
+			metadata = args.output + "_metadata_w_partitions.tsv"
 			if args.mx_transpose:
 				os.system(python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + args.output + "_partitions.tsv -o " + args.output + " --columns_summary_report \
 				" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
@@ -884,111 +911,48 @@ if __name__ == "__main__":
 		# GRAPETREE	----------
 		
 		if analysis == "grapetree": # grapetree
-			if args.loci_called == "":
-				if args.matrix4grapetree == True:
-					if args.wgmlst == True:
-						if args.subset == True:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-							-f \"" + args.filter_column + "\" --matrix-4-grapetree" +  " --site-inclusion " + str(args.N_content))
-						else:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree \
-							 --site-inclusion " + str(args.N_content))
-					else:
-						if args.subset == True:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-							-f \"" + args.filter_column + "\" --matrix-4-grapetree --site-inclusion " + str(args.N_content))
-						else:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree  --site-inclusion \
-							" + str(args.N_content))
-				else:
-					if args.wgmlst == True:
-						if args.subset == True:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-							-f \"" + args.filter_column + "\" --site-inclusion " + str(args.N_content))
-						else:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) +  " --site-inclusion \
-							" + str(args.N_content))
-					else:
-						if args.subset == True:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-							-f \"" + args.filter_column + "\" --site-inclusion " + str(args.N_content))
-						else:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) +  " --site-inclusion " + str(args.N_content))
-			else:
-				if args.matrix4grapetree == True:
-					if args.wgmlst == True:
-						if args.subset == True:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-							-f \"" + args.filter_column + "\" --matrix-4-grapetree --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
-						else:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree \
-							 --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
-					else:
-						if args.subset == True:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-							-f \"" + args.filter_column + "\" --matrix-4-grapetree --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
-						else:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --matrix-4-grapetree \
-							--loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
-				else:
-					if args.wgmlst == True:
-						if args.subset == True:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-							-f \"" + args.filter_column + "\" --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
-						else:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --wgMLST --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --loci-called \
-							" + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
-					else:
-						if args.subset == True:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " -m " + args.metadata + " \
-							-f \"" + args.filter_column + "\" --loci-called " + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))
-						else:
-							os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
-							" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --loci-called \
-							" + str(args.loci_called) +  " --site-inclusion " + str(args.N_content))		
+			extras_grapetree = ""
+			if args.matrix4grapetree == True:
+				extras_grapetree += " --matrix-4-grapetree "
+			if args.wgmlst == True:
+				extras_grapetree += " --wgMLST "
+			if args.subset == True:
+				extra = " -m " + args.metadata + " -f \"" + args.filter_column + "\""
+				extras_grapetree += extra
+			if args.hamming == True:
+				extras_grapetree += " --hamming "
+			if args.loci_called != "":
+				extra = " --loci-called " + str(args.loci_called)
+				extras_grapetree += extra
+			
+			os.system(python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
+			" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --site-inclusion " + str(args.N_content) + " \
+			-pct_thr " + str(args.pct_threshold) + extras_grapetree)
+				
 			log = open(log_name, "a+")
 		
 		
 		# HIERARCHICAL CLUSTERING	----------
 		
-		elif analysis == "HC": # hc
+		elif analysis == "HC": # hc			
 			if not distance_matrix_input:
+				extras_hc = ""
 				if args.loci_called != "":
-					if args.subset == True:
-						os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-						-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\" --loci-called " + args.loci_called + " --site-inclusion " + str(args.N_content))
-					else:
-						os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-						-d " + str(args.dist) + " --loci-called " + str(args.loci_called) + " --site-inclusion " + str(args.N_content))
-				else:
-					if args.subset == True:
-						os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-						-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\"" + " --site-inclusion " + str(args.N_content))
-					else:
-						os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-						-d " + str(args.dist) + " --site-inclusion " + str(args.N_content))
-			else:
+					extra = " --loci-called " + str(args.loci_called)
+					extras_hc += extra
 				if args.subset == True:
-					os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-					-d " + str(args.dist) + " -m " + args.metadata + " -f \"" + args.filter_column + "\" --site-inclusion " + str(args.N_content))
-				else:
-					os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
-					-d " + str(args.dist) + " --site-inclusion " + str(args.N_content))
+					extra = " -m " + args.metadata + " -f \"" + args.filter_column + "\""
+					extras_hc += extra
+				os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+				-d " + str(args.dist) + " --site-inclusion " + str(args.N_content) + " --pct-HC-threshold " + str(args.pct_HCmethod_threshold) + extras_hc)
+			else:
+				extras_hc = ""
+				if args.subset == True:
+					extra = " -m " + args.metadata + " -f \"" + args.filter_column + "\""
+					extras_hc += extra
+				os.system(python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
+				-d " + str(args.dist) + " --site-inclusion " + str(args.N_content) + " --pct-HC-threshold " + str(args.pct_HCmethod_threshold) + extras_hc)
+				
 			log = open(log_name, "a+")
 		
 		else:
@@ -1065,6 +1029,7 @@ if __name__ == "__main__":
 	## only metadata	--------------------
 	
 	elif args.metadata != "none": # only metadata provided
+		metadata = args.output + "_metadata_w_partitions.tsv"
 		print("\nOnly metadata file provided -> only metadata_report.py will be run:\n")
 		print("\nOnly metadata file provided -> only metadata_report.py will be run:\n", file = log)
 		log.close()
@@ -1081,8 +1046,17 @@ if __name__ == "__main__":
 	else:
 		print("\nYOU NEED TO SPECIFY SOMETHING VALID... OTHERWISE, I DO NOT KNOW WHAT TO DO!!!!!!\n")
 		sys.exit()
-		
 	
+	"""
+	# json output	----------
+	
+	if args.json:
+		if os.path.exists(args.output + "_metadata_w_partitions.tsv"):
+			final_metadata = pandas.read_table(metadata)
+			final_metadata = final_metadata.set_index(final_metadata.columns[0], drop = True)
+			final_metadata.to_json(args.output + "_metadata_w_partitions.json", orient="index")	
+	"""	
+		
 	# done	----------
 	
 	end = datetime.datetime.now()
