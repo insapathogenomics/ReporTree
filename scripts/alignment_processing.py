@@ -15,8 +15,8 @@ import numpy as np
 from datetime import date
 from Bio import SeqIO, AlignIO
 
-version = "1.0.0"
-last_updated = "2022-08-26"
+version = "1.0.1"
+last_updated = "2022-12-08"
 
 # functions	----------
 
@@ -294,7 +294,10 @@ def rm_ns(mx, ATCG_content, out, log):
 	report_mx["pct_called"] = (len_align - mx.isin(["0"]).sum(axis=1)) / len_align
 
 	report_df = pandas.DataFrame(report_mx)
-	flt_report = report_df[report_df["pct_called"] > float(ATCG_content)]
+	if float(ATCG_content) != 1.0:
+		flt_report = report_df[report_df["pct_called"] > float(ATCG_content)]
+	else:
+		flt_report = report_df[report_df["pct_called"] == float(ATCG_content)]
 	pass_samples = flt_report["samples"].values.tolist()
 	
 	removed_samples = set(mx[mx.columns[0]].values.tolist()) - set(pass_samples)

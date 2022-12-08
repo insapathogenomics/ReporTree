@@ -22,8 +22,8 @@ partitioning_grapetree_script = os.path.realpath(__file__)
 grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapetree.py"
 python = sys.executable
 
-version = "1.1.0"
-last_updated = "2022-12-06"
+version = "1.1.1"
+last_updated = "2022-12-08"
 
 
 # defining parameters ----------
@@ -282,12 +282,20 @@ if args.loci_called != "":
 	report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
 
 	report_allele_df = pandas.DataFrame(data = report_allele_mx)
-	flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
+	if float(args.loci_called) != 1.0:
+		flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
+	else:
+		flt_report = report_allele_df[report_allele_df["pct_called"] == float(args.loci_called)]
 	pass_samples = flt_report["samples"].values.tolist()
 	
 	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
 	print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
 	
+	if len(pass_samples) == 0:
+		print("Cannot proceed because " + str(len(pass_samples)) + " samples were kept in the matrix!")
+		print("Cannot proceed because " + str(len(pass_samples)) + " samples were kept in the matrix!", file = log)
+		sys.exit()
+		
 	allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
 	allele_mx.to_csv(args.out + "_flt_samples_matrix.tsv", index = False, header=True, sep ="\t")
 	allele_filename = args.out + "_flt_samples_matrix.tsv"
