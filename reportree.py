@@ -17,8 +17,8 @@ from datetime import date
 import pandas
 import glob
 
-version = "1.1.0"
-last_updated = "2022-12-06"
+version = "1.1.1"
+last_updated = "2022-12-08"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -409,7 +409,7 @@ if __name__ == "__main__":
 	
 	group3 = parser.add_argument_group("Alignment processing", "Alignment processing")
 	group3.add_argument("--sample-ATCG-content", dest="ATCG_content", required=False, default = 0.0, help="[OPTIONAL] Minimum proportion (0 to 1) of ATCG in informative sites of the alignment per \
-						sample (e.g. '--sample-ATCG-content 1.0' will only keep samples without N's or any non-ATCG code in informative sites)")
+						sample (e.g. '--sample-ATCG-content 1.0' will only keep samples without N's or any non-ATCG code in informative sites) [default: 0 - keep all samples]")
 	group3.add_argument("--remove-reference", dest="remove_ref", required=False, action="store_true", help="Set only if you want to remove the reference sequence of the alignment (reference \
 						name must be provided with the argument '--reference').")					
 	group3.add_argument("--use-reference-coords", dest="use_ref", required=False, action="store_true", help="Set only if you want that column names in the final alignment matrix represent the \
