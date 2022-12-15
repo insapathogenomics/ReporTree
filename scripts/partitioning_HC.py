@@ -15,8 +15,8 @@ from datetime import date
 from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_tree
 from scipy.spatial.distance import squareform
 
-version = "1.1.1"
-last_updated = "2022-12-08"
+version = "1.1.2"
+last_updated = "2022-12-15"
 
 # functions	----------
 
@@ -467,14 +467,17 @@ if __name__ == "__main__":
 		
 	for combination in args.method_threshold.split(","):
 		if "-" not in combination:
+			threshold = "all"
 			method = combination
 			if method not in combinations2run.keys():
-				threshold = "all"
-				info_run = threshold,"general"
-				combinations2run[method].append(info_run)
+				combinations2run[method] = []
+			info_run = threshold,"general"
+			combinations2run[method].append(info_run)
 		else:
 			method = combination.split("-")[0]
 			threshold = str(combination.split("-",1)[1])
+			if method not in combinations2run.keys():
+				combinations2run[method] = []
 			info_run = threshold,"general"
 			combinations2run[method].append(info_run)
 	
