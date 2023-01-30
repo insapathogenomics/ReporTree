@@ -10,7 +10,10 @@ COPY scripts/ /scripts/
 RUN mkdir /mnt/test_data
 COPY examples/Listeria/input/Listeria_input_alleles.tsv /mnt/test_data/
 
-RUN mkdir /mnt/workdir
-WORKDIR /mnt/workdir
+RUN useradd -ms /bin/bash myuser
+USER myuser
+WORKDIR /home/myuser
+RUN mkdir workdir
+WORKDIR /home/myuser/workdir
 
 CMD ["python", "/scripts/keep_running.py"]
