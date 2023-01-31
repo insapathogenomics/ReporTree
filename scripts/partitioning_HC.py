@@ -226,83 +226,8 @@ def get_newick(node, parent_dist, leaf_names, newick='') -> str:
         newick = "(%s" % (newick)
         
         return newick
-        
-        
-# running the pipeline	----------
 
-if __name__ == "__main__":
-    
-	# argument options
-    
-	parser = argparse.ArgumentParser(prog="partitioning_HC.py", formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent("""\
-									###############################################################################             
-									#                                                                             #
-									#                             partitioning_HC.py                              #
-									#                                                                             #
-									###############################################################################  
-									                            
-									partitioning_HC.py obtains genetic clusters at any distance threshold(s) of an
-									allele/SNP profile or pairwise distance matrix using hierarchical clustering 
-									methods. If a profile is provided, pairwise hamming distances will be 
-									calculated.
-									
-									Note: the profile matrix provided can only contain integers or ATCG values.
-									Alleles starting by "*" or "INF-" will be considered as a new. All the other 
-									values will be considered as missing data.
-									
-									-----------------------------------------------------------------------------"""))
-	
-	group0 = parser.add_argument_group("Partitioning with Hierarchical Clustering", "Specifications to get partitions with HC methods")
-	group0.add_argument("-d_mx", "--distance_matrix", dest="distance_matrix", required=False, type=str, help="[OPTIONAL] Input pairwise distance matrix")
-	group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=False, type=str, help="[OPTIONAL] Input allele profile matrix (can either be an allele matrix or a SNP matrix)")
-	group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
-	group0.add_argument("--HC-threshold", dest="method_threshold", required=False, default="single", 
-						help="[OPTIONAL] List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, just write \
-						the method name (e.g. single). To get clustering at a specific threshold, indicate the threshold with a hyphen (e.g. single-10). To get clustering at a specific \
-						range, indicate the range with a hyphen (e.g. single-2-10). Note: Threshold values are inclusive, i.e. '--HC-threshold single-7' will consider samples with <= 7 \
-						differences as belonging to the same cluster! Default: single (List of possible methods: single, complete, average, weighted, centroid, median, ward)")
-	group0.add_argument("--pct-HC-threshold", dest="pct_HCmethod_threshold", required=False, default="none", help="[OPTIONAL] Similar to '--HC-threshold' but the partition threshold for cluster definition \
-						is set as the proportion of differences to the final allelic schema size or number of informative positions, e.g. '--pct-HC-threshold single-0.005' corresponds to a \
-						threshold of 5 allelic/SNP differences in a matrix with 1000 loci/sites under analysis. Ranges CANNOT be specified.")
-	group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
-						proportion of samples per site/loci without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
-						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment loci/positions (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
-	group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci/positions called for allele/SNP matrices (e.g. \
-						'--loci-called 0.95' will only keep in the profile matrix samples with > 95%% of alleles/positions, i.e. <= 5%% missing data). Applied after '--site-inclusion' argument! \
-						Code for missing data: 0.")
-	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to select the samples to use for clustering \
-						according to the '--filter' argument")
-	group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples that must be used for HC \
-						clustering. This must be specified within quotation marks in the following format 'column< >operation< >condition' (e.g. 'country == Portugal'). When \
-						more than one condition is specified for a given column, they must be separated with commas (e.g 'country == Portugal,Spain,France'). When filters include more than one \
-						column, they must be separated with semicolon (e.g. 'country == Portugal,Spain,France;date > 2018-01-01;date < 2022-01-01'). White spaces are important in this argument, \
-						so, do not leave spaces before and after commas/semicolons.")
-	group0.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
-						--method-threshold single-2, the single linkage threshold will be set at 20).")
-	
-	
-	args = parser.parse_args()
-
-
-	# starting logs	----------
-
-	log_name = args.out + ".log"
-	log = open(log_name, "a+")
-	
-	print("\n-------------------- partitioning_HC.py --------------------\n")
-	print("\n-------------------- partitioning_HC.py --------------------\n", file = log)
-	print("version", version, "last updated on", last_updated, "\n")
-	print("version", version, "last updated on", last_updated, "\n", file = log)
-	print(" ".join(sys.argv), "\n")
-	print(" ".join(sys.argv), "\n", file = log)
-	
-	
-	# processing allele profile ----------
-	
-	if args.allele_profile:
-		print("Profile matrix provided... pairwise distance will be calculated!")
-		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
-		
+def from_allele_profile():
 		allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 		allele_mx = allele_mx.replace("INF-","", regex=True) #implemented because of chewie-ns profiles
 		allele_mx = allele_mx.replace("\*","", regex=True) #implemented because of chewie-ns profiles
@@ -396,7 +321,83 @@ if __name__ == "__main__":
 		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
 		temp_df.to_csv(args.out + "_dist.tsv", sep = "\t", index = None)
 		dist = pandas.read_table(args.out + "_dist.tsv")
-		
+		return dist
+        
+# running the pipeline	----------
+
+if __name__ == "__main__":
+    
+	# argument options
+    
+	parser = argparse.ArgumentParser(prog="partitioning_HC.py", formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent("""\
+									###############################################################################             
+									#                                                                             #
+									#                             partitioning_HC.py                              #
+									#                                                                             #
+									###############################################################################  
+									                            
+									partitioning_HC.py obtains genetic clusters at any distance threshold(s) of an
+									allele/SNP profile or pairwise distance matrix using hierarchical clustering 
+									methods. If a profile is provided, pairwise hamming distances will be 
+									calculated.
+									
+									Note: the profile matrix provided can only contain integers or ATCG values.
+									Alleles starting by "*" or "INF-" will be considered as a new. All the other 
+									values will be considered as missing data.
+									
+									-----------------------------------------------------------------------------"""))
+	
+	group0 = parser.add_argument_group("Partitioning with Hierarchical Clustering", "Specifications to get partitions with HC methods")
+	group0.add_argument("-d_mx", "--distance_matrix", dest="distance_matrix", required=False, type=str, help="[OPTIONAL] Input pairwise distance matrix")
+	group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=False, type=str, help="[OPTIONAL] Input allele profile matrix (can either be an allele matrix or a SNP matrix)")
+	group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
+	group0.add_argument("--HC-threshold", dest="method_threshold", required=False, default="single", 
+						help="[OPTIONAL] List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, just write \
+						the method name (e.g. single). To get clustering at a specific threshold, indicate the threshold with a hyphen (e.g. single-10). To get clustering at a specific \
+						range, indicate the range with a hyphen (e.g. single-2-10). Note: Threshold values are inclusive, i.e. '--HC-threshold single-7' will consider samples with <= 7 \
+						differences as belonging to the same cluster! Default: single (List of possible methods: single, complete, average, weighted, centroid, median, ward)")
+	group0.add_argument("--pct-HC-threshold", dest="pct_HCmethod_threshold", required=False, default="none", help="[OPTIONAL] Similar to '--HC-threshold' but the partition threshold for cluster definition \
+						is set as the proportion of differences to the final allelic schema size or number of informative positions, e.g. '--pct-HC-threshold single-0.005' corresponds to a \
+						threshold of 5 allelic/SNP differences in a matrix with 1000 loci/sites under analysis. Ranges CANNOT be specified.")
+	group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
+						proportion of samples per site/loci without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
+						'--site-inclusion 0.0' will keep all loci/positions) NOTE: This argument works on profile/alignment loci/positions (i.e. columns)! [default: 1.0]. Code for missing data: 0.")
+	group0.add_argument("--loci-called", dest="loci_called", required=False, default = "", help="[OPTIONAL] Minimum percentage of loci/positions called for allele/SNP matrices (e.g. \
+						'--loci-called 0.95' will only keep in the profile matrix samples with > 95%% of alleles/positions, i.e. <= 5%% missing data). Applied after '--site-inclusion' argument! \
+						Code for missing data: 0.")
+	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to select the samples to use for clustering \
+						according to the '--filter' argument")
+	group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples that must be used for HC \
+						clustering. This must be specified within quotation marks in the following format 'column< >operation< >condition' (e.g. 'country == Portugal'). When \
+						more than one condition is specified for a given column, they must be separated with commas (e.g 'country == Portugal,Spain,France'). When filters include more than one \
+						column, they must be separated with semicolon (e.g. 'country == Portugal,Spain,France;date > 2018-01-01;date < 2022-01-01'). White spaces are important in this argument, \
+						so, do not leave spaces before and after commas/semicolons.")
+	group0.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
+						--method-threshold single-2, the single linkage threshold will be set at 20).")
+	
+	
+	args = parser.parse_args()
+
+
+	# starting logs	----------
+
+	log_name = args.out + ".log"
+	log = open(log_name, "a+")
+	
+	print("\n-------------------- partitioning_HC.py --------------------\n")
+	print("\n-------------------- partitioning_HC.py --------------------\n", file = log)
+	print("version", version, "last updated on", last_updated, "\n")
+	print("version", version, "last updated on", last_updated, "\n", file = log)
+	print(" ".join(sys.argv), "\n")
+	print(" ".join(sys.argv), "\n", file = log)
+	
+	
+	# processing allele profile ----------
+	
+	if args.allele_profile:
+		print("Profile matrix provided... pairwise distance will be calculated!")
+		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
+		dist = from_allele_profile()
 	
 	elif args.distance_matrix:
 		print("Distance matrix provided... pairwise distance will not be calculated!")
