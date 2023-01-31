@@ -16,4 +16,4 @@ WORKDIR /home/myuser
 RUN mkdir workdir
 WORKDIR /home/myuser/workdir
 
-CMD ["python", "/scripts/keep_running.py"]
+# CMD ["python", "/scripts/keep_running.py"]
