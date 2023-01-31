@@ -8,7 +8,7 @@ RUN conda install -c etetoolkit -c anaconda -c bioconda python=3.8 biopython=1.7
 COPY scripts/ /scripts/
 
 RUN mkdir /mnt/test_data
-COPY examples/Listeria/input/Listeria_input_alleles.tsv /mnt/test_data/
+COPY examples/Listeria/input/ /mnt/test_data/
 
 RUN useradd -ms /bin/bash myuser
 USER myuser
