@@ -645,7 +645,7 @@ if __name__ == "__main__":
 	cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
 	#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
 
-print("\npartitioning_HC.py is done!")
-print("\npartitioning_HC.py is done!", file = log)
+	print("\npartitioning_HC.py is done!")
+	print("\npartitioning_HC.py is done!", file = log)
 
-log.close()
+	log.close()
