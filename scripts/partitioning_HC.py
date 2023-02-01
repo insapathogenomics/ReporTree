@@ -322,7 +322,37 @@ def from_allele_profile():
 		temp_df.to_csv(args.out + "_dist.tsv", sep = "\t", index = None)
 		dist = pandas.read_table(args.out + "_dist.tsv")
 		return dist
-        
+
+def from_distance_matrix():
+	dist = pandas.read_table(args.distance_matrix)
+
+	# filtering the pairwise distance matrix	----------
+	
+	if args.metadata != "" and args.filter_column != "":
+		print("Filtering the distance matrix...")
+		print("Filtering the distance matrix...", file = log)
+		
+		filters = args.filter_column
+		mx = pandas.read_table(args.metadata, dtype = str)
+		sample_column = mx.columns[0]
+		dist = filter_mx(dist, mx, filters, "dist", log)
+		dist.to_csv(args.out + "_flt_dist.tsv", sep = "\t", index = None)
+
+	elif args.metadata != "" and args.filter_column == "":
+		print("Metadata file was provided but no filter was found... I am confused :-(")
+		print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
+		sys.exit()
+
+	elif args.metadata == "" and args.filter_column != "":
+		print("Metadata file was not provided but a filter was found... I am confused :-(")
+		print("Metadata file was not provided but a filter was found... I am confused :-(", file = log)
+		sys.exit()
+
+	else:
+		sample_column = "sequence"
+
+	return dist
+
 # running the pipeline	----------
 
 if __name__ == "__main__":
@@ -401,33 +431,8 @@ if __name__ == "__main__":
 	
 	elif args.distance_matrix:
 		print("Distance matrix provided... pairwise distance will not be calculated!")
-		print("Distance matrix provided... pairwise distance will not be calculated!", file = log)		
-		dist = pandas.read_table(args.distance_matrix)
-	
-		# filtering the pairwise distance matrix	----------
-		
-		if args.metadata != "" and args.filter_column != "":
-			print("Filtering the distance matrix...")
-			print("Filtering the distance matrix...", file = log)
-			
-			filters = args.filter_column
-			mx = pandas.read_table(args.metadata, dtype = str)
-			sample_column = mx.columns[0]
-			dist = filter_mx(dist, mx, filters, "dist", log)
-			dist.to_csv(args.out + "_flt_dist.tsv", sep = "\t", index = None)
-
-		elif args.metadata != "" and args.filter_column == "":
-			print("Metadata file was provided but no filter was found... I am confused :-(")
-			print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
-			sys.exit()
-
-		elif args.metadata == "" and args.filter_column != "":
-			print("Metadata file was not provided but a filter was found... I am confused :-(")
-			print("Metadata file was not provided but a filter was found... I am confused :-(", file = log)
-			sys.exit()
-
-		else:
-			sample_column = "sequence"
+		print("Distance matrix provided... pairwise distance will not be calculated!", file = log)
+		dist = from_distance_matrix()
 	
 	else:
 		print("Could not find a profile or a distance matrix... One of them needs to be specified!!")
