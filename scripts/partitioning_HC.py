@@ -227,7 +227,10 @@ def get_newick(node, parent_dist, leaf_names, newick='') -> str:
         
         return newick
 
-def from_allele_profile():
+def from_allele_profile(hc=None):
+		global args
+		if hc:
+			args = hc
 		allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 		allele_mx = allele_mx.replace("INF-","", regex=True) #implemented because of chewie-ns profiles
 		allele_mx = allele_mx.replace("\*","", regex=True) #implemented because of chewie-ns profiles
@@ -323,7 +326,10 @@ def from_allele_profile():
 		dist = pandas.read_table(args.out + "_dist.tsv")
 		return dist
 
-def from_distance_matrix():
+def from_distance_matrix(hc=None):
+	global args
+	if hc:
+		args = hc
 	dist = pandas.read_table(args.distance_matrix)
 
 	# filtering the pairwise distance matrix	----------
@@ -366,10 +372,19 @@ class HC:
 	filter_column:str=None
 	dist:float=None
 
+	_dist_df:pandas.DataFrame
+
 	def __init__(self, out, **kwargs):
 		self.out = out
 		self.__dict__.update(kwargs)
-
+	
+	def run(self):
+		if self.allele_profile:
+			self._dist_df = from_allele_profile(self)
+		elif self.distance_matrix:
+			self._dist_df = from_distance_matrix(self)
+		else:
+			raise ValueError("Either distance matrix or allele profile must be specified.")
 
 # running the pipeline	----------
 
