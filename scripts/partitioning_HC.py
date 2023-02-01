@@ -443,6 +443,8 @@ if __name__ == "__main__":
 	
 	# processing allele profile ----------
 	
+	dist_df:pandas.DataFrame
+
 	if args.allele_profile:
 		print("Profile matrix provided... pairwise distance will be calculated!")
 		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
