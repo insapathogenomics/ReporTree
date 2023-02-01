@@ -13,7 +13,7 @@ COPY examples/Listeria/input/ /mnt/test_data/
 RUN useradd -ms /bin/bash myuser
 USER myuser
 WORKDIR /home/myuser
-RUN mkdir workdir
-WORKDIR /home/myuser/workdir
+RUN mkdir rt_output
+WORKDIR /home/myuser/rt_output
 
 # CMD ["python", "/scripts/keep_running.py"]
