@@ -353,19 +353,23 @@ def from_distance_matrix():
 
 	return dist
 
-def hc(
-	distance_matrix,
-	allele_profile,
-	output,
-	hc_threshold,
-	pct_hc_threshold,
-	site_inclusion,
-	loci_called,
-	metadata,
-	filter,
-	dist
-):
-	pass
+
+class HC:
+	out:str
+	distance_matrix:str=None
+	allele_profile:str=None
+	method_threshold:str=None
+	pct_HCmethod_threshold:str=None
+	samples_called:float=None
+	loci_called:float=None
+	metadata:str=None
+	filter_column:str=None
+	dist:float=None
+
+	def __init__(self, out, **kwargs):
+		self.out = out
+		self.__dict__.update(kwargs)
+
 
 # running the pipeline	----------
 
