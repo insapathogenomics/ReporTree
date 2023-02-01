@@ -1,1 +1,1 @@
-import partitioning_HC
+from partitioning_HC import hc

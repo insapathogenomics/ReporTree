@@ -353,6 +353,20 @@ def from_distance_matrix():
 
 	return dist
 
+def hc(
+	distance_matrix,
+	allele_profile,
+	output,
+	hc_threshold,
+	pct_hc_threshold,
+	site_inclusion,
+	loci_called,
+	metadata,
+	filter,
+	dist
+):
+	pass
+
 # running the pipeline	----------
 
 if __name__ == "__main__":
