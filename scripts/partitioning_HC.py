@@ -439,18 +439,19 @@ if __name__ == "__main__":
 	print(" ".join(sys.argv), "\n")
 	print(" ".join(sys.argv), "\n", file = log)
 	
+	#TODO Main script should end here!
 	
 	# processing allele profile ----------
 	
 	if args.allele_profile:
 		print("Profile matrix provided... pairwise distance will be calculated!")
 		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
-		dist = from_allele_profile()
+		dist_df = from_allele_profile()
 	
 	elif args.distance_matrix:
 		print("Distance matrix provided... pairwise distance will not be calculated!")
 		print("Distance matrix provided... pairwise distance will not be calculated!", file = log)
-		dist = from_distance_matrix()
+		dist_df = from_distance_matrix()
 	
 	else:
 		print("Could not find a profile or a distance matrix... One of them needs to be specified!!")
@@ -460,7 +461,7 @@ if __name__ == "__main__":
 			
 	# hierarchical clustering 	----------
 	
-	distance_mx, condensed_dist_mx, samples = dist_mx(dist, log)
+	distance_mx, condensed_dist_mx, samples = dist_mx(dist_df, log)
 	
 	clustering = {"sequence": distance_mx.columns.tolist()}
 	
