@@ -256,7 +256,7 @@ def from_allele_profile(hc=None, log=None):
 	
 		# cleaning allele matrix (columns)	----------
 		
-		if float(args.samples_called) != 1.0 and float(args.samples_called) != 0.0:
+		if args.samples_called and float(args.samples_called) != 1.0 and float(args.samples_called) != 0.0:
 			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
 			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
 			
