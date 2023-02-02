@@ -227,7 +227,7 @@ def get_newick(node, parent_dist, leaf_names, newick='') -> str:
         
         return newick
 
-def from_allele_profile(hc=None):
+def from_allele_profile(hc=None, log=None):
 		global args
 		if hc:
 			args = hc
@@ -326,7 +326,7 @@ def from_allele_profile(hc=None):
 		dist = pandas.read_table(args.out + "_dist.tsv")
 		return dist
 
-def from_distance_matrix(hc=None):
+def from_distance_matrix(hc=None, log=None):
 	global args
 	if hc:
 		args = hc
@@ -379,10 +379,12 @@ class HC:
 		self.__dict__.update(kwargs)
 	
 	def run(self):
+		log_name = self.out + ".log"
+		log = open(log_name, "a+")
 		if self.allele_profile:
-			self._dist_df = from_allele_profile(self)
+			self._dist_df = from_allele_profile(self, log)
 		elif self.distance_matrix:
-			self._dist_df = from_distance_matrix(self)
+			self._dist_df = from_distance_matrix(self, log)
 		else:
 			raise ValueError("Either distance matrix or allele profile must be specified.")
 
