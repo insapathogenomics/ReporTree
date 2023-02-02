@@ -435,8 +435,8 @@ if __name__ == "__main__":
 	log = open(log_name, "a+")
 	
 	logger.info("\n-------------------- partitioning_HC.py --------------------\n")
-	logger.info("version", version, "last updated on", last_updated, "\n")
-	logger.info(" ".join(sys.argv), "\n")
+	logger.info(f"version {version}, last updated on {last_updated}")
+	logger.info(" ".join(sys.argv))
 	
 	# processing allele profile ----------
 	
