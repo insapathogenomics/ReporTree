@@ -21,6 +21,20 @@ from hierarchical_clustering import hierarchical_clustering
 version = "1.1.2_ssi"
 last_updated = "2023-02"
 
+def create_logger(out: str):
+	fh = logging.FileHandler(out + '.new.log', mode='a')
+	fh.setLevel(logging.DEBUG)
+	ch = logging.StreamHandler(sys.stdout)
+	ch.setLevel(logging.INFO)
+	formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
+	fh.setFormatter(formatter)
+	ch.setFormatter(formatter)
+	logger = logging.getLogger()
+	logger.setLevel(logging.INFO)
+	logger.addHandler(fh)
+	logger.addHandler(ch)
+	return logger
+
 class HC:
 	out:str
 	distance_matrix:str = ''
@@ -39,17 +53,7 @@ class HC:
 		self.__dict__.update(kwargs)
 	
 	def run(self):
-		self.logger = logging.getLogger()
-		self.logger.setLevel(logging.INFO)
-		fh = logging.FileHandler(self.out + '.new.log', mode='a')
-		fh.setLevel(logging.DEBUG)
-		ch = logging.StreamHandler(sys.stdout)
-		ch.setLevel(logging.INFO)
-		formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
-		fh.setFormatter(formatter)
-		ch.setFormatter(formatter)
-		self.logger.addHandler(fh)
-		self.logger.addHandler(ch)
+		self.logger = create_logger(self.out)
 
 		log_name = self.out + ".log"
 		log = open(log_name, "a+")
