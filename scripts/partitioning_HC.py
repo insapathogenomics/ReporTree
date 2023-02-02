@@ -4,6 +4,8 @@
 Obtain genetic clusters at any partition level(s) of a distance matrixes using hierarchical clustering
 By Veronica Mixao
 @INSA
+
+Modified by Finn Gruwier Larsen <figl@ssi.dk>
 """
 
 import sys
@@ -16,8 +18,8 @@ import logging
 
 from hierarchical_clustering import hierarchical_clustering
 
-version = "1.1.2"
-last_updated = "2022-12-15"
+version = "1.1.2_ssi"
+last_updated = "2023-02"
 
 class HC:
 	out:str
