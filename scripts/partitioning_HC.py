@@ -239,7 +239,7 @@ def from_allele_profile(hc=None, log=None):
 		
 		# filtering allele matrix	----------
 		
-		if args.metadata != "" and args.filter_column != "":
+		if args.metadata and args.filter_column:
 			print("Filtering the distance matrix...")
 			print("Filtering the distance matrix...", file = log)
 			
@@ -273,7 +273,7 @@ def from_allele_profile(hc=None, log=None):
 		
 		# cleaning allele matrix (rows)	----------
 
-		if args.loci_called != "":
+		if args.loci_called:
 			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
 			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...", file = log)
 			
@@ -334,7 +334,7 @@ def from_distance_matrix(hc=None, log=None):
 
 	# filtering the pairwise distance matrix	----------
 	
-	if args.metadata != "" and args.filter_column != "":
+	if args.metadata and args.filter_column:
 		print("Filtering the distance matrix...")
 		print("Filtering the distance matrix...", file = log)
 		
@@ -344,12 +344,12 @@ def from_distance_matrix(hc=None, log=None):
 		dist = filter_mx(dist, mx, filters, "dist", log)
 		dist.to_csv(args.out + "_flt_dist.tsv", sep = "\t", index = None)
 
-	elif args.metadata != "" and args.filter_column == "":
+	elif args.metadata and args.filter_column == "":
 		print("Metadata file was provided but no filter was found... I am confused :-(")
 		print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
 		sys.exit()
 
-	elif args.metadata == "" and args.filter_column != "":
+	elif (not args.metadata) and args.filter_column:
 		print("Metadata file was not provided but a filter was found... I am confused :-(")
 		print("Metadata file was not provided but a filter was found... I am confused :-(", file = log)
 		sys.exit()
