@@ -37,6 +37,18 @@ class HC:
 		self.__dict__.update(kwargs)
 	
 	def run(self):
+		self.logger = logging.getLogger()
+		self.logger.setLevel(logging.INFO)
+		fh = logging.FileHandler(self.out + '.log', mode='a')
+		fh.setLevel(logging.DEBUG)
+		ch = logging.StreamHandler(sys.stdout)
+		ch.setLevel(logging.INFO)
+		formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
+		fh.setFormatter(formatter)
+		ch.setFormatter(formatter)
+		self.logger.addHandler(fh)
+		self.logger.addHandler(ch)
+
 		log_name = self.out + ".log"
 		log = open(log_name, "a+")
 		if self.allele_profile:
