@@ -440,54 +440,46 @@ if __name__ == "__main__":
 
 
 	# starting logs	----------
+	logger = create_logger(args.out)
 
 	log_name = args.out + ".log"
 	log = open(log_name, "a+")
 	
-	print("\n-------------------- partitioning_HC.py --------------------\n")
-	print("\n-------------------- partitioning_HC.py --------------------\n", file = log)
-	print("version", version, "last updated on", last_updated, "\n")
-	print("version", version, "last updated on", last_updated, "\n", file = log)
-	print(" ".join(sys.argv), "\n")
-	print(" ".join(sys.argv), "\n", file = log)
+	logger.info("\n-------------------- partitioning_HC.py --------------------\n")
+	logger.info("version", version, "last updated on", last_updated, "\n")
+	logger.info(" ".join(sys.argv), "\n")
 	
 	# processing allele profile ----------
 	
 	df_dist:pandas.DataFrame
 
 	if args.allele_profile:
-		print("Profile matrix provided... pairwise distance will be calculated!")
-		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
+		logger.info("Profile matrix provided... pairwise distance will be calculated!")
 		df_dist = from_allele_profile()
 	
 	elif args.distance_matrix:
-		print("Distance matrix provided... pairwise distance will not be calculated!")
-		print("Distance matrix provided... pairwise distance will not be calculated!", file = log)
+		logger.info("Distance matrix provided... pairwise distance will not be calculated!")
 		df_dist = from_distance_matrix()
 	
 	else:
-		print("Could not find a profile or a distance matrix... One of them needs to be specified!!")
-		print("Could not find a profile or a distance matrix... One of them needs to be specified!!", file = log)	
+		logger.info("Could not find a profile or a distance matrix... One of them needs to be specified!!")
 		sys.exit()
 	
 	clustering, cluster_details = hierarchical_clustering(df_dist, log, args)
 
 	# output partitions
 	
-	print("Creating sample partitions file...")
-	print("Creating sample partitions file...", file = log)
+	logger.info("Creating sample partitions file...")
 	df_clustering = pandas.DataFrame(data = clustering)
 	df_clustering.to_csv(args.out + "_partitions.tsv", sep = "\t", index = None)
     
     
     # output cluster composition
 	
-	print("Creating cluster composition file...")
-	print("Creating cluster composition file...", file = log)
+	logger.info("Creating cluster composition file...")
 	cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
 	#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
 
-	print("\npartitioning_HC.py is done!")
-	print("\npartitioning_HC.py is done!", file = log)
+	logger.info("\npartitioning_HC.py is done!")
 
 	log.close()
