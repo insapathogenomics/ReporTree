@@ -58,9 +58,9 @@ class HC:
 		log_name = self.out + ".log"
 		log = open(log_name, "a+")
 		if self.allele_profile:
-			self.df_dist = from_allele_profile(self, log)
+			self.df_dist = from_allele_profile(self, self.logger)
 		elif self.distance_matrix:
-			self.df_dist = from_distance_matrix(self, log)
+			self.df_dist = from_distance_matrix(self, self.logger)
 		else:
 			raise ValueError("Either distance matrix or allele profile must be specified.")
 		
@@ -250,7 +250,7 @@ def get_newick(node, parent_dist, leaf_names, newick='') -> str:
         
         return newick
 
-def from_allele_profile(hc=None, log=None):
+def from_allele_profile(hc=None, logger=None):
 		global args
 		if hc:
 			args = hc
@@ -263,8 +263,7 @@ def from_allele_profile(hc=None, log=None):
 		# filtering allele matrix	----------
 		
 		if args.metadata and args.filter_column:
-			print("Filtering the distance matrix...")
-			print("Filtering the distance matrix...", file = log)
+			logger.info("Filtering the distance matrix...")
 			
 			filters = args.filter_column
 			mx = pandas.read_table(args.metadata, dtype = str)
@@ -272,16 +271,14 @@ def from_allele_profile(hc=None, log=None):
 			initial_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
 			allele_mx = filter_mx(allele_mx, mx, filters, "allele", log)
 			final_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
-			print("\tFrom the " + str(initial_samples) + " samples, " + str(final_samples) + " were kept in the matrix...")
-			print("\tFrom the " + str(initial_samples) + " samples, " + str(final_samples) + " were kept in the matrix...", file = log)
+			logger.info("\tFrom the " + str(initial_samples) + " samples, " + str(final_samples) + " were kept in the matrix...")
 			allele_mx.to_csv(args.out + "_subset_matrix.tsv", sep = "\t", index = None)
 	
 	
 		# cleaning allele matrix (columns)	----------
 		
 		if args.samples_called and float(args.samples_called) != 1.0 and float(args.samples_called) != 0.0:
-			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
-			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
+			logger.info("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
 			
 			pos_t0 = len(allele_mx.columns[1:])
 			for col in allele_mx.columns[1:]:
@@ -290,15 +287,13 @@ def from_allele_profile(hc=None, log=None):
 					allele_mx = allele_mx.drop(columns=col)
 			allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
 			pos_t1 = len(allele_mx.columns[1:])
-			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
-			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
+			logger.info("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
 		
 		
 		# cleaning allele matrix (rows)	----------
 
 		if args.loci_called:
-			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
-			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...", file = log)
+			logger.info("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
 			
 			report_allele_mx = {}
 			
@@ -317,12 +312,10 @@ def from_allele_profile(hc=None, log=None):
 			pass_samples = flt_report["samples"].values.tolist()
 			
 			if len(pass_samples) == 0:
-				print("Cannot proceed because " + str(len(pass_samples)) + " samples were kept in the matrix!")
-				print("Cannot proceed because " + str(len(pass_samples)) + " samples were kept in the matrix!", file = log)
+				logger.info("Cannot proceed because " + str(len(pass_samples)) + " samples were kept in the matrix!")
 				sys.exit()
 		
-			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
-			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
+			logger.info("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
 			
 			allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
 			allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
@@ -331,8 +324,7 @@ def from_allele_profile(hc=None, log=None):
 			
 		# getting distance matrix	----------
 		
-		print("Getting the pairwise distance matrix with cgmlst-dists...")
-		print("Getting the pairwise distance matrix with cgmlst-dists...", file = log)
+		logger.info("Getting the pairwise distance matrix with cgmlst-dists...")
 		
 		
 		# convert ATCG to integers
@@ -349,7 +341,7 @@ def from_allele_profile(hc=None, log=None):
 		dist = pandas.read_table(args.out + "_dist.tsv")
 		return dist
 
-def from_distance_matrix(hc=None, log=None):
+def from_distance_matrix(hc=None, logger=None):
 	global args
 	if hc:
 		args = hc
@@ -358,8 +350,7 @@ def from_distance_matrix(hc=None, log=None):
 	# filtering the pairwise distance matrix	----------
 	
 	if args.metadata and args.filter_column:
-		print("Filtering the distance matrix...")
-		print("Filtering the distance matrix...", file = log)
+		logger.info("Filtering the distance matrix...")
 		
 		filters = args.filter_column
 		mx = pandas.read_table(args.metadata, dtype = str)
@@ -368,13 +359,11 @@ def from_distance_matrix(hc=None, log=None):
 		dist.to_csv(args.out + "_flt_dist.tsv", sep = "\t", index = None)
 
 	elif args.metadata and args.filter_column == "":
-		print("Metadata file was provided but no filter was found... I am confused :-(")
-		print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
+		logger.info("Metadata file was provided but no filter was found... I am confused :-(")
 		sys.exit()
 
 	elif (not args.metadata) and args.filter_column:
-		print("Metadata file was not provided but a filter was found... I am confused :-(")
-		print("Metadata file was not provided but a filter was found... I am confused :-(", file = log)
+		logger.info("Metadata file was not provided but a filter was found... I am confused :-(")
 		sys.exit()
 
 	else:
@@ -455,11 +444,11 @@ if __name__ == "__main__":
 
 	if args.allele_profile:
 		logger.info("Profile matrix provided... pairwise distance will be calculated!")
-		df_dist = from_allele_profile()
+		df_dist = from_allele_profile(hc=args, logger=logger)
 	
 	elif args.distance_matrix:
 		logger.info("Distance matrix provided... pairwise distance will not be calculated!")
-		df_dist = from_distance_matrix()
+		df_dist = from_distance_matrix(hc=args, logger=logger)
 	
 	else:
 		logger.info("Could not find a profile or a distance matrix... One of them needs to be specified!!")
