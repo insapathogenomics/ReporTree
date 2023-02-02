@@ -12,8 +12,6 @@ import argparse
 import textwrap
 import pandas
 from datetime import date
-# from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_tree
-# from scipy.spatial.distance import squareform
 
 from hierarchical_clustering import hierarchical_clustering
 
