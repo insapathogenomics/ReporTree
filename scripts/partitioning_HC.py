@@ -12,11 +12,63 @@ import argparse
 import textwrap
 import pandas
 from datetime import date
+import logging
 
 from hierarchical_clustering import hierarchical_clustering
 
 version = "1.1.2"
 last_updated = "2022-12-15"
+
+class HC:
+	out:str
+	distance_matrix:str = ''
+	allele_profile:str = ''
+	method_threshold:str = 'single'
+	pct_HCmethod_threshold: str = 'none'
+	samples_called:float = 0.0
+	loci_called:float = ''
+	metadata:str = ''
+	filter_column:str = ''
+	dist:float = 1.0
+	df_dist:pandas.DataFrame = None
+
+	def __init__(self, out, **kwargs):
+		self.out = out
+		self.__dict__.update(kwargs)
+	
+	def run(self):
+		log_name = self.out + ".log"
+		log = open(log_name, "a+")
+		if self.allele_profile:
+			self.df_dist = from_allele_profile(self, log)
+		elif self.distance_matrix:
+			self.df_dist = from_distance_matrix(self, log)
+		else:
+			raise ValueError("Either distance matrix or allele profile must be specified.")
+		
+		# Copy-pasted from main part
+		clustering, cluster_details = hierarchical_clustering(self.df_dist, log, self)
+
+		# output partitions
+	
+		print("Creating sample partitions file...")
+		print("Creating sample partitions file...", file = log)
+		df_clustering = pandas.DataFrame(data = clustering)
+		df_clustering.to_csv(args.out + "_partitions.tsv", sep = "\t", index = None)
+		
+		
+		# output cluster composition
+		
+		print("Creating cluster composition file...")
+		print("Creating cluster composition file...", file = log)
+		cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
+		#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
+
+		print("\npartitioning_HC.py is done!")
+		print("\npartitioning_HC.py is done!", file = log)
+
+		log.close()
+
 
 # functions	----------
 
@@ -314,57 +366,6 @@ def from_distance_matrix(hc=None, log=None):
 		sample_column = "sequence"
 
 	return dist
-
-
-class HC:
-	out:str
-	distance_matrix:str = ''
-	allele_profile:str = ''
-	method_threshold:str = 'single'
-	pct_HCmethod_threshold: str = 'none'
-	samples_called:float = 0.0
-	loci_called:float = ''
-	metadata:str = ''
-	filter_column:str = ''
-	dist:float = 1.0
-	df_dist:pandas.DataFrame = None
-
-	def __init__(self, out, **kwargs):
-		self.out = out
-		self.__dict__.update(kwargs)
-	
-	def run(self):
-		log_name = self.out + ".log"
-		log = open(log_name, "a+")
-		if self.allele_profile:
-			self.df_dist = from_allele_profile(self, log)
-		elif self.distance_matrix:
-			self.df_dist = from_distance_matrix(self, log)
-		else:
-			raise ValueError("Either distance matrix or allele profile must be specified.")
-		
-		# Copy-pasted from main part
-		clustering, cluster_details = hierarchical_clustering(self.df_dist, log, self)
-
-		# output partitions
-	
-		print("Creating sample partitions file...")
-		print("Creating sample partitions file...", file = log)
-		df_clustering = pandas.DataFrame(data = clustering)
-		df_clustering.to_csv(args.out + "_partitions.tsv", sep = "\t", index = None)
-		
-		
-		# output cluster composition
-		
-		print("Creating cluster composition file...")
-		print("Creating cluster composition file...", file = log)
-		cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
-		#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
-
-		print("\npartitioning_HC.py is done!")
-		print("\npartitioning_HC.py is done!", file = log)
-
-		log.close()
 
 
 # running the pipeline	----------
