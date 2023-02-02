@@ -371,8 +371,7 @@ class HC:
 	metadata:str=None
 	filter_column:str=None
 	dist:float=None
-
-	_dist_df:pandas.DataFrame
+	df_dist:pandas.DataFrame=None
 
 	def __init__(self, out, **kwargs):
 		self.out = out
@@ -382,9 +381,9 @@ class HC:
 		log_name = self.out + ".log"
 		log = open(log_name, "a+")
 		if self.allele_profile:
-			self._dist_df = from_allele_profile(self, log)
+			self.df_dist = from_allele_profile(self, log)
 		elif self.distance_matrix:
-			self._dist_df = from_distance_matrix(self, log)
+			self.df_dist = from_distance_matrix(self, log)
 		else:
 			raise ValueError("Either distance matrix or allele profile must be specified.")
 
@@ -456,21 +455,19 @@ if __name__ == "__main__":
 	print(" ".join(sys.argv), "\n")
 	print(" ".join(sys.argv), "\n", file = log)
 	
-	#TODO Main script should end here!
-	
 	# processing allele profile ----------
 	
-	dist_df:pandas.DataFrame
+	df_dist:pandas.DataFrame
 
 	if args.allele_profile:
 		print("Profile matrix provided... pairwise distance will be calculated!")
 		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
-		dist_df = from_allele_profile()
+		df_dist = from_allele_profile()
 	
 	elif args.distance_matrix:
 		print("Distance matrix provided... pairwise distance will not be calculated!")
 		print("Distance matrix provided... pairwise distance will not be calculated!", file = log)
-		dist_df = from_distance_matrix()
+		df_dist = from_distance_matrix()
 	
 	else:
 		print("Could not find a profile or a distance matrix... One of them needs to be specified!!")
@@ -480,7 +477,7 @@ if __name__ == "__main__":
 			
 	# hierarchical clustering 	----------
 	
-	distance_mx, condensed_dist_mx, samples = dist_mx(dist_df, log)
+	distance_mx, condensed_dist_mx, samples = dist_mx(df_dist, log)
 	
 	clustering = {"sequence": distance_mx.columns.tolist()}
 	
