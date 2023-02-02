@@ -39,7 +39,7 @@ class HC:
 	def run(self):
 		self.logger = logging.getLogger()
 		self.logger.setLevel(logging.INFO)
-		fh = logging.FileHandler(self.out + '.log', mode='a')
+		fh = logging.FileHandler(self.out + '.new.log', mode='a')
 		fh.setLevel(logging.DEBUG)
 		ch = logging.StreamHandler(sys.stdout)
 		ch.setLevel(logging.INFO)
@@ -63,21 +63,18 @@ class HC:
 
 		# output partitions
 	
-		print("Creating sample partitions file...")
-		print("Creating sample partitions file...", file = log)
+		self.logger.info("Creating sample partitions file...")
 		df_clustering = pandas.DataFrame(data = clustering)
 		df_clustering.to_csv(args.out + "_partitions.tsv", sep = "\t", index = None)
 		
 		
 		# output cluster composition
 		
-		print("Creating cluster composition file...")
-		print("Creating cluster composition file...", file = log)
+		self.logger.info("Creating cluster composition file...")
 		cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
 		#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
 
-		print("\npartitioning_HC.py is done!")
-		print("\npartitioning_HC.py is done!", file = log)
+		self.logger.info("partitioning_HC.py is done!")
 
 		log.close()
 
