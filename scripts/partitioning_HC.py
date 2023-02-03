@@ -56,18 +56,32 @@ class HC:
 		self.out = out
 		self.__dict__.update(kwargs)
 	
+	def __str__(self):
+		return f"Output folder: {self.out}\n" + \
+			f"Distance matrix: {self.distance_matrix}\n" + \
+			f"Allele profile: {self.allele_profile}\n" + \
+			f"Method threshold: {self.method_threshold}\n" + \
+			f"Percentage method threshold: {self.pct_HCmethod_threshold}\n" + \
+			f"Samples called: {self.samples_called}\n" + \
+			f"Loci called: {self.loci_called}\n" + \
+			f"Metadata: {self.metadata}\n" + \
+			f"Filter column: {self.filter_column}\n" + \
+			f"Distances: {self.dist}"
+	
 	def run(self):
 		self.logger = create_logger(self.out)
+		self.logger.info("Running hierarchical clustering with these parameters:")
+		self.logger.info(self.__str__())
 
 		if self.allele_profile:
-			logger.info("Profile matrix provided; pairwise distance will be calculated.")
+			self.logger.info("Profile matrix provided; pairwise distance will be calculated.")
 			self.df_dist = from_allele_profile(self, self.logger)
 		elif self.distance_matrix:
-			logger.info("Distance matrix provided; pairwise distance will NOT be calculated.")
+			self.logger.info("Distance matrix provided; pairwise distance will NOT be calculated.")
 			self.df_dist = from_distance_matrix(self, self.logger)
 		else:
 			msg = "Either distance matrix or allele profile must be specified!"
-			logger.error(msg)
+			self.logger.error(msg)
 			raise ValueError(msg)
 		
 		# Copy-pasted from main part
