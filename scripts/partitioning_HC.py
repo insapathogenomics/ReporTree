@@ -36,6 +36,10 @@ def create_logger(out: str):
 	return logger
 
 class HC:
+	"""
+	Instantiate this class when importing partitioning_HC into another code module;
+	then use the 'run' method to run the calculation.
+	"""
 	out:str
 	distance_matrix:str = ''
 	allele_profile:str = ''
