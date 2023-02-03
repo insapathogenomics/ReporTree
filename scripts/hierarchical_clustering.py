@@ -81,8 +81,8 @@ def hierarchical_clustering(df_dist, logger, args):
 	pct_correspondence = {}
 	
 	if args.pct_HCmethod_threshold != "none":
-		logger.info("\nCorrespondence between percentage and number of differences:")
-		logger.info("\n#METHODPERCENTAGEDIFFERENCES")
+		logger.info("Correspondence between percentage and number of differences:")
+		logger.info("#METHODPERCENTAGEDIFFERENCES")
 		for combination_pct in args.pct_HCmethod_threshold.split(","):
 			method = combination_pct.split("-")[0]
 			threshold_pct = combination_pct.split("-",1)[1]

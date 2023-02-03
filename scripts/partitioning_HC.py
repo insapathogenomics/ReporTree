@@ -431,7 +431,7 @@ if __name__ == "__main__":
 	log_name = args.out + ".log"
 	log = open(log_name, "a+")
 	
-	logger.info("\n-------------------- partitioning_HC.py --------------------\n")
+	logger.info("-------------------- partitioning_HC.py --------------------")
 	logger.info(f"version {version}, last updated on {last_updated}")
 	logger.info(" ".join(sys.argv))
 	
@@ -466,6 +466,6 @@ if __name__ == "__main__":
 	cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
 	#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
 
-	logger.info("\npartitioning_HC.py is done!")
+	logger.info("partitioning_HC.py is done!")
 
 	log.close()
