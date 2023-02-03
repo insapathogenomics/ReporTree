@@ -6,14 +6,15 @@ ENV PYTHONUNBUFFERED=1
 RUN conda install -c etetoolkit -c anaconda -c bioconda python=3.8 biopython=1.77 pandas=1.1.3 numpy=1.19.2 grapetree=2.1 treecluster=1.0.3 ete3 scikit-learn cgmlst-dists git --yes
 
 COPY scripts/ /scripts/
+COPY tests /tests/
 
-RUN mkdir /mnt/test_data
-COPY examples/Listeria/input/Listeria_input_alleles.tsv /mnt/test_data/
+RUN mkdir /test_data
+COPY examples/Listeria/input/ /test_data/
 
 RUN useradd -ms /bin/bash myuser
 USER myuser
 WORKDIR /home/myuser
-RUN mkdir workdir
-WORKDIR /home/myuser/workdir
+RUN mkdir rt_output
+WORKDIR /home/myuser/rt_output
 
-CMD ["python", "/scripts/keep_running.py"]
+# CMD ["python", "/scripts/keep_running.py"]

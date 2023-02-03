@@ -4,6 +4,8 @@
 Obtain genetic clusters at any partition level(s) of a distance matrixes using hierarchical clustering
 By Veronica Mixao
 @INSA
+
+Modified by Finn Gruwier Larsen <figl@ssi.dk>
 """
 
 import sys
@@ -12,11 +14,92 @@ import argparse
 import textwrap
 import pandas
 from datetime import date
-from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_tree
-from scipy.spatial.distance import squareform
+import logging
 
-version = "1.1.2"
-last_updated = "2022-12-15"
+from hierarchical_clustering import hierarchical_clustering
+
+version = "1.1.2_ssi"
+last_updated = "2023-02"
+
+def create_logger(out: str):
+	fh = logging.FileHandler(out + '.log', mode='a')
+	fh.setLevel(logging.DEBUG)
+	ch = logging.StreamHandler(sys.stdout)
+	ch.setLevel(logging.INFO)
+	logger = logging.getLogger()
+	logger.setLevel(logging.INFO)
+	logger.addHandler(fh)
+	logger.addHandler(ch)
+	return logger
+
+class HC:
+	"""
+	Instantiate this class when importing partitioning_HC into another code module;
+	then use the 'run' method to run the calculation.
+	"""
+	out:str
+	distance_matrix:str = ''
+	allele_profile:str = ''
+	method_threshold:str = 'single'
+	pct_HCmethod_threshold: str = 'none'
+	samples_called:float = 0.0
+	loci_called:float = ''
+	metadata:str = ''
+	filter_column:str = ''
+	dist:float = 1.0
+	df_dist:pandas.DataFrame = None
+
+	def __init__(self, out, **kwargs):
+		self.out = out
+		self.__dict__.update(kwargs)
+	
+	def __str__(self):
+		return f"Output file prefix: {self.out}\n" + \
+			f"Distance matrix filename: {self.distance_matrix}\n" + \
+			f"Allele profile filename: {self.allele_profile}\n" + \
+			f"Metadata filename: {self.metadata}\n" + \
+			f"Method threshold: {self.method_threshold}\n" + \
+			f"Percentage method threshold: {self.pct_HCmethod_threshold}\n" + \
+			f"Samples called: {self.samples_called}\n" + \
+			f"Loci called: {self.loci_called}\n" + \
+			f"Filter column: {self.filter_column}\n" + \
+			f"Distances: {self.dist}"
+	
+	def run(self):
+		self.logger = create_logger(self.out)
+		self.logger.info("Running hierarchical clustering with these parameters:")
+		self.logger.info(self.__str__())
+		self.logger.info("")
+
+		if self.allele_profile:
+			self.logger.info("Profile matrix provided; pairwise distance will be calculated.")
+			self.df_dist = from_allele_profile(self, self.logger)
+		elif self.distance_matrix:
+			self.logger.info("Distance matrix provided; pairwise distance will NOT be calculated.")
+			self.df_dist = from_distance_matrix(self, self.logger)
+		else:
+			msg = "Either distance matrix or allele profile must be specified!"
+			self.logger.error(msg)
+			raise ValueError(msg)
+		
+		# Copy-pasted from main part
+		clustering, cluster_details = hierarchical_clustering(self.df_dist, self.logger, self)
+
+		# output partitions
+	
+		self.logger.info("Creating sample partitions file...")
+		df_clustering = pandas.DataFrame(data = clustering)
+		df_clustering.to_csv(args.out + "_partitions.tsv", sep = "\t", index = None)
+		
+		
+		# output cluster composition
+		
+		self.logger.info("Creating cluster composition file...")
+		cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
+		#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
+
+		self.logger.info("partitioning_HC.py is done!")
+
 
 # functions	----------
 
@@ -27,7 +110,7 @@ def conv_nucl(alleles):
 	alleles.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
 	
 	
-def filter_mx(matrix, mx, filters, matrix_type, log):
+def filter_mx(matrix, mx, filters, matrix_type, logger):
 	""" filter the allele or pairwise distance matrix
 	input: matrix
 	output: filtered pandas dataframe
@@ -48,8 +131,7 @@ def filter_mx(matrix, mx, filters, matrix_type, log):
 		mx.insert(index_no + 2, "iso_week_nr", isoweek)
 		mx.insert(index_no + 3, "iso_week", isodate)
 				
-	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
-	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)
+	logger.info("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
 			
 	f = []
 	if ";" in filters:
@@ -141,50 +223,6 @@ def filter_mx(matrix, mx, filters, matrix_type, log):
 	
 	return df
 
-			
-def dist_mx(dist, log):
-    """ obtain a condensed distance matrix
-    input: squared pairwise distance matrix
-    output: consensed distance matrix
-    """
-    
-    print("\tGetting condensed distance matrix...")
-    print("\tGetting condensed distance matrix...", file = log)
-
-    dist = dist.set_index(dist.columns[0],drop=True)
-    
-    samples = dist.columns
-    
-    condensed_dist = squareform(dist)
-    
-    return dist, condensed_dist, samples
-    
-    			
-def hcluster(dist_mx, method_choice, log):
-    """ obtain linkage array 
-    input: distance matrix
-    output: linkage array, list samples names, max dist
-    """
-    
-    clustering = linkage(dist_mx, method = method_choice)
-    max_dist = maxdists(clustering)[-1]
-    
-    print("\tMaximum distance " + str(max_dist) + "...")
-    print("\tMaximum distance " + str(max_dist) + "...", file = log)
-    
-    return clustering, max_dist
-	
-
-def get_partitions(clustering, threshold, log):    
-    """ obtain clustering information for a given threshold
-    input: linkage array
-    output: list with cluster names
-    """
-    
-    clusters = list(fcluster(clustering, t = threshold, criterion = "distance"))
-    
-    return clusters
-
 
 def get_cluster_composition(outfile, partitions):
 	""" get summary of cluster composition 
@@ -226,8 +264,129 @@ def get_newick(node, parent_dist, leaf_names, newick='') -> str:
         newick = "(%s" % (newick)
         
         return newick
-        
-        
+
+def from_allele_profile(hc=None, logger=None):
+		global args
+		if hc:
+			args = hc
+		allele_mx = pandas.read_table(args.allele_profile, dtype = str)
+		allele_mx = allele_mx.replace("INF-","", regex=True) #implemented because of chewie-ns profiles
+		allele_mx = allele_mx.replace("\*","", regex=True) #implemented because of chewie-ns profiles
+		allele_mx = allele_mx.replace({"N": "0", "a": "A", "c": "C", "t": "T", "g": "G"})
+		
+		
+		# filtering allele matrix	----------
+		
+		if args.metadata and args.filter_column:
+			logger.info("Filtering the distance matrix...")
+			
+			filters = args.filter_column
+			mx = pandas.read_table(args.metadata, dtype = str)
+			sample_column = mx.columns[0]
+			initial_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
+			allele_mx = filter_mx(allele_mx, mx, filters, "allele", logger)
+			final_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
+			logger.info("\tFrom the " + str(initial_samples) + " samples, " + str(final_samples) + " were kept in the matrix...")
+			allele_mx.to_csv(args.out + "_subset_matrix.tsv", sep = "\t", index = None)
+	
+	
+		# cleaning allele matrix (columns)	----------
+		
+		if args.samples_called and float(args.samples_called) != 1.0 and float(args.samples_called) != 0.0:
+			logger.info("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
+			
+			pos_t0 = len(allele_mx.columns[1:])
+			for col in allele_mx.columns[1:]:
+				values = allele_mx[col].values.tolist()
+				if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
+					allele_mx = allele_mx.drop(columns=col)
+			allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
+			pos_t1 = len(allele_mx.columns[1:])
+			logger.info("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
+		
+		
+		# cleaning allele matrix (rows)	----------
+
+		if args.loci_called:
+			logger.info("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
+			
+			report_allele_mx = {}
+			
+			len_schema = len(allele_mx.columns) - 1
+			
+			report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
+			report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
+			report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
+			report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
+
+			report_allele_df = pandas.DataFrame(data = report_allele_mx)
+			if float(args.loci_called) != 1.0:
+				flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
+			else:
+				flt_report = report_allele_df[report_allele_df["pct_called"] == float(args.loci_called)]
+			pass_samples = flt_report["samples"].values.tolist()
+			
+			if len(pass_samples) == 0:
+				logger.info("Cannot proceed because " + str(len(pass_samples)) + " samples were kept in the matrix!")
+				sys.exit()
+		
+			logger.info("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
+			
+			allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
+			allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
+			report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
+			
+			
+		# getting distance matrix	----------
+		
+		logger.info("Getting the pairwise distance matrix with cgmlst-dists...")
+		
+		
+		# convert ATCG to integers
+		conv_nucl(allele_mx)
+		total_size = len(allele_mx.columns) - 1
+		
+		
+		# run cgmlst-dists
+		os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist.tsv")
+		os.system("rm temporary_profile.tsv")
+		temp_df = pandas.read_table(args.out + "_dist.tsv", dtype = str)
+		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
+		temp_df.to_csv(args.out + "_dist.tsv", sep = "\t", index = None)
+		dist = pandas.read_table(args.out + "_dist.tsv")
+		return dist
+
+def from_distance_matrix(hc=None, logger=None):
+	global args
+	if hc:
+		args = hc
+	dist = pandas.read_table(args.distance_matrix)
+
+	# filtering the pairwise distance matrix	----------
+	
+	if args.metadata and args.filter_column:
+		logger.info("Filtering the distance matrix...")
+		
+		filters = args.filter_column
+		mx = pandas.read_table(args.metadata, dtype = str)
+		sample_column = mx.columns[0]
+		dist = filter_mx(dist, mx, filters, "dist", logger)
+		dist.to_csv(args.out + "_flt_dist.tsv", sep = "\t", index = None)
+
+	elif args.metadata and args.filter_column == "":
+		logger.info("Metadata file was provided but no filter was found... I am confused :-(")
+		sys.exit()
+
+	elif (not args.metadata) and args.filter_column:
+		logger.info("Metadata file was not provided but a filter was found... I am confused :-(")
+		sys.exit()
+
+	else:
+		sample_column = "sequence"
+
+	return dist
+
+
 # running the pipeline	----------
 
 if __name__ == "__main__":
@@ -281,371 +440,5 @@ if __name__ == "__main__":
 						--method-threshold single-2, the single linkage threshold will be set at 20).")
 	
 	
-	args = parser.parse_args()
-
-
-	# starting logs	----------
-
-	log_name = args.out + ".log"
-	log = open(log_name, "a+")
-	
-	print("\n-------------------- partitioning_HC.py --------------------\n")
-	print("\n-------------------- partitioning_HC.py --------------------\n", file = log)
-	print("version", version, "last updated on", last_updated, "\n")
-	print("version", version, "last updated on", last_updated, "\n", file = log)
-	print(" ".join(sys.argv), "\n")
-	print(" ".join(sys.argv), "\n", file = log)
-	
-	
-	# processing allele profile ----------
-	
-	if args.allele_profile:
-		print("Profile matrix provided... pairwise distance will be calculated!")
-		print("Profile matrix provided... pairwise distance will be calculated!", file = log)
-		
-		allele_mx = pandas.read_table(args.allele_profile, dtype = str)
-		allele_mx = allele_mx.replace("INF-","", regex=True) #implemented because of chewie-ns profiles
-		allele_mx = allele_mx.replace("\*","", regex=True) #implemented because of chewie-ns profiles
-		allele_mx = allele_mx.replace({"N": "0", "a": "A", "c": "C", "t": "T", "g": "G"})
-		
-		
-		# filtering allele matrix	----------
-		
-		if args.metadata != "" and args.filter_column != "":
-			print("Filtering the distance matrix...")
-			print("Filtering the distance matrix...", file = log)
-			
-			filters = args.filter_column
-			mx = pandas.read_table(args.metadata, dtype = str)
-			sample_column = mx.columns[0]
-			initial_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
-			allele_mx = filter_mx(allele_mx, mx, filters, "allele", log)
-			final_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
-			print("\tFrom the " + str(initial_samples) + " samples, " + str(final_samples) + " were kept in the matrix...")
-			print("\tFrom the " + str(initial_samples) + " samples, " + str(final_samples) + " were kept in the matrix...", file = log)
-			allele_mx.to_csv(args.out + "_subset_matrix.tsv", sep = "\t", index = None)
-	
-	
-		# cleaning allele matrix (columns)	----------
-		
-		if float(args.samples_called) != 1.0 and float(args.samples_called) != 0.0:
-			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
-			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
-			
-			pos_t0 = len(allele_mx.columns[1:])
-			for col in allele_mx.columns[1:]:
-				values = allele_mx[col].values.tolist()
-				if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
-					allele_mx = allele_mx.drop(columns=col)
-			allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
-			pos_t1 = len(allele_mx.columns[1:])
-			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
-			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
-		
-		
-		# cleaning allele matrix (rows)	----------
-
-		if args.loci_called != "":
-			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...")
-			print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called per sample...", file = log)
-			
-			report_allele_mx = {}
-			
-			len_schema = len(allele_mx.columns) - 1
-			
-			report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
-			report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
-			report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
-			report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
-
-			report_allele_df = pandas.DataFrame(data = report_allele_mx)
-			if float(args.loci_called) != 1.0:
-				flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
-			else:
-				flt_report = report_allele_df[report_allele_df["pct_called"] == float(args.loci_called)]
-			pass_samples = flt_report["samples"].values.tolist()
-			
-			if len(pass_samples) == 0:
-				print("Cannot proceed because " + str(len(pass_samples)) + " samples were kept in the matrix!")
-				print("Cannot proceed because " + str(len(pass_samples)) + " samples were kept in the matrix!", file = log)
-				sys.exit()
-		
-			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")
-			print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.", file = log)
-			
-			allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
-			allele_mx.to_csv(args.out + "_flt_matrix.tsv", index = False, header=True, sep ="\t")
-			report_allele_df.to_csv(args.out + "_loci_report.tsv", index = False, header=True, sep ="\t")
-			
-			
-		# getting distance matrix	----------
-		
-		print("Getting the pairwise distance matrix with cgmlst-dists...")
-		print("Getting the pairwise distance matrix with cgmlst-dists...", file = log)
-		
-		
-		# convert ATCG to integers
-		conv_nucl(allele_mx)
-		total_size = len(allele_mx.columns) - 1
-		
-		
-		# run cgmlst-dists
-		os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist.tsv")
-		os.system("rm temporary_profile.tsv")
-		temp_df = pandas.read_table(args.out + "_dist.tsv", dtype = str)
-		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
-		temp_df.to_csv(args.out + "_dist.tsv", sep = "\t", index = None)
-		dist = pandas.read_table(args.out + "_dist.tsv")
-		
-	
-	elif args.distance_matrix:
-		print("Distance matrix provided... pairwise distance will not be calculated!")
-		print("Distance matrix provided... pairwise distance will not be calculated!", file = log)		
-		dist = pandas.read_table(args.distance_matrix)
-	
-		# filtering the pairwise distance matrix	----------
-		
-		if args.metadata != "" and args.filter_column != "":
-			print("Filtering the distance matrix...")
-			print("Filtering the distance matrix...", file = log)
-			
-			filters = args.filter_column
-			mx = pandas.read_table(args.metadata, dtype = str)
-			sample_column = mx.columns[0]
-			dist = filter_mx(dist, mx, filters, "dist", log)
-			dist.to_csv(args.out + "_flt_dist.tsv", sep = "\t", index = None)
-
-		elif args.metadata != "" and args.filter_column == "":
-			print("Metadata file was provided but no filter was found... I am confused :-(")
-			print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
-			sys.exit()
-
-		elif args.metadata == "" and args.filter_column != "":
-			print("Metadata file was not provided but a filter was found... I am confused :-(")
-			print("Metadata file was not provided but a filter was found... I am confused :-(", file = log)
-			sys.exit()
-
-		else:
-			sample_column = "sequence"
-	
-	else:
-		print("Could not find a profile or a distance matrix... One of them needs to be specified!!")
-		print("Could not find a profile or a distance matrix... One of them needs to be specified!!", file = log)	
-		sys.exit()
-		
-			
-	# hierarchical clustering 	----------
-	
-	distance_mx, condensed_dist_mx, samples = dist_mx(dist, log)
-	
-	clustering = {"sequence": distance_mx.columns.tolist()}
-	
-	combinations2run = {}
-	pct_correspondence = {}
-	
-	if args.pct_HCmethod_threshold != "none":
-		print("\n\tCorrespondence between percentage and number of differences:")
-		print("\n\tCorrespondence between percentage and number of differences:", file = log)
-		print("\n\t#METHOD\tPERCENTAGE\tDIFFERENCES")
-		print("\n\t#METHOD\tPERCENTAGE\tDIFFERENCES", file = log)
-		for combination_pct in args.pct_HCmethod_threshold.split(","):
-			method = combination_pct.split("-")[0]
-			threshold_pct = combination_pct.split("-",1)[1]
-			threshold = str(int(int(total_size) * float(threshold_pct)))
-			info_run = threshold,"pct"
-			
-			if method not in combinations2run.keys():
-				combinations2run[method] = []
-			combinations2run[method].append(info_run)
-
-			if threshold not in pct_correspondence.keys():
-				pct_correspondence[threshold] = []
-			if str(threshold_pct) not in pct_correspondence[threshold]:
-				pct_correspondence[threshold].append(str(threshold_pct))
-				print("\t" + str(float(threshold_pct)*100) + "\t" + str(threshold))
-				print("\t" + str(float(threshold_pct)*100) + "\t" + str(threshold), file = log)
-		
-	for combination in args.method_threshold.split(","):
-		if "-" not in combination:
-			threshold = "all"
-			method = combination
-			if method not in combinations2run.keys():
-				combinations2run[method] = []
-			info_run = threshold,"general"
-			combinations2run[method].append(info_run)
-		else:
-			method = combination.split("-")[0]
-			threshold = str(combination.split("-",1)[1])
-			if method not in combinations2run.keys():
-				combinations2run[method] = []
-			info_run = threshold,"general"
-			combinations2run[method].append(info_run)
-	
-	cluster_details = {}
-	
-	for method in combinations2run.keys():
-		print("Hierarchical clustering with method: " + method + "...")
-		print("Hierarchical clustering with method: " + method + "...", file = log)
-		hc_matrix, max_dist = hcluster(condensed_dist_mx, method, log)
-		
-		# get newick
-		
-		print("\tGenerating newick file...")
-		print("\tGenerating newick file...", file = log)
-	
-		tree = to_tree(hc_matrix, False)
-		nw = get_newick(tree, tree.dist, samples)
-		
-		with open(args.out + "_" + method + "_HC.nwk", "w+") as newick_out:
-			print(nw, file = newick_out)
-		
-		# partitioning
-		
-		print("\tDefining clusters...")
-		print("\tDefining clusters...", file = log)
-		
-		
-		for threshold,request in combinations2run[method]:
-			if threshold == "all":
-				print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist))
-				print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist), file = log)
-				for thr in range(0,int(max_dist) + 1):
-					partition = method + "-" + str(thr) + "x" + str(args.dist)
-					if partition not in cluster_details.keys():
-						cluster_details[partition] = {}
-					info_clusters = list(fcluster(hc_matrix, t = int(thr) * args.dist, criterion = "distance"))
-					# change cluster name according to cluster size
-					counter = {}
-					singleton_counter = 0
-					for cluster in set(info_clusters):
-						counter[cluster] = info_clusters.count(cluster)
-					for i in range(len(info_clusters)):
-						if counter[info_clusters[i]] == 1:
-							singleton_counter += 1
-							info_clusters[i] = "singleton_" + str(singleton_counter)
-							if info_clusters[i] not in cluster_details[partition].keys():
-								cluster_details[partition][info_clusters[i]] = {}
-								cluster_details[partition][info_clusters[i]][1] = []
-							cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
-						else:
-							cluster_size = counter[info_clusters[i]]
-							info_clusters[i] = "cluster_" + str(info_clusters[i])
-							if info_clusters[i] not in cluster_details[partition].keys():
-								cluster_details[partition][info_clusters[i]] = {}
-								cluster_details[partition][info_clusters[i]][cluster_size] = []
-							cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
-					clustering[partition] = info_clusters
-			else:
-				if "-" in threshold:
-					min_thr = int(threshold.split("-")[0])
-					max_thr = int(threshold.split("-")[1]) + 1
-					
-					if max_thr > max_dist:
-						max_thr = str(max_dist)
-					
-					print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist))
-					print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist), file = log)
-					for thr in range(min_thr,max_thr):
-						partition = method + "-" + str(thr) + "x" + str(args.dist)
-						if partition not in cluster_details.keys():
-							cluster_details[partition] = {}
-						info_clusters = list(fcluster(hc_matrix, t = thr * args.dist, criterion = "distance"))
-						# change cluster name according to cluster size
-						counter = {}
-						singleton_counter = 0
-						for cluster in set(info_clusters):
-							counter[cluster] = info_clusters.count(cluster)
-						for i in range(len(info_clusters)):
-							if counter[info_clusters[i]] == 1:
-								singleton_counter += 1
-								info_clusters[i] = "singleton_" + str(singleton_counter)
-								if info_clusters[i] not in cluster_details[partition].keys():
-									cluster_details[partition][info_clusters[i]] = {}
-									cluster_details[partition][info_clusters[i]][1] = []
-								cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
-							else:
-								cluster_size = counter[info_clusters[i]]
-								info_clusters[i] = "cluster_" + str(info_clusters[i])
-								if info_clusters[i] not in cluster_details[partition].keys():
-									cluster_details[partition][info_clusters[i]] = {}
-									cluster_details[partition][info_clusters[i]][cluster_size] = []
-								cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
-						clustering[partition] = info_clusters
-				else:
-					if request == "general":
-						partition = method + "-" + str(threshold) + "x" + str(args.dist)
-						if partition not in cluster_details.keys():
-							cluster_details[partition] = {}
-						print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist))
-						print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist), file = log)
-						info_clusters = list(fcluster(hc_matrix, t = int(threshold) * args.dist, criterion = "distance"))
-						# change cluster name according to cluster size
-						counter = {}
-						singleton_counter = 0
-						for cluster in set(info_clusters):
-							counter[cluster] = info_clusters.count(cluster)
-						for i in range(len(info_clusters)):
-							if counter[info_clusters[i]] == 1:
-								singleton_counter += 1
-								info_clusters[i] = "singleton_" + str(singleton_counter)
-								if info_clusters[i] not in cluster_details[partition].keys():
-									cluster_details[partition][info_clusters[i]] = {}
-									cluster_details[partition][info_clusters[i]][1] = []
-								cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
-							else:
-								cluster_size = counter[info_clusters[i]]
-								info_clusters[i] = "cluster_" + str(info_clusters[i])
-								if info_clusters[i] not in cluster_details[partition].keys():
-									cluster_details[partition][info_clusters[i]] = {}
-									cluster_details[partition][info_clusters[i]][cluster_size] = []
-								cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
-						clustering[partition] = info_clusters
-					elif request == "pct":
-						partition = method + "-" + str(threshold) + "_(" + "_".join(pct_correspondence[threshold]) + ")"
-						if partition not in cluster_details.keys():
-							cluster_details[partition] = {}
-						print("\tCalculating clustering for threshold " + method + "-" + str(threshold) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[threshold]))
-						print("\tCalculating clustering for threshold " + method + "-" + str(threshold) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[threshold]), file = log)
-						info_clusters = list(fcluster(hc_matrix, t = int(threshold), criterion = "distance"))
-						# change cluster name according to cluster size
-						counter = {}
-						singleton_counter = 0
-						for cluster in set(info_clusters):
-							counter[cluster] = info_clusters.count(cluster)
-						for i in range(len(info_clusters)):
-							if counter[info_clusters[i]] == 1:
-								singleton_counter += 1
-								info_clusters[i] = "singleton_" + str(singleton_counter)
-								if info_clusters[i] not in cluster_details[partition].keys():
-									cluster_details[partition][info_clusters[i]] = {}
-									cluster_details[partition][info_clusters[i]][1] = []
-								cluster_details[partition][info_clusters[i]][1].append(distance_mx.columns[i])
-							else:
-								cluster_size = counter[info_clusters[i]]
-								info_clusters[i] = "cluster_" + str(info_clusters[i])
-								if info_clusters[i] not in cluster_details[partition].keys():
-									cluster_details[partition][info_clusters[i]] = {}
-									cluster_details[partition][info_clusters[i]][cluster_size] = []
-								cluster_details[partition][info_clusters[i]][cluster_size].append(distance_mx.columns[i])
-						clustering[partition] = info_clusters
-				
-
-	# output partitions
-	
-	print("Creating sample partitions file...")
-	print("Creating sample partitions file...", file = log)
-	df_clustering = pandas.DataFrame(data = clustering)
-	df_clustering.to_csv(args.out + "_partitions.tsv", sep = "\t", index = None)
-    
-    
-    # output cluster composition
-	
-	print("Creating cluster composition file...")
-	print("Creating cluster composition file...", file = log)
-	cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
-	#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
-
-print("\npartitioning_HC.py is done!")
-print("\npartitioning_HC.py is done!", file = log)
-
-log.close()
+	hc = HC(**vars(parser.parse_args()))
+	hc.run()

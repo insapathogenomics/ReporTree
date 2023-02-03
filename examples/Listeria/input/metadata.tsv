@@ -1,0 +1,866 @@
+sample	country	region	source	date	ST	note
+sample_0001	A	A1	clinical	21/11/2021	na	not_real_data_test_only
+sample_0002	B	B1	clinical	10/11/2021	na	not_real_data_test_only
+sample_0003	C	B1	clinical	24/10/2021	388	not_real_data_test_only
+sample_0004	A	A2	clinical	18/10/2021	77	not_real_data_test_only
+sample_0005	B	B2	clinical	03/10/2021	3	not_real_data_test_only
+sample_0006	C	B2	clinical	23/09/2021	217	not_real_data_test_only
+sample_0007	A	A3	clinical	18/09/2021	388	not_real_data_test_only
+sample_0008	B	B3	clinical	12/09/2021	217	not_real_data_test_only
+sample_0009	C	B3	clinical	09/09/2021	121	not_real_data_test_only
+sample_0010	A	A4	clinical	02/09/2021	1	not_real_data_test_only
+sample_0011	B	B4	clinical	29/08/2021	1	not_real_data_test_only
+sample_0012	C	B4	clinical	29/08/2021	1	not_real_data_test_only
+sample_0013	A	A5	clinical	02/08/2021	6	not_real_data_test_only
+sample_0014	B	B5	clinical	29/07/2021	8	not_real_data_test_only
+sample_0015	C	B5	clinical	28/07/2021	451	not_real_data_test_only
+sample_0016	A	A6	clinical	20/07/2021	217	not_real_data_test_only
+sample_0017	B	B6	clinical	14/07/2021	87	not_real_data_test_only
+sample_0018	C	B6	clinical	13/07/2021	87	not_real_data_test_only
+sample_0019	A	A7	clinical	04/07/2021	1	not_real_data_test_only
+sample_0020	B	B7	clinical	29/06/2021	87	not_real_data_test_only
+sample_0021	C	B7	clinical	26/06/2021	1	not_real_data_test_only
+sample_0022	A	A8	clinical	17/06/2021	382	not_real_data_test_only
+sample_0023	B		clinical	10/06/2021	388	not_real_data_test_only
+sample_0024	C		clinical	03/06/2021	378	not_real_data_test_only
+sample_0025	A	A9	clinical	02/06/2021	3	not_real_data_test_only
+sample_0026	B	B1	clinical	22/05/2021	6	not_real_data_test_only
+sample_0027	C	B1	clinical	10/05/2021	1	not_real_data_test_only
+sample_0028	A		clinical	05/05/2021	7	not_real_data_test_only
+sample_0029	B	B2	clinical	26/04/2021	16	not_real_data_test_only
+sample_0030	C	B2	clinical	13/04/2021	217	not_real_data_test_only
+sample_0031	A	A1	clinical	05/04/2021	1	not_real_data_test_only
+sample_0032	B	B3	clinical	23/03/2021	1	not_real_data_test_only
+sample_0033	C	B3	clinical	11/03/2021	1	not_real_data_test_only
+sample_0034	A	A2	clinical	15/02/2021	217	not_real_data_test_only
+sample_0035	B	B4	clinical	05/02/2021	6	not_real_data_test_only
+sample_0036	C	B4	clinical	01/02/2021	217	not_real_data_test_only
+sample_0037	A	A3	clinical	29/01/2021	87	not_real_data_test_only
+sample_0038	B	B5	clinical	13/01/2021	1	not_real_data_test_only
+sample_0039	C	B5	clinical	14/12/2020	217	not_real_data_test_only
+sample_0040	A	A4	clinical	20/11/2020	392	not_real_data_test_only
+sample_0041	B	B6	clinical	16/11/2020	1	not_real_data_test_only
+sample_0042	C	B6	clinical	18/10/2020	18	not_real_data_test_only
+sample_0043	A	A5	clinical	07/10/2020	1	not_real_data_test_only
+sample_0044	B	B7	clinical	17/09/2020	87	not_real_data_test_only
+sample_0045	C	B7	clinical	12/09/2020	16	not_real_data_test_only
+sample_0046	A	A6	clinical	07/09/2020	14	not_real_data_test_only
+sample_0047	B		clinical	07/09/2020	1	not_real_data_test_only
+sample_0048	C		clinical	05/09/2020	14	not_real_data_test_only
+sample_0049	A	A7	clinical	03/09/2020	37	not_real_data_test_only
+sample_0050	B	B1	clinical	03/09/2020	2	not_real_data_test_only
+sample_0051	C	B1	clinical	22/08/2020	77	not_real_data_test_only
+sample_0052	A	A8	clinical	19/08/2020	37	not_real_data_test_only
+sample_0053	B	B2	clinical	17/08/2020	1	not_real_data_test_only
+sample_0054	A	A9	clinical	13/08/2020	87	not_real_data_test_only
+sample_0055	B	B3	clinical	13/08/2020	1	not_real_data_test_only
+sample_0056	C	B2	clinical	13/08/2020	87	not_real_data_test_only
+sample_0057	C	B3	clinical	06/08/2020	3	not_real_data_test_only
+sample_0058	A		clinical	30/07/2020	217	not_real_data_test_only
+sample_0059	B	B4	clinical	29/07/2020	1	not_real_data_test_only
+sample_0060	C	B4	clinical	27/07/2020	3	not_real_data_test_only
+sample_0061	A	A1	clinical	22/07/2020	1	not_real_data_test_only
+sample_0062	B	B5	clinical	22/07/2020	1	not_real_data_test_only
+sample_0063	A	A2	clinical	20/07/2020	1	not_real_data_test_only
+sample_0064	C	B5	clinical	20/07/2020	1	not_real_data_test_only
+sample_0065	B	B6	clinical	07/07/2020	2	not_real_data_test_only
+sample_0066	A	A3	clinical	25/06/2020	219	not_real_data_test_only
+sample_0067	B	B7	clinical	25/06/2020	219	not_real_data_test_only
+sample_0068	C	B6	clinical	25/06/2020	1	not_real_data_test_only
+sample_0069	C	B7	clinical	16/06/2020	217	not_real_data_test_only
+sample_0070	A	A4	clinical	08/06/2020	8	not_real_data_test_only
+sample_0071	B		clinical	08/06/2020	1	not_real_data_test_only
+sample_0072	C		clinical	08/06/2020	1	not_real_data_test_only
+sample_0073	A	A5	clinical	04/06/2020	382	not_real_data_test_only
+sample_0074	B	B1	clinical	03/06/2020	3	not_real_data_test_only
+sample_0075	C	B1	clinical	31/05/2020	na	not_real_data_test_only
+sample_0076	A	A6	clinical	26/05/2020	378	not_real_data_test_only
+sample_0077	B	B2	clinical	26/05/2020	1	not_real_data_test_only
+sample_0078	A	A7	clinical	18/05/2020	1	not_real_data_test_only
+sample_0079	C	B2	clinical	18/05/2020	1	not_real_data_test_only
+sample_0080	B	B3	clinical	08/05/2020	1	not_real_data_test_only
+sample_0081	C	B3	clinical	04/05/2020	1	not_real_data_test_only
+sample_0082	A	A8	clinical	02/05/2020	666	not_real_data_test_only
+sample_0083	B	B4	clinical	29/04/2020	na	not_real_data_test_only
+sample_0084	A	A9	clinical	28/04/2020	666	not_real_data_test_only
+sample_0085	C	B4	clinical	28/04/2020	219	not_real_data_test_only
+sample_0086	B	B5	clinical	16/04/2020	16	not_real_data_test_only
+sample_0087	C	B5	clinical	20/03/2020	1	not_real_data_test_only
+sample_0088	A		clinical	14/02/2020	9	not_real_data_test_only
+sample_0089	B	B6	clinical	13/02/2020	3	not_real_data_test_only
+sample_0090	C	B6	clinical	31/01/2020	1	not_real_data_test_only
+sample_0091	A	A1	clinical	06/01/2020	3	not_real_data_test_only
+sample_0092	B	B7	clinical	02/12/2019	1	not_real_data_test_only
+sample_0093	C	B7	clinical	29/11/2019	1	not_real_data_test_only
+sample_0094	A	A2	clinical	25/11/2019	87	not_real_data_test_only
+sample_0095	B		clinical	18/11/2019	87	not_real_data_test_only
+sample_0096	A	A3	clinical	10/11/2019	9	not_real_data_test_only
+sample_0097	C		clinical	10/11/2019	9	not_real_data_test_only
+sample_0098	B	B1	clinical	07/11/2019	1	not_real_data_test_only
+sample_0099	C	B1	clinical	27/10/2019	1	not_real_data_test_only
+sample_0100	A	A4	clinical	08/10/2019	1	not_real_data_test_only
+sample_0101	B	B2	clinical	23/09/2019	121	not_real_data_test_only
+sample_0102	C	B2	clinical	21/09/2019	87	not_real_data_test_only
+sample_0103	A	A5	clinical	16/09/2019	3	not_real_data_test_only
+sample_0104	B	B3	clinical	14/09/2019	1	not_real_data_test_only
+sample_0105	C	B3	clinical	16/08/2019	1	not_real_data_test_only
+sample_0106	A	A6	clinical	15/08/2019	388	not_real_data_test_only
+sample_0107	B	B4	clinical	13/08/2019	1	not_real_data_test_only
+sample_0108	C	B4	clinical	13/08/2019	1	not_real_data_test_only
+sample_0109	A	A7	clinical	08/08/2019	1	not_real_data_test_only
+sample_0110	B	B5	clinical	07/08/2019	382	not_real_data_test_only
+sample_0111	C	B5	clinical	06/08/2019	1	not_real_data_test_only
+sample_0112	A	A8	clinical	29/07/2019	29	not_real_data_test_only
+sample_0113	B	B6	clinical	11/07/2019	1	not_real_data_test_only
+sample_0114	C	B6	clinical	08/07/2019	692	not_real_data_test_only
+sample_0115	A	A9	clinical	07/07/2019	388	not_real_data_test_only
+sample_0116	B	B7	clinical	03/07/2019	219	not_real_data_test_only
+sample_0117	C	B7	clinical	27/06/2019	2	not_real_data_test_only
+sample_0118	A		clinical	21/06/2019	7	not_real_data_test_only
+sample_0119	B		clinical	21/06/2019	7	not_real_data_test_only
+sample_0120	C		clinical	18/06/2019	1	not_real_data_test_only
+sample_0121	A	A1	clinical	12/06/2019	1	not_real_data_test_only
+sample_0122	B	B1	clinical	07/06/2019	na	not_real_data_test_only
+sample_0123	C	B1	clinical	04/06/2019	9	not_real_data_test_only
+sample_0124	A	A2	food	21/05/2019	1	not_real_data_test_only
+sample_0125	B	B2	food	21/05/2019	155	not_real_data_test_only
+sample_0126	A	A3	clinical	17/05/2019	1	not_real_data_test_only
+sample_0127	C	B2	clinical	17/05/2019	1	not_real_data_test_only
+sample_0128	B	B3	clinical	10/05/2019	1	not_real_data_test_only
+sample_0129	C	B3	clinical	09/05/2019	na	not_real_data_test_only
+sample_0130	A	A4	clinical	07/05/2019	1	not_real_data_test_only
+sample_0131	B	B4	clinical	04/05/2019	6	not_real_data_test_only
+sample_0132	C	B4	clinical	01/05/2019	87	not_real_data_test_only
+sample_0133	A	A5	clinical	12/04/2019	1	not_real_data_test_only
+sample_0134	B	B5	clinical	10/04/2019	1	not_real_data_test_only
+sample_0135	A	A6	clinical	08/04/2019	1	not_real_data_test_only
+sample_0136	B	B6	clinical	08/04/2019	217	not_real_data_test_only
+sample_0137	C	B5	clinical	08/04/2019	1	not_real_data_test_only
+sample_0138	C	B6	clinical	22/03/2019	1	not_real_data_test_only
+sample_0139	A	A7	clinical	21/03/2019	382	not_real_data_test_only
+sample_0140	B	B7	clinical	20/03/2019	6	not_real_data_test_only
+sample_0141	C	B7	clinical	04/03/2019	3	not_real_data_test_only
+sample_0142	A	A8	clinical	23/02/2019	9	not_real_data_test_only
+sample_0143	B		clinical	20/02/2019	6	not_real_data_test_only
+sample_0144	C		clinical	19/02/2019	1	not_real_data_test_only
+sample_0145	A	A9	clinical	18/02/2019	206	not_real_data_test_only
+sample_0146	B	B1	clinical	15/02/2019	87	not_real_data_test_only
+sample_0147	C	B1	clinical	10/02/2019	2	not_real_data_test_only
+sample_0148	A		clinical	06/02/2019	87	not_real_data_test_only
+sample_0149	B	B2	clinical	12/01/2019	876	not_real_data_test_only
+sample_0150	C	B2	clinical	10/01/2019	3	not_real_data_test_only
+sample_0151	A	A1	clinical	07/01/2019	3	not_real_data_test_only
+sample_0152	B	B3	clinical	30/12/2018	4	not_real_data_test_only
+sample_0153	A	A2	clinical	29/12/2018	382	not_real_data_test_only
+sample_0154	C	B3	clinical	29/12/2018	382	not_real_data_test_only
+sample_0155	B	B4	clinical	28/12/2018	1	not_real_data_test_only
+sample_0156	C	B4	clinical	23/12/2018	213	not_real_data_test_only
+sample_0157	A	A3	clinical	22/12/2018	388	not_real_data_test_only
+sample_0158	B	B5	clinical	22/12/2018	388	not_real_data_test_only
+sample_0159	C	B5	clinical	15/12/2018	1	not_real_data_test_only
+sample_0160	A	A4	clinical	14/11/2018	1	not_real_data_test_only
+sample_0161	B	B6	clinical	16/10/2018	5	not_real_data_test_only
+sample_0162	C	B6	clinical	09/10/2018	1	not_real_data_test_only
+sample_0163	A	A5	clinical	05/10/2018	219	not_real_data_test_only
+sample_0164	B	B7	clinical	05/10/2018	1	not_real_data_test_only
+sample_0165	A	A6	clinical	01/10/2018	6	not_real_data_test_only
+sample_0166	C	B7	clinical	01/10/2018	7	not_real_data_test_only
+sample_0167	B		clinical	27/09/2018	1	not_real_data_test_only
+sample_0168	C		clinical	16/09/2018	1	not_real_data_test_only
+sample_0169	A	A7	clinical	07/09/2018	2	not_real_data_test_only
+sample_0170	B	B1	clinical	18/08/2018	16	not_real_data_test_only
+sample_0171	C	B1	clinical	17/08/2018	16	not_real_data_test_only
+sample_0172	A	A8	clinical	28/07/2018	378	not_real_data_test_only
+sample_0173	B	B2	clinical	27/07/2018	9	not_real_data_test_only
+sample_0174	C	B2	clinical	25/07/2018	378	not_real_data_test_only
+sample_0175	A	A9	clinical	23/07/2018	1	not_real_data_test_only
+sample_0176	B	B3	clinical	20/07/2018	217	not_real_data_test_only
+sample_0177	C	B3	clinical	13/07/2018	1	not_real_data_test_only
+sample_0178	A		clinical	03/07/2018	378	not_real_data_test_only
+sample_0179	B	B4	clinical	01/07/2018	87	not_real_data_test_only
+sample_0180	A	A1	clinical	19/06/2018	7	not_real_data_test_only
+sample_0181	C	B4	clinical	19/06/2018	6	not_real_data_test_only
+sample_0182	B	B5	clinical	18/06/2018	1	not_real_data_test_only
+sample_0183	C	B5	clinical	15/06/2018	9	not_real_data_test_only
+sample_0184	A	A2	clinical	10/06/2018	16	not_real_data_test_only
+sample_0185	B	B6	clinical	07/06/2018	1	not_real_data_test_only
+sample_0186	C	B6	clinical	04/06/2018	1	not_real_data_test_only
+sample_0187	A	A3	clinical	15/05/2018	1	not_real_data_test_only
+sample_0188	B	B7	clinical	14/05/2018	1	not_real_data_test_only
+sample_0189	C	B7	clinical	10/05/2018	1	not_real_data_test_only
+sample_0190	A	A4	clinical	08/05/2018	1	not_real_data_test_only
+sample_0191	B		clinical	23/04/2018	16	not_real_data_test_only
+sample_0192	C		clinical	10/04/2018	2	not_real_data_test_only
+sample_0193	A	A5	clinical	09/04/2018	2	not_real_data_test_only
+sample_0194	B	B1	clinical	08/04/2018	87	not_real_data_test_only
+sample_0195	C	B1	clinical	02/04/2018	1	not_real_data_test_only
+sample_0196	A	A6	clinical	29/03/2018	504	not_real_data_test_only
+sample_0197	B	B2	clinical	11/03/2018	388	not_real_data_test_only
+sample_0198	C	B2	clinical	25/02/2018	2	not_real_data_test_only
+sample_0199	A	A7	clinical	19/02/2018	1	not_real_data_test_only
+sample_0200	B	B3	clinical	11/02/2018	1	not_real_data_test_only
+sample_0201	C	B3	clinical	27/01/2018	1	not_real_data_test_only
+sample_0202	A	A8	clinical	23/01/2018	4	not_real_data_test_only
+sample_0203	B	B4	clinical	17/01/2018	9	not_real_data_test_only
+sample_0204	C	B4	clinical	17/01/2018	9	not_real_data_test_only
+sample_0205	A	A9	clinical	14/01/2018	1	not_real_data_test_only
+sample_0206	B	B5	clinical	03/01/2018	1	not_real_data_test_only
+sample_0207	C	B5	clinical	24/12/2017	1	not_real_data_test_only
+sample_0208	A		clinical	28/11/2017	1	not_real_data_test_only
+sample_0209	B	B6	clinical	24/11/2017	1	not_real_data_test_only
+sample_0210	C	B6	clinical	18/10/2017	2	not_real_data_test_only
+sample_0211	A	A1	clinical	04/10/2017	87	not_real_data_test_only
+sample_0212	B	B7	clinical	29/09/2017	1	not_real_data_test_only
+sample_0213	C	B7	clinical	22/09/2017	1	not_real_data_test_only
+sample_0214	A	A2	clinical	16/09/2017	1	not_real_data_test_only
+sample_0215	B		clinical	03/09/2017	26	not_real_data_test_only
+sample_0216	C		clinical	03/09/2017	1	not_real_data_test_only
+sample_0217	A	A3	clinical	26/08/2017	403	not_real_data_test_only
+sample_0218	B	B1	clinical	04/08/2017	1	not_real_data_test_only
+sample_0219	C	B1	clinical	30/07/2017	1	not_real_data_test_only
+sample_0220	A	A4	clinical	29/07/2017	26	not_real_data_test_only
+sample_0221	B	B2	clinical	23/07/2017	382	not_real_data_test_only
+sample_0222	C	B2	clinical	12/07/2017	26	not_real_data_test_only
+sample_0223	A	A5	clinical	06/07/2017	217	not_real_data_test_only
+sample_0224	B	B3	clinical	30/06/2017	378	not_real_data_test_only
+sample_0225	C	B3	clinical	25/06/2017	378	not_real_data_test_only
+sample_0226	A	A6	clinical	24/06/2017	6	not_real_data_test_only
+sample_0227	B	B4	clinical	20/06/2017	1	not_real_data_test_only
+sample_0228	C	B4	clinical	13/06/2017	87	not_real_data_test_only
+sample_0229	A	A7	clinical	12/06/2017	6	not_real_data_test_only
+sample_0230	B	B5	clinical	11/06/2017	378	not_real_data_test_only
+sample_0231	C	B5	clinical	10/06/2017	217	not_real_data_test_only
+sample_0232	A	A8	clinical	18/05/2017	8	not_real_data_test_only
+sample_0233	B	B6	clinical	17/05/2017	6	not_real_data_test_only
+sample_0234	C	B6	clinical	16/05/2017	6	not_real_data_test_only
+sample_0235	A	A9	clinical	08/05/2017	121	not_real_data_test_only
+sample_0236	B	B7	clinical	06/05/2017	16	not_real_data_test_only
+sample_0237	C	B7	clinical	30/03/2017	1	not_real_data_test_only
+sample_0238	A		clinical	24/03/2017	6	not_real_data_test_only
+sample_0239	B		clinical	23/03/2017	87	not_real_data_test_only
+sample_0240	C		clinical	13/03/2017	26	not_real_data_test_only
+sample_0241	A	A1	clinical	19/02/2017	1	not_real_data_test_only
+sample_0242	B	B1	clinical	25/01/2017	121	not_real_data_test_only
+sample_0243	C	B1	clinical	22/11/2016	1	not_real_data_test_only
+sample_0244	A	A2	clinical	25/10/2016	1	not_real_data_test_only
+sample_0245	B	B2	clinical	06/10/2016	388	not_real_data_test_only
+sample_0246	C	B2	clinical	06/09/2016	1	not_real_data_test_only
+sample_0247	A	A3	clinical	27/08/2016	219	not_real_data_test_only
+sample_0248	B	B3	clinical	11/08/2016	378	not_real_data_test_only
+sample_0249	A	A4	clinical	14/07/2016	87	not_real_data_test_only
+sample_0250	C	B3	clinical	14/07/2016	87	not_real_data_test_only
+sample_0251	B	B4	clinical	25/06/2016	6	not_real_data_test_only
+sample_0252	C	B4	clinical	15/06/2016	1	not_real_data_test_only
+sample_0253	A	A5	clinical	09/06/2016	1	not_real_data_test_only
+sample_0254	B	B5	clinical	08/06/2016	1	not_real_data_test_only
+sample_0255	A	A6	clinical	24/05/2016	2	not_real_data_test_only
+sample_0256	C	B5	clinical	24/05/2016	2	not_real_data_test_only
+sample_0257	B	B6	clinical	19/05/2016	121	not_real_data_test_only
+sample_0258	C	B6	clinical	19/05/2016	155	not_real_data_test_only
+sample_0259	A	A7	clinical	08/04/2016	1	not_real_data_test_only
+sample_0260	B	B7	clinical	02/04/2016	217	not_real_data_test_only
+sample_0261	C	B7	clinical	01/04/2016	219	not_real_data_test_only
+sample_0262	A	A8	clinical	22/02/2016	87	not_real_data_test_only
+sample_0263	B		clinical	09/02/2016	14	not_real_data_test_only
+sample_0264	C		clinical	07/02/2016	14	not_real_data_test_only
+sample_0265	A	A9	clinical	29/01/2016	1	not_real_data_test_only
+sample_0266	B	B1	clinical	20/01/2016	121	not_real_data_test_only
+sample_0267	C	B1	clinical	31/12/2015	1	not_real_data_test_only
+sample_0268	A		clinical	30/12/2015	217	not_real_data_test_only
+sample_0269	B	B2	clinical	28/12/2015	1	not_real_data_test_only
+sample_0270	C	B2	clinical	03/12/2015	1	not_real_data_test_only
+sample_0271	A	A1	clinical	29/11/2015	6	not_real_data_test_only
+sample_0272	B	B3	clinical	25/11/2015	388	not_real_data_test_only
+sample_0273	C	B3	clinical	25/11/2015	388	not_real_data_test_only
+sample_0274	A	A2	clinical	12/11/2015	382	not_real_data_test_only
+sample_0275	B	B4	clinical	08/11/2015	382	not_real_data_test_only
+sample_0276	A	A3	food	30/10/2015	121	not_real_data_test_only
+sample_0277	B	B5	food	30/10/2015	121	not_real_data_test_only
+sample_0278	C	B4	food	30/10/2015	4	not_real_data_test_only
+sample_0279	C	B5	clinical	23/09/2015	1	not_real_data_test_only
+sample_0280	A	A4	clinical	07/09/2015	388	not_real_data_test_only
+sample_0281	B	B6	clinical	15/08/2015	na	not_real_data_test_only
+sample_0282	C	B6	clinical	04/08/2015	na	not_real_data_test_only
+sample_0283	A	A5	clinical	01/08/2015	na	not_real_data_test_only
+sample_0284	B	B7	clinical	18/07/2015	8	not_real_data_test_only
+sample_0285	C	B7	clinical	17/07/2015	219	not_real_data_test_only
+sample_0286	A	A6	clinical	09/07/2015	87	not_real_data_test_only
+sample_0287	B		clinical	05/07/2015	87	not_real_data_test_only
+sample_0288	C		clinical	30/06/2015	6	not_real_data_test_only
+sample_0289	A	A7	clinical	18/06/2015	na	not_real_data_test_only
+sample_0290	B	B1	clinical	15/06/2015	6	not_real_data_test_only
+sample_0291	C	B1	clinical	14/06/2015	1	not_real_data_test_only
+sample_0292	A	A8	clinical	30/05/2015	87	not_real_data_test_only
+sample_0293	B	B2	clinical	26/05/2015	1	not_real_data_test_only
+sample_0294	C	B2	clinical	24/05/2015	1	not_real_data_test_only
+sample_0295	A	A9	clinical	21/05/2015	6	not_real_data_test_only
+sample_0296	B	B3	clinical	18/05/2015	1	not_real_data_test_only
+sample_0297	C	B3	clinical	12/05/2015	217	not_real_data_test_only
+sample_0298	A		clinical	05/05/2015	1	not_real_data_test_only
+sample_0299	B	B4	clinical	03/05/2015	29	not_real_data_test_only
+sample_0300	C	B4	food	29/04/2015	na	not_real_data_test_only
+sample_0301	A	A1	clinical	27/04/2015	na	not_real_data_test_only
+sample_0302	B	B5	clinical	27/04/2015	1	not_real_data_test_only
+sample_0303	C	B5	clinical	24/04/2015	8	not_real_data_test_only
+sample_0304	A	A2	clinical	11/04/2015	1	not_real_data_test_only
+sample_0305	B	B6	clinical	10/04/2015	6	not_real_data_test_only
+sample_0306	C	B6	clinical	16/03/2015	388	not_real_data_test_only
+sample_0307	A	A3	clinical	15/03/2015	na	not_real_data_test_only
+sample_0308	B	B7	clinical	12/03/2015	1	not_real_data_test_only
+sample_0309	C	B7	clinical	25/02/2015	6	not_real_data_test_only
+sample_0310	A	A4	food	18/02/2015	6	not_real_data_test_only
+sample_0311	B		clinical	09/02/2015	14	not_real_data_test_only
+sample_0312	C		clinical	04/02/2015	1	not_real_data_test_only
+sample_0313	A	A5	clinical	28/01/2015	na	not_real_data_test_only
+sample_0314	B	B1	food	24/01/2015	6	not_real_data_test_only
+sample_0315	A	A6	clinical	20/01/2015	3	not_real_data_test_only
+sample_0316	C	B1	clinical	20/01/2015	200	not_real_data_test_only
+sample_0317	B	B2	food	16/01/2015	1	not_real_data_test_only
+sample_0318	C	B2	food	16/01/2015	1	not_real_data_test_only
+sample_0319	A	A7	clinical	08/01/2015	1	not_real_data_test_only
+sample_0320	B	B3	food	15/12/2014	121	not_real_data_test_only
+sample_0321	A	A8	food	04/12/2014	7	not_real_data_test_only
+sample_0322	C	B3	clinical	04/12/2014	1	not_real_data_test_only
+sample_0323	B	B4	clinical	27/11/2014	388	not_real_data_test_only
+sample_0324	C	B4	clinical	17/11/2014	1	not_real_data_test_only
+sample_0325	A	A9	clinical	05/11/2014	1	not_real_data_test_only
+sample_0326	B	B5	clinical	03/11/2014	155	not_real_data_test_only
+sample_0327	A		food	21/10/2014	54	not_real_data_test_only
+sample_0328	A	A1	food	21/10/2014	1	not_real_data_test_only
+sample_0329	B	B6	food	21/10/2014	na	not_real_data_test_only
+sample_0330	C	B5	food	21/10/2014	121	not_real_data_test_only
+sample_0331	C	B6	food	21/10/2014	1	not_real_data_test_only
+sample_0332	B	B7	food	17/10/2014	3	not_real_data_test_only
+sample_0333	C	B7	clinical	15/10/2014	217	not_real_data_test_only
+sample_0334	A	A2	clinical	05/10/2014	1	not_real_data_test_only
+sample_0335	B		clinical	22/09/2014	1	not_real_data_test_only
+sample_0336	C		clinical	18/09/2014	1	not_real_data_test_only
+sample_0337	A	A3	food	26/08/2014	121	not_real_data_test_only
+sample_0338	B	B1	clinical	01/08/2014	na	not_real_data_test_only
+sample_0339	C	B1	clinical	17/07/2014	2	not_real_data_test_only
+sample_0340	A	A4	food	25/06/2014	7	not_real_data_test_only
+sample_0341	B	B2	clinical	23/06/2014	4	not_real_data_test_only
+sample_0342	C	B2	clinical	03/06/2014	4	not_real_data_test_only
+sample_0343	A	A5	food	19/05/2014	9	not_real_data_test_only
+sample_0344	B	B3	food	11/05/2014	8	not_real_data_test_only
+sample_0345	C	B3	food	08/05/2014	8	not_real_data_test_only
+sample_0346	A	A6	food	29/04/2014	9	not_real_data_test_only
+sample_0347	B	B4	clinical	25/04/2014	666	not_real_data_test_only
+sample_0348	C	B4	food	22/04/2014	29	not_real_data_test_only
+sample_0349	A	A7	clinical	17/04/2014	2	not_real_data_test_only
+sample_0350	B	B5	clinical	29/03/2014	3	not_real_data_test_only
+sample_0351	C	B5	clinical	20/03/2014	1	not_real_data_test_only
+sample_0352	A	A8	clinical	13/03/2014	8	not_real_data_test_only
+sample_0353	B	B6	clinical	13/03/2014	8	not_real_data_test_only
+sample_0354	C	B6	food	13/03/2014	9	not_real_data_test_only
+sample_0355	A	A9	clinical	05/03/2014	8	not_real_data_test_only
+sample_0356	A		food	05/03/2014	9	not_real_data_test_only
+sample_0357	A	A1	food	05/03/2014	na	not_real_data_test_only
+sample_0358	B	B7	food	05/03/2014	9	not_real_data_test_only
+sample_0359	B		food	05/03/2014	3	not_real_data_test_only
+sample_0360	C	B7	food	05/03/2014	2	not_real_data_test_only
+sample_0361	C		food	05/03/2014	na	not_real_data_test_only
+sample_0362	B	B1	clinical	25/02/2014	1	not_real_data_test_only
+sample_0363	A	A2	food	17/02/2014	29	not_real_data_test_only
+sample_0364	C	B1	food	17/02/2014	121	not_real_data_test_only
+sample_0365	B	B2	clinical	16/02/2014	8	not_real_data_test_only
+sample_0366	C	B2	clinical	09/02/2014	1	not_real_data_test_only
+sample_0367	A	A3	food	24/01/2014	9	not_real_data_test_only
+sample_0368	B	B3	food	24/01/2014	29	not_real_data_test_only
+sample_0369	C	B3	clinical	21/01/2014	2	not_real_data_test_only
+sample_0370	A	A4	clinical	13/01/2014	200	not_real_data_test_only
+sample_0371	B	B4	food	13/01/2014	na	not_real_data_test_only
+sample_0372	C	B4	food	07/01/2014	9	not_real_data_test_only
+sample_0373	A	A5	clinical	18/12/2013	2	not_real_data_test_only
+sample_0374	B	B5	clinical	27/11/2013	2	not_real_data_test_only
+sample_0375	C	B5	food	25/11/2013	121	not_real_data_test_only
+sample_0376	A	A6	food	05/11/2013	6	not_real_data_test_only
+sample_0377	B	B6	clinical	04/11/2013	8	not_real_data_test_only
+sample_0378	C	B6	clinical	28/10/2013	2	not_real_data_test_only
+sample_0379	A	A7	food	24/10/2013	2	not_real_data_test_only
+sample_0380	B	B7	food	20/10/2013	121	not_real_data_test_only
+sample_0381	C	B7	food	20/10/2013	121	not_real_data_test_only
+sample_0382	A	A8	clinical	20/09/2013	87	not_real_data_test_only
+sample_0383	A	A9	clinical	19/06/2013	155	not_real_data_test_only
+sample_0384	B		clinical	19/06/2013	217	not_real_data_test_only
+sample_0385	C		clinical	19/06/2013	217	not_real_data_test_only
+sample_0386	B	B1	clinical	05/06/2013	1	not_real_data_test_only
+sample_0387	C	B1	clinical	01/05/2013	219	not_real_data_test_only
+sample_0388	A		clinical	22/04/2013	2	not_real_data_test_only
+sample_0389	B	B2	clinical	15/04/2013	224	not_real_data_test_only
+sample_0390	C	B2	food	10/04/2013	388	not_real_data_test_only
+sample_0391	A	A1	clinical	09/04/2013	1	not_real_data_test_only
+sample_0392	B	B3	clinical	01/04/2013	1	not_real_data_test_only
+sample_0393	C	B3	clinical	01/04/2013	1	not_real_data_test_only
+sample_0394	A	A2	clinical	19/03/2013	4	not_real_data_test_only
+sample_0395	B	B4	clinical	19/03/2013	219	not_real_data_test_only
+sample_0396	C	B4	clinical	16/03/2013	na	not_real_data_test_only
+sample_0397	A	A3	clinical	12/03/2013	1	not_real_data_test_only
+sample_0398	A	A4	food	12/03/2013	121	not_real_data_test_only
+sample_0399	B	B5	food	12/03/2013	1	not_real_data_test_only
+sample_0400	B	B6	food	12/03/2013	121	not_real_data_test_only
+sample_0401	C	B5	food	12/03/2013	121	not_real_data_test_only
+sample_0402	A	A5	food	28/02/2013	91	not_real_data_test_only
+sample_0403	C	B6	food	28/02/2013	9	not_real_data_test_only
+sample_0404	B	B7	clinical	10/02/2013	101	not_real_data_test_only
+sample_0405	C	B7	clinical	09/02/2013	736	not_real_data_test_only
+sample_0406	A	A6	clinical	04/02/2013	4	not_real_data_test_only
+sample_0407	B		clinical	31/01/2013	217	not_real_data_test_only
+sample_0408	C		clinical	30/01/2013	3	not_real_data_test_only
+sample_0409	A	A7	clinical	23/01/2013	87	not_real_data_test_only
+sample_0410	B	B1	clinical	14/01/2013	4	not_real_data_test_only
+sample_0411	C	B1	clinical	12/01/2013	6	not_real_data_test_only
+sample_0412	A	A8	food	04/12/2012	121	not_real_data_test_only
+sample_0413	A	A9	food	03/12/2012	121	not_real_data_test_only
+sample_0414	A		food	03/12/2012	20	not_real_data_test_only
+sample_0415	B	B2	food	03/12/2012	155	not_real_data_test_only
+sample_0416	B	B3	food	03/12/2012	155	not_real_data_test_only
+sample_0417	B	B4	food	03/12/2012	20	not_real_data_test_only
+sample_0418	C	B2	food	03/12/2012	121	not_real_data_test_only
+sample_0419	C	B3	food	03/12/2012	87	not_real_data_test_only
+sample_0420	C	B4	food	27/11/2012	217	not_real_data_test_only
+sample_0421	A	A1	food	26/11/2012	1	not_real_data_test_only
+sample_0422	B	B5	clinical	22/11/2012	87	not_real_data_test_only
+sample_0423	C	B5	food	16/11/2012	1	not_real_data_test_only
+sample_0424	A	A2	food	15/11/2012	1	not_real_data_test_only
+sample_0425	A	A3	food	14/11/2012	1	not_real_data_test_only
+sample_0426	B	B6	food	14/11/2012	1	not_real_data_test_only
+sample_0427	B	B7	food	14/11/2012	1	not_real_data_test_only
+sample_0428	C	B6	food	14/11/2012	na	not_real_data_test_only
+sample_0429	A	A4	food	12/11/2012	9	not_real_data_test_only
+sample_0430	C	B7	food	12/11/2012	6	not_real_data_test_only
+sample_0431	B		food	06/11/2012	9	not_real_data_test_only
+sample_0432	A	A5	food	18/10/2012	1	not_real_data_test_only
+sample_0433	B	B1	food	18/10/2012	1	not_real_data_test_only
+sample_0434	C		food	18/10/2012	8	not_real_data_test_only
+sample_0435	C	B1	food	17/10/2012	7	not_real_data_test_only
+sample_0436	A	A6	food	15/10/2012	9	not_real_data_test_only
+sample_0437	B	B2	clinical	14/09/2012	382	not_real_data_test_only
+sample_0438	A	A7	clinical	04/09/2012	6	not_real_data_test_only
+sample_0439	C	B2	clinical	04/09/2012	6	not_real_data_test_only
+sample_0440	B	B3	clinical	22/08/2012	382	not_real_data_test_only
+sample_0441	A	A8	clinical	01/06/2012	87	not_real_data_test_only
+sample_0442	C	B3	clinical	01/06/2012	87	not_real_data_test_only
+sample_0443	B	B4	clinical	09/02/2012	736	not_real_data_test_only
+sample_0444	C	B4	clinical	10/12/2011	1	not_real_data_test_only
+sample_0445	A	A9	clinical	08/12/2011	1	not_real_data_test_only
+sample_0446	B	B5	clinical	28/10/2011	6	not_real_data_test_only
+sample_0447	C	B5	clinical	10/10/2011	87	not_real_data_test_only
+sample_0448	A		clinical	01/10/2011	1	not_real_data_test_only
+sample_0449	B	B6	clinical	16/09/2011	1	not_real_data_test_only
+sample_0450	C	B6	clinical	13/09/2011	6	not_real_data_test_only
+sample_0451	A	A1	clinical	12/09/2011	1	not_real_data_test_only
+sample_0452	B	B7	clinical	12/09/2011	1	not_real_data_test_only
+sample_0453	C	B7	clinical	08/09/2011	1	not_real_data_test_only
+sample_0454	A	A2	clinical	04/09/2011	1	not_real_data_test_only
+sample_0455	B		clinical	28/08/2011	388	not_real_data_test_only
+sample_0456	C		clinical	09/08/2011	2	not_real_data_test_only
+sample_0457	A	A3	clinical	28/07/2011	3	not_real_data_test_only
+sample_0458	B	B1	clinical	21/07/2011	217	not_real_data_test_only
+sample_0459	A	A4	clinical	19/07/2011	1	not_real_data_test_only
+sample_0460	C	B1	clinical	19/07/2011	1	not_real_data_test_only
+sample_0461	B	B2	clinical	27/06/2011	na	not_real_data_test_only
+sample_0462	C	B2	clinical	24/06/2011	1	not_real_data_test_only
+sample_0463	A	A5	clinical	21/06/2011	2	not_real_data_test_only
+sample_0464	B	B3	clinical	20/06/2011	87	not_real_data_test_only
+sample_0465	C	B3	clinical	07/06/2011	2	not_real_data_test_only
+sample_0466	A	A6	clinical	26/05/2011	121	not_real_data_test_only
+sample_0467	B	B4	clinical	05/05/2011	1	not_real_data_test_only
+sample_0468	C	B4	clinical	27/04/2011	1	not_real_data_test_only
+sample_0469	A	A7	clinical	16/04/2011	219	not_real_data_test_only
+sample_0470	B	B5	clinical	14/04/2011	5	not_real_data_test_only
+sample_0471	A	A8	clinical	02/04/2011	426	not_real_data_test_only
+sample_0472	C	B5	clinical	02/04/2011	426	not_real_data_test_only
+sample_0473	B	B6	clinical	23/03/2011	1	not_real_data_test_only
+sample_0474	C	B6	clinical	16/03/2011	378	not_real_data_test_only
+sample_0475	A	A9	clinical	09/03/2011	388	not_real_data_test_only
+sample_0476	B	B7	clinical	08/03/2011	1	not_real_data_test_only
+sample_0477	C	B7	clinical	07/03/2011	2	not_real_data_test_only
+sample_0478	A		clinical	05/03/2011	388	not_real_data_test_only
+sample_0479	B		clinical	04/03/2011	4	not_real_data_test_only
+sample_0480	C		clinical	04/03/2011	3	not_real_data_test_only
+sample_0481	A	A1	clinical	28/02/2011	1	not_real_data_test_only
+sample_0482	B	B1	environmental	25/02/2011	8	not_real_data_test_only
+sample_0483	C	B1	clinical	24/02/2011	6	not_real_data_test_only
+sample_0484	A	A2	clinical	18/02/2011	87	not_real_data_test_only
+sample_0485	B	B2	clinical	13/02/2011	388	not_real_data_test_only
+sample_0486	C	B2	clinical	07/02/2011	2	not_real_data_test_only
+sample_0487	A	A3	clinical	26/01/2011	1	not_real_data_test_only
+sample_0488	B	B3	clinical	26/01/2011	1	not_real_data_test_only
+sample_0489	C	B3	clinical	21/01/2011	2	not_real_data_test_only
+sample_0490	A	A4	clinical	13/01/2011	388	not_real_data_test_only
+sample_0491	B	B4	clinical	10/01/2011	219	not_real_data_test_only
+sample_0492	A	A5	clinical	01/01/2011	87	not_real_data_test_only
+sample_0493	C	B4	clinical	01/01/2011	1	not_real_data_test_only
+sample_0494	B	B5	clinical	20/12/2010	1	not_real_data_test_only
+sample_0495	C	B5	clinical	29/11/2010	382	not_real_data_test_only
+sample_0496	A	A6	clinical	27/11/2010	2	not_real_data_test_only
+sample_0497	B	B6	clinical	21/11/2010	388	not_real_data_test_only
+sample_0498	C	B6	clinical	20/11/2010	388	not_real_data_test_only
+sample_0499	A	A7	clinical	15/11/2010	1	not_real_data_test_only
+sample_0500	B	B7	clinical	05/11/2010	1	not_real_data_test_only
+sample_0501	C	B7	clinical	28/10/2010	388	not_real_data_test_only
+sample_0502	A	A8	clinical	02/10/2010	5	not_real_data_test_only
+sample_0503	B		clinical	24/09/2010	388	not_real_data_test_only
+sample_0504	C		clinical	23/09/2010	388	not_real_data_test_only
+sample_0505	A	A9	clinical	08/09/2010	1	not_real_data_test_only
+sample_0506	B	B1	clinical	08/09/2010	7	not_real_data_test_only
+sample_0507	C	B1	food	03/09/2010	1	not_real_data_test_only
+sample_0508	A		clinical	15/08/2010	2	not_real_data_test_only
+sample_0509	B	B2	clinical	13/08/2010	388	not_real_data_test_only
+sample_0510	A	A1	clinical	29/07/2010	1	not_real_data_test_only
+sample_0511	C	B2	clinical	29/07/2010	8	not_real_data_test_only
+sample_0512	B	B3	clinical	09/07/2010	388	not_real_data_test_only
+sample_0513	C	B3	clinical	06/07/2010	1	not_real_data_test_only
+sample_0514	A	A2	clinical	25/06/2010	736	not_real_data_test_only
+sample_0515	B	B4	clinical	23/06/2010	1	not_real_data_test_only
+sample_0516	C	B4	clinical	18/06/2010	1	not_real_data_test_only
+sample_0517	A	A3	clinical	12/06/2010	2	not_real_data_test_only
+sample_0518	B	B5	clinical	11/06/2010	388	not_real_data_test_only
+sample_0519	C	B5	clinical	09/06/2010	388	not_real_data_test_only
+sample_0520	A	A4	clinical	06/06/2010	388	not_real_data_test_only
+sample_0521	B	B6	clinical	31/05/2010	388	not_real_data_test_only
+sample_0522	C	B6	clinical	30/05/2010	2	not_real_data_test_only
+sample_0523	A	A5	clinical	19/05/2010	388	not_real_data_test_only
+sample_0524	B	B7	clinical	17/05/2010	6	not_real_data_test_only
+sample_0525	C	B7	clinical	06/05/2010	388	not_real_data_test_only
+sample_0526	A	A6	clinical	04/05/2010	388	not_real_data_test_only
+sample_0527	B		clinical	27/04/2010	388	not_real_data_test_only
+sample_0528	C		clinical	15/04/2010	388	not_real_data_test_only
+sample_0529	A	A7	clinical	07/04/2010	388	not_real_data_test_only
+sample_0530	B	B1	clinical	01/04/2010	388	not_real_data_test_only
+sample_0531	C	B1	clinical	22/02/2010	87	not_real_data_test_only
+sample_0532	A	A8	clinical	16/02/2010	388	not_real_data_test_only
+sample_0533	B	B2	clinical	03/02/2010	217	not_real_data_test_only
+sample_0534	A	A9	clinical	01/02/2010	388	not_real_data_test_only
+sample_0535	C	B2	clinical	01/02/2010	388	not_real_data_test_only
+sample_0536	B	B3	clinical	30/01/2010	1	not_real_data_test_only
+sample_0537	C	B3	clinical	28/01/2010	217	not_real_data_test_only
+sample_0538	A		clinical	27/01/2010	87	not_real_data_test_only
+sample_0539	B	B4	clinical	27/01/2010	87	not_real_data_test_only
+sample_0540	C	B4	clinical	25/01/2010	3	not_real_data_test_only
+sample_0541	A	A1	clinical	18/01/2010	388	not_real_data_test_only
+sample_0542	B	B5	clinical	17/01/2010	388	not_real_data_test_only
+sample_0543	C	B5	clinical	12/01/2010	388	not_real_data_test_only
+sample_0544	A	A2	clinical	11/01/2010	388	not_real_data_test_only
+sample_0545	B	B6	clinical	04/01/2010	388	not_real_data_test_only
+sample_0546	C	B6	clinical	03/01/2010	1	not_real_data_test_only
+sample_0547	A	A3	clinical	01/01/2010	1	not_real_data_test_only
+sample_0548	A	A4	clinical	13/12/2009	1	not_real_data_test_only
+sample_0549	B	B7	clinical	13/12/2009	101	not_real_data_test_only
+sample_0550	C	B7	clinical	13/12/2009	1	not_real_data_test_only
+sample_0551	B		clinical	01/07/2009	1	not_real_data_test_only
+sample_0552	C		clinical	29/06/2009	736	not_real_data_test_only
+sample_0553	A	A5	clinical	26/05/2009	3	not_real_data_test_only
+sample_0554	B	B1	clinical	18/05/2009	217	not_real_data_test_only
+sample_0555	C	B1	clinical	09/04/2009	7	not_real_data_test_only
+sample_0556	A	A6	clinical	22/03/2009	1	not_real_data_test_only
+sample_0557	B	B2	clinical	25/02/2009	87	not_real_data_test_only
+sample_0558	A	A7	clinical	09/02/2009	3	not_real_data_test_only
+sample_0559	C	B2	clinical	09/02/2009	3	not_real_data_test_only
+sample_0560	B	B3	clinical	22/01/2009	4	not_real_data_test_only
+sample_0561	C	B3	clinical	13/01/2009	4	not_real_data_test_only
+sample_0562	A	A8	clinical	06/01/2009	1	not_real_data_test_only
+sample_0563	B	B4	clinical	15/11/2008	87	not_real_data_test_only
+sample_0564	C	B4	food	03/09/2008	87	not_real_data_test_only
+sample_0565	A	A9	food	17/04/2007	6	not_real_data_test_only
+sample_0566	B	B5	food	21/02/2007	1	not_real_data_test_only
+sample_0567	C	B5	food	16/02/2007	87	not_real_data_test_only
+sample_0568	A		food	07/11/2006	87	not_real_data_test_only
+sample_0569	B	B6	food	07/11/2006	87	not_real_data_test_only
+sample_0570	C	B6	food	12/07/2005	87	not_real_data_test_only
+sample_0571	A	A1	food	08/06/2005	87	not_real_data_test_only
+sample_0572	B	B7	food	28/02/2005	87	not_real_data_test_only
+sample_0573	C	B7	food	16/02/2005	87	not_real_data_test_only
+sample_0574	A	A2	food	04/11/2004	87	not_real_data_test_only
+sample_0575	B		food	27/05/2004	87	not_real_data_test_only
+sample_0576	C		food	13/04/2004	8	not_real_data_test_only
+sample_0577	A	A3	food	06/04/2004	na	not_real_data_test_only
+sample_0578	B	B1	food	30/03/2004	87	not_real_data_test_only
+sample_0579	A	A4	clinical	2021	217	not_real_data_test_only
+sample_0580	C	B1	clinical	2021	1	not_real_data_test_only
+sample_0581	B	B2	clinical	2020	217	not_real_data_test_only
+sample_0582	A	A5	food	2019	155	not_real_data_test_only
+sample_0583	A	A6	food	2019	1	not_real_data_test_only
+sample_0584	A	A7	food	2019	1	not_real_data_test_only
+sample_0585	A	A8	food	2019	2	not_real_data_test_only
+sample_0586	A	A9	food	2019	1	not_real_data_test_only
+sample_0587	A		food	2019	1	not_real_data_test_only
+sample_0588	B	B3	food	2019	155	not_real_data_test_only
+sample_0589	B	B4	food	2019	1	not_real_data_test_only
+sample_0590	B	B5	food	2019	1	not_real_data_test_only
+sample_0591	B	B6	food	2019	2	not_real_data_test_only
+sample_0592	B	B7	food	2019	1	not_real_data_test_only
+sample_0593	B		food	2019	9	not_real_data_test_only
+sample_0594	C	B2	clinical	2019	8	not_real_data_test_only
+sample_0595	C	B3	food	2019	155	not_real_data_test_only
+sample_0596	C	B4	food	2019	1	not_real_data_test_only
+sample_0597	C	B5	food	2019	2	not_real_data_test_only
+sample_0598	C	B6	food	2019	1	not_real_data_test_only
+sample_0599	C	B7	food	2019	155	not_real_data_test_only
+sample_0600	A	A1	food	2018	155	not_real_data_test_only
+sample_0601	A	A2	food	2018	na	not_real_data_test_only
+sample_0602	B	B1	food	2018	2	not_real_data_test_only
+sample_0603	B	B2	food	2018	9	not_real_data_test_only
+sample_0604	C		food	2018	87	not_real_data_test_only
+sample_0605	C	B1	food	2018	1	not_real_data_test_only
+sample_0606	A	A3	clinical	2017	1	not_real_data_test_only
+sample_0607	A	A4	clinical	2017	1	not_real_data_test_only
+sample_0608	A	A5	food	2017	87	not_real_data_test_only
+sample_0609	A	A6	food	2017	4	not_real_data_test_only
+sample_0610	A	A7	food	2017	736	not_real_data_test_only
+sample_0611	A	A8	food	2017	121	not_real_data_test_only
+sample_0612	B	B3	clinical	2017	382	not_real_data_test_only
+sample_0613	B	B4	clinical	2017	1	not_real_data_test_only
+sample_0614	B	B5	food	2017	403	not_real_data_test_only
+sample_0615	B	B6	food	2017	121	not_real_data_test_only
+sample_0616	B	B7	food	2017	155	not_real_data_test_only
+sample_0617	B		food	2017	1	not_real_data_test_only
+sample_0618	C	B2	clinical	2017	87	not_real_data_test_only
+sample_0619	C	B3	clinical	2017	87	not_real_data_test_only
+sample_0620	C	B4	environmental	2017	na	not_real_data_test_only
+sample_0621	C	B5	food	2017	363	not_real_data_test_only
+sample_0622	C	B6	food	2017	2	not_real_data_test_only
+sample_0623	C	B7	food	2017	1	not_real_data_test_only
+sample_0624	A	A9	clinical	2016	1	not_real_data_test_only
+sample_0625	A		clinical	2016	1	not_real_data_test_only
+sample_0626	A	A1	clinical	2016	26	not_real_data_test_only
+sample_0627	A	A2	food	2016	121	not_real_data_test_only
+sample_0628	A	A3	food	2016	1	not_real_data_test_only
+sample_0629	A	A4	food	2016	7	not_real_data_test_only
+sample_0630	A	A5	food	2016	7	not_real_data_test_only
+sample_0631	A	A6	food	2016	121	not_real_data_test_only
+sample_0632	A	A7	food	2016	9	not_real_data_test_only
+sample_0633	B	B1	clinical	2016	388	not_real_data_test_only
+sample_0634	B	B2	clinical	2016	1	not_real_data_test_only
+sample_0635	B	B3	food	2016	7	not_real_data_test_only
+sample_0636	B	B4	food	2016	2	not_real_data_test_only
+sample_0637	B	B5	food	2016	7	not_real_data_test_only
+sample_0638	B	B6	food	2016	7	not_real_data_test_only
+sample_0639	B	B7	food	2016	7	not_real_data_test_only
+sample_0640	B		food	2016	na	not_real_data_test_only
+sample_0641	C		clinical	2016	1	not_real_data_test_only
+sample_0642	C	B1	clinical	2016	1	not_real_data_test_only
+sample_0643	C	B2	clinical	2016	87	not_real_data_test_only
+sample_0644	C	B3	food	2016	7	not_real_data_test_only
+sample_0645	C	B4	food	2016	121	not_real_data_test_only
+sample_0646	C	B5	food	2016	1	not_real_data_test_only
+sample_0647	C	B6	food	2016	7	not_real_data_test_only
+sample_0648	C	B7	food	2016	121	not_real_data_test_only
+sample_0649	C		food	2016	121	not_real_data_test_only
+sample_0650	A	A8	food	2015	5	not_real_data_test_only
+sample_0651	A	A9	food	2015	7	not_real_data_test_only
+sample_0652	A		food	2015	7	not_real_data_test_only
+sample_0653	A	A1	food	2015	7	not_real_data_test_only
+sample_0654	A	A2	food	2015	1	not_real_data_test_only
+sample_0655	A	A3	food	2015	1	not_real_data_test_only
+sample_0656	A	A4	food	2015	2	not_real_data_test_only
+sample_0657	A	A5	food	2015	59	not_real_data_test_only
+sample_0658	A	A6	food	2015	7	not_real_data_test_only
+sample_0659	A	A7	food	2015	7	not_real_data_test_only
+sample_0660	A	A8	food	2015	3	not_real_data_test_only
+sample_0661	A	A9	food	2015	na	not_real_data_test_only
+sample_0662	A		food	2015	87	not_real_data_test_only
+sample_0663	B	B1	food	2015	87	not_real_data_test_only
+sample_0664	B	B2	food	2015	8	not_real_data_test_only
+sample_0665	B	B3	food	2015	7	not_real_data_test_only
+sample_0666	B	B4	food	2015	7	not_real_data_test_only
+sample_0667	B	B5	food	2015	7	not_real_data_test_only
+sample_0668	B	B6	food	2015	3	not_real_data_test_only
+sample_0669	B	B7	food	2015	2	not_real_data_test_only
+sample_0670	B		food	2015	16	not_real_data_test_only
+sample_0671	B	B1	food	2015	9	not_real_data_test_only
+sample_0672	B	B2	food	2015	3	not_real_data_test_only
+sample_0673	B	B3	food	2015	2	not_real_data_test_only
+sample_0674	B	B4	food	2015	8	not_real_data_test_only
+sample_0675	B	B5	food	2015	na	not_real_data_test_only
+sample_0676	C	B1	food	2015	1	not_real_data_test_only
+sample_0677	C	B2	food	2015	7	not_real_data_test_only
+sample_0678	C	B3	food	2015	6	not_real_data_test_only
+sample_0679	C	B4	food	2015	7	not_real_data_test_only
+sample_0680	C	B5	food	2015	7	not_real_data_test_only
+sample_0681	C	B6	food	2015	2	not_real_data_test_only
+sample_0682	C	B7	food	2015	1	not_real_data_test_only
+sample_0683	C		food	2015	3	not_real_data_test_only
+sample_0684	C	B1	food	2015	2	not_real_data_test_only
+sample_0685	C	B2	food	2015	7	not_real_data_test_only
+sample_0686	C	B3	food	2015	na	not_real_data_test_only
+sample_0687	C	B4	food	2015	na	not_real_data_test_only
+sample_0688	C	B5	food	2015	87	not_real_data_test_only
+sample_0689	A	A1	clinical	2014	1	not_real_data_test_only
+sample_0690	A	A2	clinical	2014	na	not_real_data_test_only
+sample_0691	A	A3	clinical	2014	1	not_real_data_test_only
+sample_0692	A	A4	clinical	2014	382	not_real_data_test_only
+sample_0693	A	A5	clinical	2014	6	not_real_data_test_only
+sample_0694	A	A6	food	2014	121	not_real_data_test_only
+sample_0695	A	A7	food	2014	121	not_real_data_test_only
+sample_0696	A	A8	food	2014	7	not_real_data_test_only
+sample_0697	A	A9	food	2014	1	not_real_data_test_only
+sample_0698	A		food	2014	87	not_real_data_test_only
+sample_0699	A	A1	food	2014	121	not_real_data_test_only
+sample_0700	A	A2	food	2014	121	not_real_data_test_only
+sample_0701	A	A3	food	2014	3	not_real_data_test_only
+sample_0702	A	A4	food	2014	530	not_real_data_test_only
+sample_0703	A	A5	food	2014	na	not_real_data_test_only
+sample_0704	B	B6	clinical	2014	1	not_real_data_test_only
+sample_0705	B	B7	clinical	2014	4	not_real_data_test_only
+sample_0706	B		clinical	2014	388	not_real_data_test_only
+sample_0707	B	B1	clinical	2014	7	not_real_data_test_only
+sample_0708	B	B2	clinical	2014	1	not_real_data_test_only
+sample_0709	B	B3	clinical	2014	1	not_real_data_test_only
+sample_0710	B	B4	food	2014	9	not_real_data_test_only
+sample_0711	B	B5	food	2014	1	not_real_data_test_only
+sample_0712	B	B6	food	2014	388	not_real_data_test_only
+sample_0713	B	B7	food	2014	1	not_real_data_test_only
+sample_0714	B		food	2014	121	not_real_data_test_only
+sample_0715	B	B1	food	2014	2	not_real_data_test_only
+sample_0716	B	B2	food	2014	2	not_real_data_test_only
+sample_0717	B	B3	food	2014	54	not_real_data_test_only
+sample_0718	B	B4	food	2014	121	not_real_data_test_only
+sample_0719	C	B6	clinical	2014	1	not_real_data_test_only
+sample_0720	C	B7	clinical	2014	1	not_real_data_test_only
+sample_0721	C		clinical	2014	1	not_real_data_test_only
+sample_0722	C	B1	clinical	2014	77	not_real_data_test_only
+sample_0723	C	B2	clinical	2014	1	not_real_data_test_only
+sample_0724	C	B3	clinical	2014	219	not_real_data_test_only
+sample_0725	C	B4	food	2014	121	not_real_data_test_only
+sample_0726	C	B5	food	2014	217	not_real_data_test_only
+sample_0727	C	B6	food	2014	9	not_real_data_test_only
+sample_0728	C	B7	food	2014	121	not_real_data_test_only
+sample_0729	C		food	2014	2	not_real_data_test_only
+sample_0730	C	B1	food	2014	121	not_real_data_test_only
+sample_0731	C	B2	food	2014	121	not_real_data_test_only
+sample_0732	C	B3	food	2014	121	not_real_data_test_only
+sample_0733	C	B4	food	2014	121	not_real_data_test_only
+sample_0734	A	A6	food	2013	121	not_real_data_test_only
+sample_0735	A	A7	food	2013	1	not_real_data_test_only
+sample_0736	A	A8	food	2013	204	not_real_data_test_only
+sample_0737	A	A9	food	2013	2	not_real_data_test_only
+sample_0738	A		food	2013	1	not_real_data_test_only
+sample_0739	A	A1	food	2013	1	not_real_data_test_only
+sample_0740	A	A2	food	2013	1	not_real_data_test_only
+sample_0741	A	A3	food	2013	3	not_real_data_test_only
+sample_0742	A	A4	food	2013	na	not_real_data_test_only
+sample_0743	A	A5	food	2013	121	not_real_data_test_only
+sample_0744	B	B5	clinical	2013	1	not_real_data_test_only
+sample_0745	B	B6	food	2013	121	not_real_data_test_only
+sample_0746	B	B7	food	2013	2	not_real_data_test_only
+sample_0747	B		food	2013	121	not_real_data_test_only
+sample_0748	B	B1	food	2013	2	not_real_data_test_only
+sample_0749	B	B2	food	2013	1	not_real_data_test_only
+sample_0750	B	B3	food	2013	1	not_real_data_test_only
+sample_0751	B	B4	food	2013	1	not_real_data_test_only
+sample_0752	B	B5	food	2013	666	not_real_data_test_only
+sample_0753	B	B6	food	2013	121	not_real_data_test_only
+sample_0754	C	B5	clinical	2013	155	not_real_data_test_only
+sample_0755	C	B6	food	2013	121	not_real_data_test_only
+sample_0756	C	B7	food	2013	121	not_real_data_test_only
+sample_0757	C		food	2013	2	not_real_data_test_only
+sample_0758	C	B1	food	2013	1	not_real_data_test_only
+sample_0759	C	B2	food	2013	1	not_real_data_test_only
+sample_0760	C	B3	food	2013	121	not_real_data_test_only
+sample_0761	C	B4	food	2013	7	not_real_data_test_only
+sample_0762	C	B5	food	2013	1	not_real_data_test_only
+sample_0763	C	B6	food	2013	121	not_real_data_test_only
+sample_0764	A	A6	clinical	2012	1	not_real_data_test_only
+sample_0765	A	A7	clinical	2012	1	not_real_data_test_only
+sample_0766	A	A8	food	2012	403	not_real_data_test_only
+sample_0767	A	A9	food	2012	378	not_real_data_test_only
+sample_0768	A		food	2012	14	not_real_data_test_only
+sample_0769	A	A1	food	2012	1	not_real_data_test_only
+sample_0770	A	A2	food	2012	7	not_real_data_test_only
+sample_0771	A	A3	food	2012	3	not_real_data_test_only
+sample_0772	A	A4	food	2012	121	not_real_data_test_only
+sample_0773	A	A5	food	2012	388	not_real_data_test_only
+sample_0774	A	A6	food	2012	14	not_real_data_test_only
+sample_0775	A	A7	food	2012	9	not_real_data_test_only
+sample_0776	B	B7	clinical	2012	666	not_real_data_test_only
+sample_0777	B		clinical	2012	1	not_real_data_test_only
+sample_0778	B	B1	clinical	2012	388	not_real_data_test_only
+sample_0779	B	B2	food	2012	1	not_real_data_test_only
+sample_0780	B	B3	food	2012	14	not_real_data_test_only
+sample_0781	B	B4	food	2012	2	not_real_data_test_only
+sample_0782	B	B5	food	2012	1	not_real_data_test_only
+sample_0783	B	B6	food	2012	1	not_real_data_test_only
+sample_0784	B	B7	food	2012	121	not_real_data_test_only
+sample_0785	B		food	2012	121	not_real_data_test_only
+sample_0786	B	B1	food	2012	121	not_real_data_test_only
+sample_0787	B	B2	food	2012	9	not_real_data_test_only
+sample_0788	B	B3	food	2012	121	not_real_data_test_only
+sample_0789	C	B7	clinical	2012	8	not_real_data_test_only
+sample_0790	C		clinical	2012	1	not_real_data_test_only
+sample_0791	C	B1	clinical	2012	1	not_real_data_test_only
+sample_0792	C	B2	food	2012	121	not_real_data_test_only
+sample_0793	C	B3	food	2012	14	not_real_data_test_only
+sample_0794	C	B4	food	2012	7	not_real_data_test_only
+sample_0795	C	B5	food	2012	1	not_real_data_test_only
+sample_0796	C	B6	food	2012	1398	not_real_data_test_only
+sample_0797	C	B7	food	2012	3	not_real_data_test_only
+sample_0798	C		food	2012	121	not_real_data_test_only
+sample_0799	C	B1	food	2012	2	not_real_data_test_only
+sample_0800	C	B2	food	2012	2	not_real_data_test_only
+sample_0801	C	B3	food	2012	121	not_real_data_test_only
+sample_0802	A	A8	clinical	2011	1	not_real_data_test_only
+sample_0803	A	A9	clinical	2011	8	not_real_data_test_only
+sample_0804	A		food	2011	121	not_real_data_test_only
+sample_0805	A	A1	food	2011	388	not_real_data_test_only
+sample_0806	A	A2	food	2011	474	not_real_data_test_only
+sample_0807	A	A3	food	2011	121	not_real_data_test_only
+sample_0808	A	A4	food	2011	3	not_real_data_test_only
+sample_0809	A	A5	food	2011	2	not_real_data_test_only
+sample_0810	B	B4	clinical	2011	388	not_real_data_test_only
+sample_0811	B	B5	clinical	2011	8	not_real_data_test_only
+sample_0812	B	B6	food	2011	330	not_real_data_test_only
+sample_0813	B	B7	food	2011	388	not_real_data_test_only
+sample_0814	B		food	2011	388	not_real_data_test_only
+sample_0815	B	B1	food	2011	9	not_real_data_test_only
+sample_0816	B	B2	food	2011	121	not_real_data_test_only
+sample_0817	B	B3	food	2011	155	not_real_data_test_only
+sample_0818	C	B4	clinical	2011	2	not_real_data_test_only
+sample_0819	C	B5	food	2011	1	not_real_data_test_only
+sample_0820	C	B6	food	2011	388	not_real_data_test_only
+sample_0821	C	B7	food	2011	9	not_real_data_test_only
+sample_0822	C		food	2011	121	not_real_data_test_only
+sample_0823	C	B1	food	2011	328	not_real_data_test_only
+sample_0824	C	B2	food	2011	1	not_real_data_test_only
+sample_0825	C	B3	food	2011	224	not_real_data_test_only
+sample_0826	A	A6	clinical	2010	388	not_real_data_test_only
+sample_0827	A	A7	food	2010	1	not_real_data_test_only
+sample_0828	A	A8	food	2010	59	not_real_data_test_only
+sample_0829	A	A9	food	2010	9	not_real_data_test_only
+sample_0830	A		food	2010	3	not_real_data_test_only
+sample_0831	A	A1	food	2010	9	not_real_data_test_only
+sample_0832	A	A2	food	2010	736	not_real_data_test_only
+sample_0833	B	B4	clinical	2010	2	not_real_data_test_only
+sample_0834	B	B5	food	2010	2	not_real_data_test_only
+sample_0835	B	B6	food	2010	1	not_real_data_test_only
+sample_0836	B	B7	food	2010	2	not_real_data_test_only
+sample_0837	B		food	2010	9	not_real_data_test_only
+sample_0838	B	B1	food	2010	14	not_real_data_test_only
+sample_0839	C	B4	clinical	2010	1	not_real_data_test_only
+sample_0840	C	B5	food	2010	2	not_real_data_test_only
+sample_0841	C	B6	food	2010	1	not_real_data_test_only
+sample_0842	C	B7	food	2010	2	not_real_data_test_only
+sample_0843	C		food	2010	9	not_real_data_test_only
+sample_0844	C	B1	food	2010	3	not_real_data_test_only
+sample_0845	A	A3	clinical	2009	388	not_real_data_test_only
+sample_0846	A	A4	food	2009	3	not_real_data_test_only
+sample_0847	A	A5	food	2009	3	not_real_data_test_only
+sample_0848	A	A6	food	2009	3	not_real_data_test_only
+sample_0849	A	A7	food	2009	2	not_real_data_test_only
+sample_0850	A	A8	food	2009	54	not_real_data_test_only
+sample_0851	A	A9	food	2009	121	not_real_data_test_only
+sample_0852	B	B2	clinical	2009	388	not_real_data_test_only
+sample_0853	B	B3	food	2009	532	not_real_data_test_only
+sample_0854	B	B4	food	2009	121	not_real_data_test_only
+sample_0855	B	B5	food	2009	121	not_real_data_test_only
+sample_0856	B	B6	food	2009	121	not_real_data_test_only
+sample_0857	B	B7	food	2009	121	not_real_data_test_only
+sample_0858	B		food	2009	1	not_real_data_test_only
+sample_0859	C	B2	clinical	2009	388	not_real_data_test_only
+sample_0860	C	B3	food	2009	121	not_real_data_test_only
+sample_0861	C	B4	food	2009	3	not_real_data_test_only
+sample_0862	C	B5	food	2009	2	not_real_data_test_only
+sample_0863	C	B6	food	2009	3	not_real_data_test_only
+sample_0864	C	B7	food	2009	121	not_real_data_test_only
+sample_0865	C		food	2009	1	not_real_data_test_only
