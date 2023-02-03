@@ -26,9 +26,6 @@ def create_logger(out: str):
 	fh.setLevel(logging.DEBUG)
 	ch = logging.StreamHandler(sys.stdout)
 	ch.setLevel(logging.INFO)
-	formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
-	fh.setFormatter(formatter)
-	ch.setFormatter(formatter)
 	logger = logging.getLogger()
 	logger.setLevel(logging.INFO)
 	logger.addHandler(fh)
@@ -57,14 +54,14 @@ class HC:
 		self.__dict__.update(kwargs)
 	
 	def __str__(self):
-		return f"Output folder: {self.out}\n" + \
-			f"Distance matrix: {self.distance_matrix}\n" + \
-			f"Allele profile: {self.allele_profile}\n" + \
+		return f"Output file prefix: {self.out}\n" + \
+			f"Distance matrix filename: {self.distance_matrix}\n" + \
+			f"Allele profile filename: {self.allele_profile}\n" + \
+			f"Metadata filename: {self.metadata}\n" + \
 			f"Method threshold: {self.method_threshold}\n" + \
 			f"Percentage method threshold: {self.pct_HCmethod_threshold}\n" + \
 			f"Samples called: {self.samples_called}\n" + \
 			f"Loci called: {self.loci_called}\n" + \
-			f"Metadata: {self.metadata}\n" + \
 			f"Filter column: {self.filter_column}\n" + \
 			f"Distances: {self.dist}"
 	
@@ -72,6 +69,7 @@ class HC:
 		self.logger = create_logger(self.out)
 		self.logger.info("Running hierarchical clustering with these parameters:")
 		self.logger.info(self.__str__())
+		self.logger.info("")
 
 		if self.allele_profile:
 			self.logger.info("Profile matrix provided; pairwise distance will be calculated.")
