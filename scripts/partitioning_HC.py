@@ -431,9 +431,6 @@ if __name__ == "__main__":
 
 	# starting logs	----------
 	logger = create_logger(args.out)
-
-	log_name = args.out + ".log"
-	log = open(log_name, "a+")
 	
 	logger.info("-------------------- partitioning_HC.py --------------------")
 	logger.info(f"version {version}, last updated on {last_updated}")
@@ -472,4 +469,3 @@ if __name__ == "__main__":
 
 	logger.info("partitioning_HC.py is done!")
 
-	log.close()
