@@ -60,8 +60,10 @@ class HC:
 		self.logger = create_logger(self.out)
 
 		if self.allele_profile:
+			logger.info("Profile matrix provided; pairwise distance will be calculated.")
 			self.df_dist = from_allele_profile(self, self.logger)
 		elif self.distance_matrix:
+			logger.info("Distance matrix provided; pairwise distance will NOT be calculated.")
 			self.df_dist = from_distance_matrix(self, self.logger)
 		else:
 			msg = "Either distance matrix or allele profile must be specified!"
