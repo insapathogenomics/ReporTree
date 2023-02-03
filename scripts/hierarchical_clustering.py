@@ -1,14 +1,13 @@
 from scipy.spatial.distance import squareform
 from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_tree
 
-def dist_mx(dist, log):
+def dist_mx(dist, logger):
     """ obtain a condensed distance matrix
     input: squared pairwise distance matrix
     output: consensed distance matrix
     """
     
-    print("\tGetting condensed distance matrix...")
-    print("\tGetting condensed distance matrix...", file = log)
+    logger.info("\tGetting condensed distance matrix...")
 
     dist = dist.set_index(dist.columns[0],drop=True)
     
@@ -19,7 +18,7 @@ def dist_mx(dist, log):
     return dist, condensed_dist, samples
 
     			
-def hcluster(dist_mx, method_choice, log):
+def hcluster(dist_mx, method_choice, logger):
     """ obtain linkage array 
     input: distance matrix
     output: linkage array, list samples names, max dist
@@ -28,13 +27,12 @@ def hcluster(dist_mx, method_choice, log):
     clustering = linkage(dist_mx, method = method_choice)
     max_dist = maxdists(clustering)[-1]
     
-    print("\tMaximum distance " + str(max_dist) + "...")
-    print("\tMaximum distance " + str(max_dist) + "...", file = log)
+    logger.info("\tMaximum distance " + str(max_dist) + "...")
     
     return clustering, max_dist
 	
 
-def get_partitions(clustering, threshold, log):    
+def get_partitions(clustering, threshold, logger):    
     """ obtain clustering information for a given threshold
     input: linkage array
     output: list with cluster names
@@ -73,9 +71,9 @@ def get_newick(node, parent_dist, leaf_names, newick='') -> str:
         return newick
 
 
-def hierarchical_clustering(df_dist, log, args):
+def hierarchical_clustering(df_dist, logger, args):
 
-	distance_mx, condensed_dist_mx, samples = dist_mx(df_dist, log)
+	distance_mx, condensed_dist_mx, samples = dist_mx(df_dist, logger)
 	
 	clustering = {"sequence": distance_mx.columns.tolist()}
 	
@@ -83,10 +81,8 @@ def hierarchical_clustering(df_dist, log, args):
 	pct_correspondence = {}
 	
 	if args.pct_HCmethod_threshold != "none":
-		print("\n\tCorrespondence between percentage and number of differences:")
-		print("\n\tCorrespondence between percentage and number of differences:", file = log)
-		print("\n\t#METHOD\tPERCENTAGE\tDIFFERENCES")
-		print("\n\t#METHOD\tPERCENTAGE\tDIFFERENCES", file = log)
+		logger.info("\n\tCorrespondence between percentage and number of differences:")
+		logger.info("\n\t#METHOD\tPERCENTAGE\tDIFFERENCES")
 		for combination_pct in args.pct_HCmethod_threshold.split(","):
 			method = combination_pct.split("-")[0]
 			threshold_pct = combination_pct.split("-",1)[1]
@@ -101,8 +97,7 @@ def hierarchical_clustering(df_dist, log, args):
 				pct_correspondence[threshold] = []
 			if str(threshold_pct) not in pct_correspondence[threshold]:
 				pct_correspondence[threshold].append(str(threshold_pct))
-				print("\t" + str(float(threshold_pct)*100) + "\t" + str(threshold))
-				print("\t" + str(float(threshold_pct)*100) + "\t" + str(threshold), file = log)
+				logger.info("\t" + str(float(threshold_pct)*100) + "\t" + str(threshold))
 		
 	for combination in args.method_threshold.split(","):
 		if "-" not in combination:
@@ -123,14 +118,12 @@ def hierarchical_clustering(df_dist, log, args):
 	cluster_details = {}
 	
 	for method in combinations2run.keys():
-		print("Hierarchical clustering with method: " + method + "...")
-		print("Hierarchical clustering with method: " + method + "...", file = log)
-		hc_matrix, max_dist = hcluster(condensed_dist_mx, method, log)
+		logger.info("Hierarchical clustering with method: " + method + "...")
+		hc_matrix, max_dist = hcluster(condensed_dist_mx, method, logger)
 		
 		# get newick
 		
-		print("\tGenerating newick file...")
-		print("\tGenerating newick file...", file = log)
+		logger.info("\tGenerating newick file...")
 	
 		tree = to_tree(hc_matrix, False)
 		nw = get_newick(tree, tree.dist, samples)
@@ -140,14 +133,12 @@ def hierarchical_clustering(df_dist, log, args):
 		
 		# partitioning
 		
-		print("\tDefining clusters...")
-		print("\tDefining clusters...", file = log)
+		logger.info("\tDefining clusters...")
 		
 		
 		for threshold,request in combinations2run[method]:
 			if threshold == "all":
-				print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist))
-				print("\tCalculating clustering in range",str(0),str(max_dist),"with a distance of",str(args.dist), file = log)
+				logger.info(f"\tCalculating clustering in range 0 - {str(max_dist)} with a distance of {str(args.dist)}")
 				for thr in range(0,int(max_dist) + 1):
 					partition = method + "-" + str(thr) + "x" + str(args.dist)
 					if partition not in cluster_details.keys():
@@ -182,8 +173,7 @@ def hierarchical_clustering(df_dist, log, args):
 					if max_thr > max_dist:
 						max_thr = str(max_dist)
 					
-					print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist))
-					print("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist), file = log)
+					logger.info("\tCalculating clustering in range",str(min_thr),str(max_thr),"with a distance of",str(args.dist))
 					for thr in range(min_thr,max_thr):
 						partition = method + "-" + str(thr) + "x" + str(args.dist)
 						if partition not in cluster_details.keys():
@@ -215,8 +205,7 @@ def hierarchical_clustering(df_dist, log, args):
 						partition = method + "-" + str(threshold) + "x" + str(args.dist)
 						if partition not in cluster_details.keys():
 							cluster_details[partition] = {}
-						print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist))
-						print("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist), file = log)
+						logger.info("\tCalculating clustering for threshold",str(threshold),"with a distance of",str(args.dist))
 						info_clusters = list(fcluster(hc_matrix, t = int(threshold) * args.dist, criterion = "distance"))
 						# change cluster name according to cluster size
 						counter = {}
@@ -243,8 +232,7 @@ def hierarchical_clustering(df_dist, log, args):
 						partition = method + "-" + str(threshold) + "_(" + "_".join(pct_correspondence[threshold]) + ")"
 						if partition not in cluster_details.keys():
 							cluster_details[partition] = {}
-						print("\tCalculating clustering for threshold " + method + "-" + str(threshold) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[threshold]))
-						print("\tCalculating clustering for threshold " + method + "-" + str(threshold) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[threshold]), file = log)
+						logger.info("\tCalculating clustering for threshold " + method + "-" + str(threshold) + ", which corresponds to the pct threshold of: " + ", ".join(pct_correspondence[threshold]))
 						info_clusters = list(fcluster(hc_matrix, t = int(threshold), criterion = "distance"))
 						# change cluster name according to cluster size
 						counter = {}

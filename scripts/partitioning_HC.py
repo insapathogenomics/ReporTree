@@ -65,7 +65,7 @@ class HC:
 			raise ValueError("Either distance matrix or allele profile must be specified.")
 		
 		# Copy-pasted from main part
-		clustering, cluster_details = hierarchical_clustering(self.df_dist, log, self)
+		clustering, cluster_details = hierarchical_clustering(self.df_dist, self.logger, self)
 
 		# output partitions
 	
@@ -453,7 +453,7 @@ if __name__ == "__main__":
 		logger.info("Could not find a profile or a distance matrix... One of them needs to be specified!!")
 		sys.exit()
 	
-	clustering, cluster_details = hierarchical_clustering(df_dist, log, args)
+	clustering, cluster_details = hierarchical_clustering(df_dist, logger, args)
 
 	# output partitions
 	
