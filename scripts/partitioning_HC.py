@@ -62,7 +62,9 @@ class HC:
 		elif self.distance_matrix:
 			self.df_dist = from_distance_matrix(self, self.logger)
 		else:
-			raise ValueError("Either distance matrix or allele profile must be specified.")
+			msg = "Either distance matrix or allele profile must be specified!"
+			logger.error(msg)
+			raise ValueError(msg)
 		
 		# Copy-pasted from main part
 		clustering, cluster_details = hierarchical_clustering(self.df_dist, self.logger, self)
