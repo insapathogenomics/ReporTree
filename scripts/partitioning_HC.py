@@ -440,46 +440,5 @@ if __name__ == "__main__":
 						--method-threshold single-2, the single linkage threshold will be set at 20).")
 	
 	
-	args = parser.parse_args()
-
-
-	# starting logs	----------
-	logger = create_logger(args.out)
-	
-	logger.info("-------------------- partitioning_HC.py --------------------")
-	logger.info(f"version {version}, last updated on {last_updated}")
-	logger.info(" ".join(sys.argv))
-	
-	# processing allele profile ----------
-	
-	df_dist:pandas.DataFrame
-
-	if args.allele_profile:
-		logger.info("Profile matrix provided... pairwise distance will be calculated!")
-		df_dist = from_allele_profile(hc=args, logger=logger)
-	
-	elif args.distance_matrix:
-		logger.info("Distance matrix provided... pairwise distance will not be calculated!")
-		df_dist = from_distance_matrix(hc=args, logger=logger)
-	
-	else:
-		logger.info("Could not find a profile or a distance matrix... One of them needs to be specified!!")
-		sys.exit()
-	
-	clustering, cluster_details = hierarchical_clustering(df_dist, logger, args)
-
-	# output partitions
-	
-	logger.info("Creating sample partitions file...")
-	df_clustering = pandas.DataFrame(data = clustering)
-	df_clustering.to_csv(args.out + "_partitions.tsv", sep = "\t", index = None)
-    
-    
-    # output cluster composition
-	
-	logger.info("Creating cluster composition file...")
-	cluster_composition = get_cluster_composition(args.out + "_clusterComposition.tsv", cluster_details)
-	#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
-
-	logger.info("partitioning_HC.py is done!")
-
+	hc = HC(**vars(parser.parse_args()))
+	hc.run()
