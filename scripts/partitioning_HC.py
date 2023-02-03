@@ -94,7 +94,7 @@ def conv_nucl(alleles):
 	alleles.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
 	
 	
-def filter_mx(matrix, mx, filters, matrix_type, log):
+def filter_mx(matrix, mx, filters, matrix_type, logger):
 	""" filter the allele or pairwise distance matrix
 	input: matrix
 	output: filtered pandas dataframe
@@ -115,8 +115,7 @@ def filter_mx(matrix, mx, filters, matrix_type, log):
 		mx.insert(index_no + 2, "iso_week_nr", isoweek)
 		mx.insert(index_no + 3, "iso_week", isodate)
 				
-	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
-	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)
+	logger.info("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
 			
 	f = []
 	if ";" in filters:
@@ -269,7 +268,7 @@ def from_allele_profile(hc=None, logger=None):
 			mx = pandas.read_table(args.metadata, dtype = str)
 			sample_column = mx.columns[0]
 			initial_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
-			allele_mx = filter_mx(allele_mx, mx, filters, "allele", log)
+			allele_mx = filter_mx(allele_mx, mx, filters, "allele", logger)
 			final_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
 			logger.info("\tFrom the " + str(initial_samples) + " samples, " + str(final_samples) + " were kept in the matrix...")
 			allele_mx.to_csv(args.out + "_subset_matrix.tsv", sep = "\t", index = None)
@@ -355,7 +354,7 @@ def from_distance_matrix(hc=None, logger=None):
 		filters = args.filter_column
 		mx = pandas.read_table(args.metadata, dtype = str)
 		sample_column = mx.columns[0]
-		dist = filter_mx(dist, mx, filters, "dist", log)
+		dist = filter_mx(dist, mx, filters, "dist", logger)
 		dist.to_csv(args.out + "_flt_dist.tsv", sep = "\t", index = None)
 
 	elif args.metadata and args.filter_column == "":
