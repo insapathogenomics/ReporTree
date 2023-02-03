@@ -22,7 +22,7 @@ version = "1.1.2_ssi"
 last_updated = "2023-02"
 
 def create_logger(out: str):
-	fh = logging.FileHandler(out + '.new.log', mode='a')
+	fh = logging.FileHandler(out + '.log', mode='a')
 	fh.setLevel(logging.DEBUG)
 	ch = logging.StreamHandler(sys.stdout)
 	ch.setLevel(logging.INFO)
@@ -55,8 +55,6 @@ class HC:
 	def run(self):
 		self.logger = create_logger(self.out)
 
-		log_name = self.out + ".log"
-		log = open(log_name, "a+")
 		if self.allele_profile:
 			self.df_dist = from_allele_profile(self, self.logger)
 		elif self.distance_matrix:
@@ -83,8 +81,6 @@ class HC:
 		#cluster_composition.to_csv(args.out + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
 
 		self.logger.info("partitioning_HC.py is done!")
-
-		log.close()
 
 
 # functions	----------
