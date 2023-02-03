@@ -138,7 +138,7 @@ def hierarchical_clustering(df_dist, logger, args):
 		
 		for threshold,request in combinations2run[method]:
 			if threshold == "all":
-				logger.info(f"Calculating clustering in range 0 - {str(max_dist)} with a distance of {str(args.dist)}")
+				logger.info(f"Calculating clustering in range 0.0 - {str(max_dist)} with a distance of {str(args.dist)}")
 				for thr in range(0,int(max_dist) + 1):
 					partition = method + "-" + str(thr) + "x" + str(args.dist)
 					if partition not in cluster_details.keys():
