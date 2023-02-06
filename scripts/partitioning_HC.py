@@ -15,6 +15,8 @@ import textwrap
 import pandas
 from datetime import date
 import logging
+import subprocess
+from io import StringIO
 
 from hierarchical_clustering import hierarchical_clustering
 
@@ -348,9 +350,16 @@ def from_allele_profile(hc=None, logger=None):
 		
 		
 		# run cgmlst-dists
-		os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist.tsv")
+		cp:subprocess.CompletedProcess = subprocess.run(
+			["cgmlst-dists", "temporary_profile.tsv"], capture_output=True, text=True)
+		if cp.returncode != 0:
+			logger.error("Something went wrong!")
+			logger.error(cp.stderr)
+			raise IOError
+		
 		os.system("rm temporary_profile.tsv")
-		temp_df = pandas.read_table(args.out + "_dist.tsv", dtype = str)
+		
+		temp_df = pandas.read_table(StringIO(cp.stdout), dtype=str)
 		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
 		temp_df.to_csv(args.out + "_dist.tsv", sep = "\t", index = None)
 		dist = pandas.read_table(args.out + "_dist.tsv")
