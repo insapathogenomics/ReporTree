@@ -109,7 +109,6 @@ def conv_nucl(alleles):
 	"""convert nucl to integers"""
 	
 	alleles = alleles.replace({"N": "0", "A": "1", "C": "2", "T": "3", "G": "4"})
-	alleles.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
 	return alleles
 	
 	
@@ -347,6 +346,7 @@ def from_allele_profile(hc=None, logger=None):
 		
 		# convert ATCG to integers
 		allele_mx = conv_nucl(allele_mx)
+		allele_mx.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
 		total_size = len(allele_mx.columns) - 1
 		
 		
