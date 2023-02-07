@@ -15,6 +15,10 @@ import textwrap
 import pandas
 from datetime import date
 import logging
+import subprocess
+from io import StringIO
+from pathlib import Path
+import uuid
 
 from hierarchical_clustering import hierarchical_clustering
 
@@ -31,6 +35,9 @@ def create_logger(out: str):
 	logger.addHandler(fh)
 	logger.addHandler(ch)
 	return logger
+
+def generate_random_filename():
+    return uuid.uuid4().hex[:8].upper()
 
 class HC:
 	"""
@@ -107,7 +114,7 @@ def conv_nucl(alleles):
 	"""convert nucl to integers"""
 	
 	alleles = alleles.replace({"N": "0", "A": "1", "C": "2", "T": "3", "G": "4"})
-	alleles.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
+	return alleles
 	
 	
 def filter_mx(matrix, mx, filters, matrix_type, logger):
@@ -343,14 +350,33 @@ def from_allele_profile(hc=None, logger=None):
 		
 		
 		# convert ATCG to integers
-		conv_nucl(allele_mx)
+		allele_mx = conv_nucl(allele_mx)
+
+
+		# save allele matrix to a file that cgmlst-dists can use for input
+		tmp_dirname = os.getenv('TMPDIR', '/tmp')
+		tmp_path = Path(tmp_dirname, generate_random_filename())
+		allele_mx.to_csv(tmp_path, index = False, header=True, sep ="\t")
 		total_size = len(allele_mx.columns) - 1
 		
 		
 		# run cgmlst-dists
-		os.system("cgmlst-dists temporary_profile.tsv > " + args.out + "_dist.tsv")
-		os.system("rm temporary_profile.tsv")
-		temp_df = pandas.read_table(args.out + "_dist.tsv", dtype = str)
+		cp1:subprocess.CompletedProcess = subprocess.run(
+			["cgmlst-dists", str(tmp_path)], capture_output=True, text=True)
+		if cp1.returncode != 0:
+			logger.error(f"Could not run cgmlst-dists on {str(tmp_path)}!")
+			logger.error(cp1.stderr)
+			raise IOError
+		
+		# remove temporary file
+		cp2:subprocess.CompletedProcess = subprocess.run(
+			["rm", str(tmp_path)], capture_output=True, text=True)
+		logger.info(cp2.stdout)
+		if cp2.returncode != 0:
+			logger.warning(f"Could not remove temporary file {str(tmp_path)}!")
+			logger.warning(cp2.stderr)
+		
+		temp_df = pandas.read_table(StringIO(cp1.stdout), dtype=str)
 		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
 		temp_df.to_csv(args.out + "_dist.tsv", sep = "\t", index = None)
 		dist = pandas.read_table(args.out + "_dist.tsv")
