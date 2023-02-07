@@ -17,6 +17,7 @@ from datetime import date
 import logging
 import subprocess
 from io import StringIO
+from pathlib import Path
 
 from hierarchical_clustering import hierarchical_clustering
 
@@ -346,15 +347,20 @@ def from_allele_profile(hc=None, logger=None):
 		
 		# convert ATCG to integers
 		allele_mx = conv_nucl(allele_mx)
-		allele_mx.to_csv("temporary_profile.tsv", index = False, header=True, sep ="\t")
+
+
+		# save allele matrix to a file that cgmlst-dists can use for input
+		tmp_dirname = os.getenv('TMPDIR', '/tmp')
+		tmp_path = Path(tmp_dirname, 'temporary_profile.tsv')
+		allele_mx.to_csv(tmp_path, index = False, header=True, sep ="\t")
 		total_size = len(allele_mx.columns) - 1
 		
 		
 		# run cgmlst-dists
 		cp:subprocess.CompletedProcess = subprocess.run(
-			["cgmlst-dists", "temporary_profile.tsv"], capture_output=True, text=True)
+			["cgmlst-dists", str(tmp_path)], capture_output=True, text=True)
 		if cp.returncode != 0:
-			logger.error("Something went wrong!")
+			logger.error(f"Could not run cgmlst-dists on {str(tmp_path)}!")
 			logger.error(cp.stderr)
 			raise IOError
 		
