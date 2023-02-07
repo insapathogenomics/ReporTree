@@ -18,6 +18,7 @@ import logging
 import subprocess
 from io import StringIO
 from pathlib import Path
+import uuid
 
 from hierarchical_clustering import hierarchical_clustering
 
@@ -34,6 +35,9 @@ def create_logger(out: str):
 	logger.addHandler(fh)
 	logger.addHandler(ch)
 	return logger
+
+def generate_random_filename():
+    return uuid.uuid4().hex[:8].upper()
 
 class HC:
 	"""
@@ -351,7 +355,7 @@ def from_allele_profile(hc=None, logger=None):
 
 		# save allele matrix to a file that cgmlst-dists can use for input
 		tmp_dirname = os.getenv('TMPDIR', '/tmp')
-		tmp_path = Path(tmp_dirname, 'temporary_profile.tsv')
+		tmp_path = Path(tmp_dirname, generate_random_filename())
 		allele_mx.to_csv(tmp_path, index = False, header=True, sep ="\t")
 		total_size = len(allele_mx.columns) - 1
 		
