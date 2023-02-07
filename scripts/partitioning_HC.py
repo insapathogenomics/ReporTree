@@ -357,16 +357,22 @@ def from_allele_profile(hc=None, logger=None):
 		
 		
 		# run cgmlst-dists
-		cp:subprocess.CompletedProcess = subprocess.run(
+		cp1:subprocess.CompletedProcess = subprocess.run(
 			["cgmlst-dists", str(tmp_path)], capture_output=True, text=True)
-		if cp.returncode != 0:
+		if cp1.returncode != 0:
 			logger.error(f"Could not run cgmlst-dists on {str(tmp_path)}!")
-			logger.error(cp.stderr)
+			logger.error(cp1.stderr)
 			raise IOError
 		
-		os.system("rm temporary_profile.tsv")
+		# remove temporary file
+		cp2:subprocess.CompletedProcess = subprocess.run(
+			["rm", str(tmp_path)], capture_output=True, text=True)
+		logger.info(cp2.stdout)
+		if cp2.returncode != 0:
+			logger.warning(f"Could not remove temporary file {str(tmp_path)}!")
+			logger.warning(cp2.stderr)
 		
-		temp_df = pandas.read_table(StringIO(cp.stdout), dtype=str)
+		temp_df = pandas.read_table(StringIO(cp1.stdout), dtype=str)
 		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
 		temp_df.to_csv(args.out + "_dist.tsv", sep = "\t", index = None)
 		dist = pandas.read_table(args.out + "_dist.tsv")
