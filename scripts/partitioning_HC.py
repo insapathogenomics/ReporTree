@@ -20,6 +20,8 @@ from io import StringIO
 from pathlib import Path
 import uuid
 
+from pandas import DataFrame
+
 from hierarchical_clustering import hierarchical_clustering
 
 version = "1.1.2_ssi"
@@ -47,6 +49,7 @@ class HC:
 	out:str
 	distance_matrix:str = ''
 	allele_profile:str = ''
+	allele_mx:DataFrame = None
 	method_threshold:str = 'single'
 	pct_HCmethod_threshold: str = 'none'
 	samples_called:float = 0.0
@@ -60,10 +63,14 @@ class HC:
 		self.out = out
 		self.__dict__.update(kwargs)
 	
+	def allele_df_provided(self):
+		return "Provided" if self.allele_mx else "Not provided"
+	
 	def __str__(self):
 		return f"Output file prefix: {self.out}\n" + \
-			f"Distance matrix filename: {self.distance_matrix}\n" + \
 			f"Allele profile filename: {self.allele_profile}\n" + \
+			f"Allele profile dataframe: {self.allele_df_provided()}\n" + \
+			f"Distance matrix filename: {self.distance_matrix}\n" + \
 			f"Metadata filename: {self.metadata}\n" + \
 			f"Method threshold: {self.method_threshold}\n" + \
 			f"Percentage method threshold: {self.pct_HCmethod_threshold}\n" + \
@@ -79,8 +86,11 @@ class HC:
 		self.logger.info("")
 
 		if self.allele_profile:
-			self.logger.info("Profile matrix provided; pairwise distance will be calculated.")
+			self.logger.info("Profile matrix provided as file path; pairwise distance will be calculated.")
 			self.df_dist = from_allele_profile(self, self.logger)
+		elif self.allele_mx:
+			self.logger.info("Profile matrix provided as DataFrame; pairwise distance will be calculated.")
+			self.df_dist = from_allele_profile(self, self.logger, allele_mx = self.allele_mx)
 		elif self.distance_matrix:
 			self.logger.info("Distance matrix provided; pairwise distance will NOT be calculated.")
 			self.df_dist = from_distance_matrix(self, self.logger)
@@ -272,11 +282,12 @@ def get_newick(node, parent_dist, leaf_names, newick='') -> str:
         
         return newick
 
-def from_allele_profile(hc=None, logger=None):
+def from_allele_profile(hc=None, logger=None, allele_mx:DataFrame=None):
 		global args
 		if hc:
 			args = hc
-		allele_mx = pandas.read_table(args.allele_profile, dtype = str)
+		if not allele_mx:
+			allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 		allele_mx = allele_mx.replace("INF-","", regex=True) #implemented because of chewie-ns profiles
 		allele_mx = allele_mx.replace("\*","", regex=True) #implemented because of chewie-ns profiles
 		allele_mx = allele_mx.replace({"N": "0", "a": "A", "c": "C", "t": "T", "g": "G"})
