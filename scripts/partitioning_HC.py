@@ -22,7 +22,7 @@ import uuid
 
 from pandas import DataFrame
 
-from hierarchical_clustering import hierarchical_clustering
+from .hierarchical_clustering import hierarchical_clustering
 
 version = "1.1.2_ssi"
 last_updated = "2023-02"
