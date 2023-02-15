@@ -64,7 +64,7 @@ class HC:
 		self.__dict__.update(kwargs)
 	
 	def allele_df_provided(self):
-		return "Provided" if self.allele_mx else "Not provided"
+		return "Not provided" if self.allele_mx is None else "Provided"
 	
 	def __str__(self):
 		return f"Output file prefix: {self.out}\n" + \
@@ -88,7 +88,7 @@ class HC:
 		if self.allele_profile:
 			self.logger.info("Profile matrix provided as file path; pairwise distance will be calculated.")
 			self.df_dist = from_allele_profile(self, self.logger)
-		elif self.allele_mx:
+		elif self.allele_mx is not None:
 			self.logger.info("Profile matrix provided as DataFrame; pairwise distance will be calculated.")
 			self.df_dist = from_allele_profile(self, self.logger, allele_mx = self.allele_mx)
 		elif self.distance_matrix:
@@ -286,7 +286,7 @@ def from_allele_profile(hc=None, logger=None, allele_mx:DataFrame=None):
 		global args
 		if hc:
 			args = hc
-		if not allele_mx:
+		if allele_mx is None:
 			allele_mx = pandas.read_table(args.allele_profile, dtype = str)
 		allele_mx = allele_mx.replace("INF-","", regex=True) #implemented because of chewie-ns profiles
 		allele_mx = allele_mx.replace("\*","", regex=True) #implemented because of chewie-ns profiles
