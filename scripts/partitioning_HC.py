@@ -43,8 +43,6 @@ def create_logger(folder:Path, out:str):
 	logger.addHandler(ch)
 	return logger
 
-def generate_random_filename():
-    return uuid.uuid4().hex[:8].upper()
 
 class HC:
 	"""
@@ -374,7 +372,7 @@ def from_allele_profile(hc=None, logger=None, allele_mx:DataFrame=None):
 
 
 		# save allele matrix to a file that cgmlst-dists can use for input
-		allele_mx_path = Path(TMPDIR, generate_random_filename())
+		allele_mx_path = Path(TMPDIR, hc.out, hc.out + '_allele_mx.tsv')
 		allele_mx.to_csv(allele_mx_path, index = False, header=True, sep ="\t")
 		total_size = len(allele_mx.columns) - 1
 		
@@ -386,14 +384,6 @@ def from_allele_profile(hc=None, logger=None, allele_mx:DataFrame=None):
 			logger.error(f"Could not run cgmlst-dists on {str(allele_mx_path)}!")
 			logger.error(cp1.stderr)
 			raise IOError
-		
-		# remove temporary file
-		cp2:subprocess.CompletedProcess = subprocess.run(
-			["rm", str(allele_mx_path)], capture_output=True, text=True)
-		logger.info(cp2.stdout)
-		if cp2.returncode != 0:
-			logger.warning(f"Could not remove temporary file {str(allele_mx_path)}!")
-			logger.warning(cp2.stderr)
 		
 		temp_df = pandas.read_table(StringIO(cp1.stdout), dtype=str)
 		temp_df.rename(columns = {"cgmlst-dists": "dists"}, inplace = True)
