@@ -30,6 +30,8 @@ except ImportError:
 version = "1.1.2_ssi"
 last_updated = "2023-02"
 
+TMPDIR = os.getenv('TMPDIR', '/tmp')
+
 def create_logger(out: str):
 	fh = logging.FileHandler(out + '.log', mode='a')
 	fh.setLevel(logging.DEBUG)
@@ -368,8 +370,7 @@ def from_allele_profile(hc=None, logger=None, allele_mx:DataFrame=None):
 
 
 		# save allele matrix to a file that cgmlst-dists can use for input
-		tmp_dirname = os.getenv('TMPDIR', '/tmp')
-		tmp_path = Path(tmp_dirname, generate_random_filename())
+		tmp_path = Path(TMPDIR, generate_random_filename())
 		allele_mx.to_csv(tmp_path, index = False, header=True, sep ="\t")
 		total_size = len(allele_mx.columns) - 1
 		
