@@ -14,8 +14,6 @@ COPY examples/Listeria/input/ /test_data/
 
 RUN useradd -ms /bin/bash myuser
 USER myuser
-WORKDIR /home/myuser
-RUN mkdir rt_output
-WORKDIR /home/myuser/rt_output
+WORKDIR $TMPDIR
 
 # CMD ["python", "/scripts/keep_running.py"]
