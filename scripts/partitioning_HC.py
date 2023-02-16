@@ -73,7 +73,8 @@ class HC:
 		return "Not provided" if self.allele_mx is None else "Provided"
 	
 	def __str__(self):
-		return f"Folder: {self.folder}\n" + \
+		return \
+			f"Folder: {self.folder}\n" + \
 			f"Output filename prefix: {self.out}\n" + \
 			f"Allele profile filename: {self.allele_profile}\n" + \
 			f"Allele profile dataframe: {self.allele_df_provided()}\n" + \
@@ -484,6 +485,8 @@ if __name__ == "__main__":
 	group0.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
 						--method-threshold single-2, the single linkage threshold will be set at 20).")
 	
-	
-	hc = HC(folder=TMPDIR, **vars(parser.parse_args()))
+	args = parser.parse_args()
+
+	# We also use the 'out' argument for job_folder_name in the HC class
+	hc = HC(vars(args)['out'], **vars(args))
 	hc.run()
