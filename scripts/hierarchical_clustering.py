@@ -1,3 +1,5 @@
+import pathlib
+
 from scipy.spatial.distance import squareform
 from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_tree
 
@@ -128,7 +130,7 @@ def hierarchical_clustering(df_dist, logger, args):
 		tree = to_tree(hc_matrix, False)
 		nw = get_newick(tree, tree.dist, samples)
 		
-		with open(args.out + "_" + method + "_HC.nwk", "w+") as newick_out:
+		with open(pathlib.Path(args.folder).joinpath(args.out + "_" + method + "_HC.nwk"), "w+") as newick_out:
 			print(nw, file = newick_out)
 		
 		# partitioning
