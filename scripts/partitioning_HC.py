@@ -32,8 +32,8 @@ last_updated = "2023-02"
 
 TMPDIR = os.getenv('TMPDIR', '/tmp')
 
-def create_logger(folder):
-	fh = logging.FileHandler(pathlib.Path(folder).joinpath('reportree.log'), mode='a')
+def create_logger(folder:pathlib.Path, out:str):
+	fh = logging.FileHandler(pathlib.Path(folder).joinpath(out + '.log'), mode='a')
 	fh.setLevel(logging.DEBUG)
 	ch = logging.StreamHandler(sys.stdout)
 	ch.setLevel(logging.INFO)
@@ -89,7 +89,7 @@ class HC:
 	
 	def run(self):
 		self.folder.mkdir()
-		self.logger = create_logger(self.folder)
+		self.logger = create_logger(self.folder, self.out)
 		self.logger.info("Running hierarchical clustering with these parameters:")
 		self.logger.info(self.__str__())
 		self.logger.info("")
