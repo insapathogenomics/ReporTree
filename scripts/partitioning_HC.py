@@ -374,25 +374,25 @@ def from_allele_profile(hc=None, logger=None, allele_mx:DataFrame=None):
 
 
 		# save allele matrix to a file that cgmlst-dists can use for input
-		tmp_path = Path(TMPDIR, generate_random_filename())
-		allele_mx.to_csv(tmp_path, index = False, header=True, sep ="\t")
+		allele_mx_path = Path(TMPDIR, generate_random_filename())
+		allele_mx.to_csv(allele_mx_path, index = False, header=True, sep ="\t")
 		total_size = len(allele_mx.columns) - 1
 		
 		
 		# run cgmlst-dists
 		cp1:subprocess.CompletedProcess = subprocess.run(
-			["cgmlst-dists", str(tmp_path)], capture_output=True, text=True)
+			["cgmlst-dists", str(allele_mx_path)], capture_output=True, text=True)
 		if cp1.returncode != 0:
-			logger.error(f"Could not run cgmlst-dists on {str(tmp_path)}!")
+			logger.error(f"Could not run cgmlst-dists on {str(allele_mx_path)}!")
 			logger.error(cp1.stderr)
 			raise IOError
 		
 		# remove temporary file
 		cp2:subprocess.CompletedProcess = subprocess.run(
-			["rm", str(tmp_path)], capture_output=True, text=True)
+			["rm", str(allele_mx_path)], capture_output=True, text=True)
 		logger.info(cp2.stdout)
 		if cp2.returncode != 0:
-			logger.warning(f"Could not remove temporary file {str(tmp_path)}!")
+			logger.warning(f"Could not remove temporary file {str(allele_mx_path)}!")
 			logger.warning(cp2.stderr)
 		
 		temp_df = pandas.read_table(StringIO(cp1.stdout), dtype=str)
