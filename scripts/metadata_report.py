@@ -15,12 +15,12 @@ import pandas
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from datetime import datetime, date
 
-version = "1.0.0"
-last_updated = "2022-09-12"
+version = "1.0.2"
+last_updated = "2023-03-26"
 
 # functions	----------
 
-def partitions2metadata(partitions, metadata, partitions2report, filters, log):
+def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2report, filters, log):
 	""" 
 	create a combined matrix with metadata and partitions information
 	
@@ -35,8 +35,11 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 	dataframe with the required metadata and partitions
 	"""
 
-	mx_metadata = pandas.read_table(metadata, dtype = str)
+	columns_names = [col.replace(" ", "_") for col in mx_metadata.columns]
+	#mx_metadata.replace(" ", "_", regex=True, inplace=True)
+	mx_metadata.columns = columns_names
 	sample_column = mx_metadata.columns[0]
+	possible_subset = False
 
 	# checking for 'date' column
 	if "date" in mx_metadata.columns and "iso_week_nr" not in mx_metadata.columns and "iso_year" not in mx_metadata.columns and "iso_week" not in mx_metadata.columns:
@@ -77,6 +80,11 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		a = mx_metadata.set_index(sample_column, drop = True)
 		b = mx_partitions.set_index(sample_column_part, drop = True)
 		
+		if len(set(a.columns) & set(b.columns)) > 0:
+			b = b.add_prefix("subset_")
+			possible_subset = True
+			mx_partitions.columns = [sample_column_part] + b.columns.tolist()
+			mx_partitions.to_csv(partitions_name, index = False, header=True, sep ="\t")
 		if partitions2report == "all": # add all partitions
 			c = pandas.concat([a, b], axis=1)
 			
@@ -111,7 +119,7 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		for spec in f:
 			col = spec.split(" ", 2)[0]
 			val = spec.split(" ", 2)[1]
-			cond = spec.split(" ", 2)[2]
+			cond = " ".join(spec.split(" ")[2:])
 			
 			if "," in cond:
 				lst = cond.split(",")
@@ -184,11 +192,10 @@ def partitions2metadata(partitions, metadata, partitions2report, filters, log):
 		print("\t\tSamples not present in partitions table but present in metadata table: " + ",".join(list(missing_in_partitions)))
 		print("\t\tSamples not present in partitions table but present in metadata table: " + ",".join(list(missing_in_partitions)), file = log)
 		
-	
-	return new_metadata
+	return new_metadata, possible_subset
 
 
-def partitions_summary(complete_metadata, partitions, partitions2report, summary_columns, sample_column, log):
+def partitions_summary(complete_metadata, partitions, partitions2report, summary_columns, sample_column, possible_subset, log):
 	""" summary information for partitions file variables
 	
 	input:
@@ -209,15 +216,19 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 	
 	if partitions2report == "all":
 		if isinstance(partitions, pandas.DataFrame):
-			partitions2report = ",".join(partitions.columns.tolist()[1:])			
-	
+			partitions = partitions[partitions.columns[1:]]
+			if possible_subset:
+				partitions = partitions.add_prefix("subset_")
+				partitions2report = ",".join(partitions)
+			else:
+				partitions2report = ",".join(partitions.columns.tolist())			
 	absent_columns = []
 	for column in partitions2report.split(","): # for column to report
 		if column != sample_column:
 			if column in complete_metadata.columns: # if column exists
 				clusters = complete_metadata[column].values.tolist()
 				for cluster in set(clusters):
-					if "singleton" not in str(cluster) and "EMPTY" not in str(cluster) and clusters.count(cluster) > 1:
+					if "EMPTY" not in str(cluster) and clusters.count(cluster) > 1:
 						flt_data = complete_metadata[complete_metadata[column] == cluster] # filter the dataframe
 						summary["partition"].append(column)
 						summary["cluster"].append(str(cluster))
@@ -226,9 +237,10 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 						if len(flt_data[sample_column].unique()) != len(flt_data[column]): # compare number of unique sequences with the number of lines
 							print("\t\tWarning!!! You have a repetitive " + sample_column + " in the cluster: " + str(cluster) + " of column " + column)
 							print("\t\tWarning!!! You have a repetitive " + sample_column + " in the cluster: " + str(cluster) + " of column " + column, file = log)
-						
+						columns_checked = []
 						for stat in summary_columns.split(","): # for each column we need to summarize
-							if stat != "n_" + sample_column and stat != sample_column:
+							if stat != "n_" + sample_column and stat != sample_column and stat not in columns_checked:
+								columns_checked.append(stat)
 								if stat not in summary.keys(): # start a new column in the report
 									summary[stat] = []
 									order_columns.append(stat)
@@ -263,15 +275,14 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 											elif stat == "timespan_days":
 												timespan = max((val for val in date if val is not pandas.NaT), default=pandas.NaT) - min((val for val in date if val is not pandas.NaT), default=pandas.NaT)
 												summary["timespan_days"].append(timespan.days)
-											
 										else:
 											if stat not in absent_columns:
 												absent_columns.append(stat)
 											summary[stat].append("")
 									
 									elif "n_" in stat and len(stat.split("n_")) > 0:
-										if stat.split("n_")[1] in complete_metadata.columns: # get number of different observations
-											col = stat.split("n_")[1]
+										if stat.split("n_",1)[1] in complete_metadata.columns: # get number of different observations
+											col = stat.split("n_",1)[1]
 											observations = set(flt_data[col].values.tolist())
 											n = len(observations)
 											summary[stat].append(n)
@@ -312,7 +323,6 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 	absent_columns = []
 	
 	complete_metadata = complete_metadata.fillna("EMPTY")
-	
 	if main_column in complete_metadata.columns:
 		order_columns = [main_column]
 		summary = {main_column: []} # dictionary for final dataframe
@@ -322,15 +332,16 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 				summary[main_column].append(group)
 				flt_data = complete_metadata[complete_metadata[main_column].astype(str) == str(group)] # filter the dataframe
 				if len(flt_data[sample_column].unique()) != len(flt_data[main_column]): # compare number of unique sequences with the number of lines
-					print("\t\tWarning!!! You have a repetitive " + sample_column + " in the cluster: " + str(cluster) + " of column " + column)
-					print("\t\tWarning!!! You have a repetitive " + sample_column + " in the cluster: " + str(cluster) + " of column " + column, file = log)	
+					print("\t\tWarning!!! You have a repetitive " + sample_column + " in the cluster: " + str(group) + " of column " + column)
+					print("\t\tWarning!!! You have a repetitive " + sample_column + " in the cluster: " + str(group) + " of column " + column, file = log)	
+				columns_checked = []
 				for stat in columns_summary_report.split(","): # for each column we need to summarize
-					if stat != main_column and stat != "n_" + main_column:
-						if stat not in summary.keys(): # start a new column in the report
-							summary[stat] = []
-							order_columns.append(stat)
-									
+					if stat != main_column and stat != "n_" + main_column and stat not in columns_checked:
+						columns_checked.append(stat)									
 						if stat in complete_metadata.columns: # get summary of the variable
+							if stat not in summary.keys(): # start a new column in the report
+								summary[stat] = []
+								order_columns.append(stat)
 							if stat == sample_column:
 								col = stat
 								observations = list(flt_data[col])
@@ -357,6 +368,9 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 						else: # it is not a normal column
 							if stat == "first_seq_date" or stat == "last_seq_date" or stat == "timespan_days":
 								if "date" in complete_metadata.columns:
+									if stat not in summary.keys(): # start a new column in the report
+										summary[stat] = []
+										order_columns.append(stat)
 									date = pandas.to_datetime(flt_data.date, errors = "coerce") # converting date format
 									if stat == "first_seq_date":
 										summary["first_seq_date"].append(min((val for val in date if val is not pandas.NaT), default=pandas.NaT))
@@ -364,14 +378,13 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 										summary["last_seq_date"].append(max((val for val in date if val is not pandas.NaT), default=pandas.NaT))
 									elif stat == "timespan_days":
 										timespan = max((val for val in date if val is not pandas.NaT), default=pandas.NaT) - min((val for val in date if val is not pandas.NaT), default=pandas.NaT)
-										summary["timespan_days"].append(timespan.days)
-								else:
-									print("\t\tWarning!!! Column 'date' was not found to report " + stat)
-									print("\t\tWarning!!! Column 'date' was not found to report " + stat, file = log)
-									
+										summary["timespan_days"].append(timespan.days)									
 							elif "n_" in stat and len(stat.split("n_")) > 0:
-								if stat.split("n_")[1] in complete_metadata.columns: # get number of different observations
-									col = stat.split("n_")[1]
+								if stat.split("n_",1)[1] in complete_metadata.columns: # get number of different observations
+									if stat not in summary.keys(): # start a new column in the report
+										summary[stat] = []
+										order_columns.append(stat)
+									col = stat.split("n_",1)[1]
 									observations = set(flt_data[col].values.tolist())
 									n = len(observations)
 									summary[stat].append(n)
@@ -385,16 +398,16 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 								summary[stat].append("")
 		
 	else:
-		if column != "none":
-			print("\t\tWarning!!! Column " + column + " was not found. The respective summary stats will not be generated!")
-			print("\t\tWarning!!! Column " + column + " was not found. The respective summary stats will not be generated!", file = log)
+		if main_column != "none":
+			print("\t\tWarning!!! Column " + str(main_column) + " was not found. The respective summary stats will not be generated!")
+			print("\t\tWarning!!! Column " + str(main_column) + " was not found. The respective summary stats will not be generated!", file = log)
 		summary = {}
 		order_columns = []
 	
 	if len(absent_columns) > 0:
 		print("\t\tWarning!!! Could not identify the following requested columns: ", ",".join(set(absent_columns)))
 		print("\t\tWarning!!! Could not identify the following requested columns: ", ",".join(set(absent_columns)), file = log)
-	
+
 	summary_df = pandas.DataFrame(data = summary, columns = order_columns)
 	
 	if "n_" + sample_column in summary_df.columns:
@@ -405,7 +418,7 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 	return summary_df_ordered
 	
 
-def get_matrix(requirement, complete_metadata, dtype, log):
+def get_matrix(requirement, complete_metadata, dtype, out, log):
 	""" create a frequency matrix for two variables 
 	
 	input:
@@ -418,16 +431,15 @@ def get_matrix(requirement, complete_metadata, dtype, log):
 	"""
 	
 	variable1,variable2 = requirement.split(",")
-	
+
 	if variable1 not in complete_metadata.columns:
 		print("\t\tWarning!!! " + variable1 + " was not found in metadata table!! I cannot continue :-( ")
 		print("\t\tWarning!!! " + variable1 + " was not found in metadata table!! I cannot continue :-( ", file = log)
 		sys.exit()
-	
+
 	if ":" in variable2:
 		variable2A = variable2.split(":", 1)[0]
 		variable2B = variable2.split(":", 1)[1]
-		
 		if variable2A not in complete_metadata.columns:
 			print("\t\tWarning!!! " + variable2A + " was not found in metadata table!! I cannot continue :-( ")
 			print("\t\tWarning!!! " + variable2A + " was not found in metadata table!! I cannot continue :-( ", file = log)
@@ -476,11 +488,13 @@ def get_matrix(requirement, complete_metadata, dtype, log):
 							rel_freq = float(n_col/total)
 						if dtype == "frequency":
 							freq_matrix[col].append(rel_freq)
+							analysis = "freq"
 						elif dtype == "count":
 							freq_matrix[col].append(n_col)
+							analysis = "count"
 		
 		df_frequency_matrix = pandas.DataFrame(data = freq_matrix)
-		
+		code_output = out + "_" + variable1 + "_" + variable2A + "_" + variable2B + "_" + analysis
 		
 	else:
 		if variable2 not in complete_metadata.columns:
@@ -513,13 +527,48 @@ def get_matrix(requirement, complete_metadata, dtype, log):
 							rel_freq = float(n_col/total)
 						if dtype == "frequency":
 							freq_matrix[col].append(rel_freq)
+							analysis = "freq"
 						elif dtype == "count":
 							freq_matrix[col].append(n_col)
-	
+							analysis = "count"
 	
 		df_frequency_matrix = pandas.DataFrame(data = freq_matrix)
+		code_output = out + "_" + variable1 + "_" + variable2 + "_" + analysis
 	
-	return df_frequency_matrix
+	return df_frequency_matrix, code_output
+
+def mx2pivot(mx, analysis, requirement):
+	""" convert a frequency or count matrix into a pivotal talble for plot
+	input: matrix, type of analysis, and requirements argument
+	output: new matriz """
+	
+	pivot_info = {}
+	variable1 = requirement.split(",")[0]
+	variable2 = requirement.split(",")[1]
+
+	if ":" in variable2:
+		variable2A = variable2.split(":")[0]
+		variable2B = variable2.split(":")[1]
+		pivot_info[variable2A] = []
+		pivot_info[variable2B] = []
+		start = 2
+	else:
+		pivot_info[variable2] = []
+		start = 1
+	pivot_info[variable1] = []
+	pivot_info[analysis] = []
+	for col in mx.columns[start:]:
+		if start == 2:
+			pivot_info[variable2A] = [*pivot_info[variable2A], *mx[variable2A]]
+			pivot_info[variable2B] = [*pivot_info[variable2B], *mx[variable2B]]
+		elif start == 1:
+			pivot_info[variable2] = [*pivot_info[variable2], *mx[variable2]]
+		new_var1 = [col] * len(mx[col].values.tolist())
+		pivot_info[variable1] = [*pivot_info[variable1], *new_var1]
+		pivot_info[analysis] = [*pivot_info[analysis], *mx[col].values.tolist()]
+	pivot_mx = pandas.DataFrame(data = pivot_info)
+
+	return pivot_mx
 	
 
 def col_list(metadata, partitions):
@@ -535,6 +584,8 @@ def col_list(metadata, partitions):
 	
 	cols_output = []
 	metadata_mx = pandas.read_table(metadata)
+	columns_names = [col.replace(" ", "_") for col in metadata_mx.columns]
+	metadata_mx.columns = columns_names
 	
 	for col in metadata_mx.columns:
 		if col != "date":
@@ -559,7 +610,7 @@ def col_list(metadata, partitions):
 	
 # running the script	----------
 
-if __name__ == "__main__":
+def main():
 	
 	# argument options
     
@@ -584,7 +635,7 @@ if __name__ == "__main__":
 									
 									
 									Note: White spaces should be avoided in metadata and partition tables column 
-									names!!
+									names!! White cells in the body of the metadata will be filled with "EMPTY".
 									
 									Note 2: To take the most profit of this script we recommend that you include 
 									the column 'date' in the metadata. This column must follow the format 
@@ -634,8 +685,7 @@ if __name__ == "__main__":
 						Default = n_sequence,lineage,n_country,country,n_region,first_seq_date,last_seq_date,timespan_days [the order of the list will be the order of the columns in the report]")
 	parser.add_argument("--partitions2report", dest="partitions2report", required=False, default="all", type=str, help="Columns of the partitions table to include in a joint report \
 						(comma-separated). Other alternatives: 'all' == all partitions; 'stability_regions' == first partition of each stability region as determined by \
-						comparing_partitions_v2.py. Note: 'stability_regions' can only be inferred when partitioning TreeCluster or GrapeTree is run for all possible thresholds or when a \
-						similar partitions table is provided (i.e. sequential partitions obtained with the same clustering method) [all]. Check '--list' argument for some help")
+						comparing_partitions_v2.py. [all] Check '--list' argument for some help")
 	parser.add_argument("--metadata2report", dest="metadata2report", required=False, default="none", help="[OPTIONAL] Columns of the metadata table for which a separated summary report must be \
 						provided (comma-separated)")
 	parser.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples to analyze. This must be specified \
@@ -651,6 +701,7 @@ if __name__ == "__main__":
 	parser.add_argument("--count-matrix", dest="count_matrix", required=False, default="no", help="[OPTIONAL] Same as '--frequency-matrix' but outputs counts and not frequencies")
 	parser.add_argument("--mx-transpose", dest="mx_transpose", required=False, action="store_true", help="[OPTIONAL] Set ONLY if you want that the variable1 specified in '--frequency-matrix' \
 						corresponds to the matrix first column.")
+	parser.add_argument("--pivot", dest="pivot", required=False, action="store_true", help="[OPTIONAL] Set ONLY if you want an additional table for each count/frequency matrix in pivot format.")
 			
 			
 	args = parser.parse_args()
@@ -682,6 +733,7 @@ if __name__ == "__main__":
 	if args.partitions != "": # partitions table provided
 		print("Getting information from the partitions table: " + str(args.partitions))
 		print("Getting information from the partitions table: " + str(args.partitions), file = log)
+		partitions_name = args.partitions
 		partitions = pandas.read_table(args.partitions, dtype = str)
 	else:
 		partitions = args.partitions
@@ -691,7 +743,13 @@ if __name__ == "__main__":
 	
 	print("Getting metadata information...")
 	print("Getting metadata information...", file = log)
-	complete_metadata = partitions2metadata(partitions, args.metadata, args.partitions2report, args.filter_column, log)
+	mx_metadata = pandas.read_table(args.metadata, dtype = str)
+	col_rename = {}
+	for col in mx_metadata.columns:
+		if " " in col:
+			new_name = col.replace(" ", "_")
+			col_rename[new_name] = col
+	complete_metadata, possible_subset = partitions2metadata(partitions_name, partitions, mx_metadata, args.partitions2report, args.filter_column, log)
 	sample_column = complete_metadata.columns[0]
 	
 	
@@ -699,7 +757,7 @@ if __name__ == "__main__":
 	if args.partitions != "":
 		print("Getting summary stats for the variables specified at '--partitions2report'...")
 		print("Getting summary stats for the variables specified at '--partitions2report'...", file = log)
-		partitions_stats = partitions_summary(complete_metadata, partitions, args.partitions2report, args.columns_summary_report, sample_column, log)
+		partitions_stats = partitions_summary(complete_metadata, partitions, args.partitions2report, args.columns_summary_report, sample_column, possible_subset, log)
 	
 	
 	# summary metadata
@@ -727,27 +785,17 @@ if __name__ == "__main__":
 			requirements = [args.frequency_matrix]
 		
 		for requirement in requirements:
-			df_frequency_matrix = get_matrix(requirement, complete_metadata, "frequency", log)
+			df_frequency_matrix, code_output = get_matrix(requirement, complete_metadata, "frequency", args.output, log)
 			if args.mx_transpose:
 				df_T = df_frequency_matrix.set_index(df_frequency_matrix.columns[0], drop = True).T
 				df_T = df_T.reset_index(drop = False)
 				df_T = df_T.rename(columns={df_T.columns[0]: requirement.split(",")[0]})
-				
-				if ":" in requirement:
-					v1 = requirement.split(",")[0]
-					v2A = requirement.split(",")[1].split(":")[0]
-					v2B = requirement.split(",")[1].split(":")[1]
-					df_T.to_csv(args.output + "_" + v1 + "_" + v2A + "_" + v2B + "_freq_matrix.tsv", index = False, header=True, sep ="\t")
-				else:
-					df_T.to_csv(args.output + "_" + "_".join(requirement.split(",")) + "_freq_matrix.tsv", index = False, header=True, sep ="\t")
+				df_T.to_csv(code_output + "_matrix.tsv", index = False, header=True, sep ="\t")
 			else:
-				if ":" in requirement:
-					v1 = requirement.split(",")[0]
-					v2A = requirement.split(",")[1].split(":")[0]
-					v2B = requirement.split(",")[1].split(":")[1]
-					df_frequency_matrix.to_csv(args.output + "_" + v1 + "_" + v2A + "_" + v2B + "_freq_matrix.tsv", index = False, header=True, sep ="\t")
-				else:
-					df_frequency_matrix.to_csv(args.output + "_" + "_".join(requirement.split(",")) + "_freq_matrix.tsv", index = False, header=True, sep ="\t")
+				df_frequency_matrix.to_csv(code_output + "_matrix.tsv", index = False, header=True, sep ="\t")
+			if args.pivot:
+				df_pivot_matrix = mx2pivot(df_frequency_matrix, "frequency", requirement)
+				df_pivot_matrix.to_csv(code_output + "_pivot.tsv", index = False, header=True, sep ="\t")
 
 	# get count matrix
 	if args.count_matrix != "no":
@@ -760,38 +808,31 @@ if __name__ == "__main__":
 			requirements = [args.count_matrix]
 		
 		for requirement in requirements:
-			df_count_matrix = get_matrix(requirement, complete_metadata, "count", log)
+			df_count_matrix, code_output = get_matrix(requirement, complete_metadata, "count", args.output, log)
 			if args.mx_transpose:
 				df_T = df_count_matrix.set_index(df_count_matrix.columns[0], drop = True).T
 				df_T = df_T.reset_index(drop = False)
 				df_T = df_T.rename(columns={df_T.columns[0]: requirement.split(",")[0]})
-				
-				if ":" in requirement:
-					v1 = requirement.split(",")[0]
-					v2A = requirement.split(",")[1].split(":")[0]
-					v2B = requirement.split(",")[1].split(":")[1]
-					df_T.to_csv(args.output + "_" + v1 + "_" + v2A + "_" + v2B + "_count_matrix.tsv", index = False, header=True, sep ="\t")
-				else:
-					df_T.to_csv(args.output + "_" + "_".join(requirement.split(",")) + "_count_matrix.tsv", index = False, header=True, sep ="\t")
+				df_T.to_csv(code_output + "_matrix.tsv", index = False, header=True, sep ="\t")
 			else:
-				if ":" in requirement:
-					v1 = requirement.split(",")[0]
-					v2A = requirement.split(",")[1].split(":")[0]
-					v2B = requirement.split(",")[1].split(":")[1]
-					df_count_matrix.to_csv(args.output + "_" + v1 + "_" + v2A + "_" + v2B + "_count_matrix.tsv", index = False, header=True, sep ="\t")
-				else:
-					df_count_matrix.to_csv(args.output + "_" + "_".join(requirement.split(",")) + "_count_matrix.tsv", index = False, header=True, sep ="\t")
-	
+				df_count_matrix.to_csv(code_output + "_matrix.tsv", index = False, header=True, sep ="\t")
+			if args.pivot:
+				df_pivot_matrix = mx2pivot(df_count_matrix, "count", requirement)
+				df_pivot_matrix.to_csv(code_output + "_pivot.tsv", index = False, header=True, sep ="\t")
 	
 	# preparing outputs
 	complete_metadata = complete_metadata.replace(["EMPTY"],"")
 	complete_metadata = pandas.DataFrame(data = complete_metadata)
+	complete_metadata = complete_metadata.rename(columns=col_rename)
 	complete_metadata.to_csv(args.output + "_metadata_w_partitions.tsv", index = False, header=True, sep ="\t")
 	if args.partitions != "":
-		partitions_stats = pandas.DataFrame(data = partitions_stats)
+		partitions_stats = pandas.DataFrame(data = partitions_stats, dtype = str)
 		partitions_stats["samples"].where(partitions_stats["samples"].str.len() < 30000, "list is too large, check *metadata_w_partitions.tsv", inplace=True)
 		partitions_stats.to_csv(args.output + "_partitions_summary.tsv", index = False, header=True, sep ="\t")
 	print("metadata_report.py is done!")
 	print("metadata_report.py is done!", file = log)
 	
 	log.close()
+
+if __name__ == "__main__":
+    main()
