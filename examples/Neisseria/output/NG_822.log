@@ -1,0 +1,561 @@
+
+******************** running reportree.py ********************
+
+version 2.0.0 last updated on 2023-03-28
+
+../../reportree.py -m input/NG_Metadata_NEW.tsv -a input/Allelic_profile_matrix_MScgMLST_822_loci_3791_isolates_NEW.tab --output output/NG_822 --method MSTree --n_proc 1 --matrix-4-grapetree --columns_summary_report n_sequence,first_seq_date,last_seq_date,timespan_days,country,n_country,MLST,NG_MAST,NG_STAR,folP_228S,rpsJ_57M,ponA_421P,porB_type,porB_120K,porB_121D,porB_121N,rpoB_553N,pro_mtrR_35Adel,pro_mtrR_A38C,mtrR_45D,mtrR_A39T,mtrR_R44H,gyrA_91F,gyrA_95G,gyrA_95N,parC_86N,parC_87I,parC_87R,parC_88P,parC_91K,penA_311V,penA_312M,penA_316T,penA_483S,penA_501V,penA_542S,penA_545S,penA_551S,23SrRNA_A204G,23SrRNA_C2597T,16SrRNA_C1184T,tetM,blaTEM --partitions2report stability_regions -AdjW 0.99 -n 9 --metadata2report country --analysis grapetree --nomenclature-file input/NG_nomenclature.tsv --nomenclature-code 39
+start: 2023-03-28 16:32:54.428430
+
+Profiles file provided -> will run partitioning_grapetree.py:
+
+
+-------------------- partitioning_grapetree.py --------------------
+
+version 1.2.0 last updated on 2023-03-28 
+
+/Users/veronicamixao/Desktop/reportree/ReporTree/scripts/partitioning_grapetree.py -a input/Allelic_profile_matrix_MScgMLST_822_loci_3791_isolates_NEW.tab -o output/NG_822 --method MSTree --missing 0 --n_proc 1 -thr max -d 1.0 --site-inclusion 0.0 -pct_thr none --loci-called 0.0 --missing-code 0 --matrix-4-grapetree 
+
+start: 2023-03-28 16:32:55.073173
+Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 2000 alleles/positions)...
+Running GrapeTree...
+/Users/veronicamixao/miniconda3/envs/reportree2/bin/python /Users/veronicamixao/Desktop/reportree/ReporTree/scripts/GrapeTree/grapetree.py -p temporary_clean_codes.tsv -m MSTree -o output/NG_822 --missing 0 --n_proc 1
+
+Processing clustering threshold...
+Getting redundant sample information...
+Defining clusters...
+	Calculating clustering in range 0 473 with a distance of 1.0
+Creating cluster composition file...
+Creating sample partitions file...
+
+partitioning_grapetree.py is done!
+
+End: 2023-03-28 16:34:32.064893
+Time elapsed: 0:01:36.991720
+
+Nomenclature file provided. Will work on cluster names...
+	'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...
+
+-------------------- comparing_partitions_v2.py --------------------
+
+/Users/veronicamixao/Desktop/reportree/ReporTree/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 output/NG_822_partitions.tsv -t output/NG_822 -o1 0 -a stability -n 9 -thr 0.99 -log output/NG_822.log
+Preparing for stability analysis...
+Removing redundant samples...
+	The most discriminatory column found was MST-0x1.0
+Ordering matrix...
+Cleaning matrix...
+Calculating metrics...
+			Adjusted Wallace  MST-1x1.0  vs  MST-0x1.0 	0.000000	-0.019815	0.019815
+			Adjusted Wallace  MST-2x1.0  vs  MST-1x1.0 	0.337606	0.296276	0.378936
+			Adjusted Wallace  MST-3x1.0  vs  MST-2x1.0 	0.471839	0.428436	0.515241
+			Adjusted Wallace  MST-4x1.0  vs  MST-3x1.0 	0.619542	0.579445	0.659639
+			Adjusted Wallace  MST-5x1.0  vs  MST-4x1.0 	0.705915	0.666328	0.745502
+			Adjusted Wallace  MST-6x1.0  vs  MST-5x1.0 	0.749019	0.711802	0.786235
+			Adjusted Wallace  MST-7x1.0  vs  MST-6x1.0 	0.776895	0.742104	0.811686
+			Adjusted Wallace  MST-8x1.0  vs  MST-7x1.0 	0.869776	0.838496	0.901056
+			Adjusted Wallace  MST-9x1.0  vs  MST-8x1.0 	0.930268	0.907370	0.953166
+			Adjusted Wallace  MST-10x1.0  vs  MST-9x1.0 	0.830603	0.806167	0.855040
+			Adjusted Wallace  MST-11x1.0  vs  MST-10x1.0 	0.932778	0.909053	0.956502
+			Adjusted Wallace  MST-12x1.0  vs  MST-11x1.0 	0.931201	0.910806	0.951597
+			Adjusted Wallace  MST-13x1.0  vs  MST-12x1.0 	0.901325	0.876744	0.925906
+			Adjusted Wallace  MST-14x1.0  vs  MST-13x1.0 	0.908684	0.883324	0.934043
+			Adjusted Wallace  MST-15x1.0  vs  MST-14x1.0 	0.856381	0.829183	0.883580
+			Adjusted Wallace  MST-16x1.0  vs  MST-15x1.0 	0.966078	0.950021	0.982136
+			Adjusted Wallace  MST-17x1.0  vs  MST-16x1.0 	0.933009	0.910768	0.955250
+			Adjusted Wallace  MST-18x1.0  vs  MST-17x1.0 	0.978629	0.969800	0.987459
+			Adjusted Wallace  MST-19x1.0  vs  MST-18x1.0 	0.984827	0.973358	0.996295
+			Adjusted Wallace  MST-20x1.0  vs  MST-19x1.0 	0.846388	0.823405	0.869372
+			Adjusted Wallace  MST-21x1.0  vs  MST-20x1.0 	0.991830	0.983443	1.000217
+			Adjusted Wallace  MST-22x1.0  vs  MST-21x1.0 	0.981848	0.969744	0.993951
+			Adjusted Wallace  MST-23x1.0  vs  MST-22x1.0 	0.992101	0.984488	0.999714
+			Adjusted Wallace  MST-24x1.0  vs  MST-23x1.0 	0.998010	0.995381	1.000638
+			Adjusted Wallace  MST-25x1.0  vs  MST-24x1.0 	0.979278	0.965717	0.992838
+			Adjusted Wallace  MST-26x1.0  vs  MST-25x1.0 	0.987490	0.981646	0.993333
+			Adjusted Wallace  MST-27x1.0  vs  MST-26x1.0 	0.995893	0.990388	1.001397
+			Adjusted Wallace  MST-28x1.0  vs  MST-27x1.0 	0.987095	0.976446	0.997743
+			Adjusted Wallace  MST-29x1.0  vs  MST-28x1.0 	0.996855	0.992629	1.001082
+			Adjusted Wallace  MST-30x1.0  vs  MST-29x1.0 	0.998029	0.996310	0.999748
+			Adjusted Wallace  MST-31x1.0  vs  MST-30x1.0 	0.980536	0.969468	0.991605
+			Adjusted Wallace  MST-32x1.0  vs  MST-31x1.0 	0.998766	0.997749	0.999784
+			Adjusted Wallace  MST-33x1.0  vs  MST-32x1.0 	0.974424	0.969602	0.979245
+			Adjusted Wallace  MST-34x1.0  vs  MST-33x1.0 	0.989798	0.982677	0.996918
+			Adjusted Wallace  MST-35x1.0  vs  MST-34x1.0 	0.998622	0.998269	0.998976
+			Adjusted Wallace  MST-36x1.0  vs  MST-35x1.0 	0.905667	0.882230	0.929103
+			Adjusted Wallace  MST-37x1.0  vs  MST-36x1.0 	0.998566	0.997409	0.999722
+			Adjusted Wallace  MST-38x1.0  vs  MST-37x1.0 	0.995278	0.991319	0.999237
+			Adjusted Wallace  MST-39x1.0  vs  MST-38x1.0 	0.989915	0.984092	0.995738
+			Adjusted Wallace  MST-40x1.0  vs  MST-39x1.0 	0.999430	0.998910	0.999949
+			Adjusted Wallace  MST-41x1.0  vs  MST-40x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-42x1.0  vs  MST-41x1.0 	0.995962	0.993456	0.998468
+			Adjusted Wallace  MST-43x1.0  vs  MST-42x1.0 	0.999016	0.997520	1.000511
+			Adjusted Wallace  MST-44x1.0  vs  MST-43x1.0 	0.995282	0.991880	0.998684
+			Adjusted Wallace  MST-45x1.0  vs  MST-44x1.0 	0.991091	0.986153	0.996028
+			Adjusted Wallace  MST-46x1.0  vs  MST-45x1.0 	0.998507	0.997172	0.999841
+			Adjusted Wallace  MST-47x1.0  vs  MST-46x1.0 	0.995465	0.989198	1.001731
+			Adjusted Wallace  MST-48x1.0  vs  MST-47x1.0 	0.999829	0.999521	1.000137
+			Adjusted Wallace  MST-49x1.0  vs  MST-48x1.0 	0.994754	0.989364	1.000145
+			Adjusted Wallace  MST-50x1.0  vs  MST-49x1.0 	0.999704	0.999264	1.000144
+			Adjusted Wallace  MST-51x1.0  vs  MST-50x1.0 	0.997608	0.993554	1.001663
+			Adjusted Wallace  MST-52x1.0  vs  MST-51x1.0 	0.999506	0.999389	0.999622
+			Adjusted Wallace  MST-53x1.0  vs  MST-52x1.0 	0.999816	0.999496	1.000135
+			Adjusted Wallace  MST-54x1.0  vs  MST-53x1.0 	0.995343	0.989608	1.001078
+			Adjusted Wallace  MST-55x1.0  vs  MST-54x1.0 	0.971356	0.965855	0.976857
+			Adjusted Wallace  MST-56x1.0  vs  MST-55x1.0 	0.999921	0.999881	0.999961
+			Adjusted Wallace  MST-57x1.0  vs  MST-56x1.0 	0.776391	0.761172	0.791610
+			Adjusted Wallace  MST-58x1.0  vs  MST-57x1.0 	0.999080	0.998971	0.999189
+			Adjusted Wallace  MST-59x1.0  vs  MST-58x1.0 	0.990959	0.982493	0.999424
+			Adjusted Wallace  MST-60x1.0  vs  MST-59x1.0 	0.999626	0.999246	1.000006
+			Adjusted Wallace  MST-61x1.0  vs  MST-60x1.0 	0.999898	0.999783	1.000013
+			Adjusted Wallace  MST-62x1.0  vs  MST-61x1.0 	0.999190	0.998276	1.000104
+			Adjusted Wallace  MST-63x1.0  vs  MST-62x1.0 	0.995349	0.994993	0.995705
+			Adjusted Wallace  MST-64x1.0  vs  MST-63x1.0 	0.999442	0.998914	0.999970
+			Adjusted Wallace  MST-65x1.0  vs  MST-64x1.0 	0.998014	0.996880	0.999148
+			Adjusted Wallace  MST-66x1.0  vs  MST-65x1.0 	0.970711	0.967798	0.973624
+			Adjusted Wallace  MST-67x1.0  vs  MST-66x1.0 	0.958290	0.940472	0.976108
+			Adjusted Wallace  MST-68x1.0  vs  MST-67x1.0 	0.997185	0.995597	0.998773
+			Adjusted Wallace  MST-69x1.0  vs  MST-68x1.0 	0.998663	0.997457	0.999868
+			Adjusted Wallace  MST-70x1.0  vs  MST-69x1.0 	0.923668	0.901074	0.946261
+			Adjusted Wallace  MST-71x1.0  vs  MST-70x1.0 	0.997736	0.995678	0.999795
+			Adjusted Wallace  MST-72x1.0  vs  MST-71x1.0 	0.999755	0.999287	1.000222
+			Adjusted Wallace  MST-73x1.0  vs  MST-72x1.0 	0.999941	0.999898	0.999984
+			Adjusted Wallace  MST-74x1.0  vs  MST-73x1.0 	0.923887	0.907188	0.940586
+			Adjusted Wallace  MST-75x1.0  vs  MST-74x1.0 	0.996051	0.991190	1.000913
+			Adjusted Wallace  MST-76x1.0  vs  MST-75x1.0 	0.999373	0.998581	1.000165
+			Adjusted Wallace  MST-77x1.0  vs  MST-76x1.0 	0.999872	0.999821	0.999923
+			Adjusted Wallace  MST-78x1.0  vs  MST-77x1.0 	0.988670	0.980447	0.996894
+			Adjusted Wallace  MST-79x1.0  vs  MST-78x1.0 	0.998679	0.997477	0.999880
+			Adjusted Wallace  MST-80x1.0  vs  MST-79x1.0 	0.999756	0.999521	0.999990
+			Adjusted Wallace  MST-81x1.0  vs  MST-80x1.0 	0.997778	0.996607	0.998950
+			Adjusted Wallace  MST-82x1.0  vs  MST-81x1.0 	0.999679	0.999069	1.000290
+			Adjusted Wallace  MST-83x1.0  vs  MST-82x1.0 	0.999328	0.998470	1.000186
+			Adjusted Wallace  MST-84x1.0  vs  MST-83x1.0 	0.999860	0.999733	0.999987
+			Adjusted Wallace  MST-85x1.0  vs  MST-84x1.0 	0.999522	0.999370	0.999674
+			Adjusted Wallace  MST-86x1.0  vs  MST-85x1.0 	0.998078	0.997698	0.998457
+			Adjusted Wallace  MST-87x1.0  vs  MST-86x1.0 	0.999626	0.998955	1.000298
+			Adjusted Wallace  MST-88x1.0  vs  MST-87x1.0 	0.999847	0.999712	0.999982
+			Adjusted Wallace  MST-89x1.0  vs  MST-88x1.0 	0.999995	0.999991	1.000000
+			Adjusted Wallace  MST-90x1.0  vs  MST-89x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-91x1.0  vs  MST-90x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-92x1.0  vs  MST-91x1.0 	0.999932	0.999818	1.000047
+			Adjusted Wallace  MST-93x1.0  vs  MST-92x1.0 	0.999860	0.999773	0.999948
+			Adjusted Wallace  MST-94x1.0  vs  MST-93x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-95x1.0  vs  MST-94x1.0 	0.995380	0.990502	1.000258
+			Adjusted Wallace  MST-96x1.0  vs  MST-95x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-97x1.0  vs  MST-96x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-98x1.0  vs  MST-97x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-99x1.0  vs  MST-98x1.0 	0.999422	0.998834	1.000010
+			Adjusted Wallace  MST-100x1.0  vs  MST-99x1.0 	0.999087	0.998113	1.000060
+			Adjusted Wallace  MST-101x1.0  vs  MST-100x1.0 	0.999996	0.999991	1.000000
+			Adjusted Wallace  MST-102x1.0  vs  MST-101x1.0 	0.998212	0.994765	1.001659
+			Adjusted Wallace  MST-103x1.0  vs  MST-102x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-104x1.0  vs  MST-103x1.0 	0.999674	0.999043	1.000304
+			Adjusted Wallace  MST-105x1.0  vs  MST-104x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-106x1.0  vs  MST-105x1.0 	0.999794	0.999405	1.000184
+			Adjusted Wallace  MST-107x1.0  vs  MST-106x1.0 	0.999960	0.999898	1.000022
+			Adjusted Wallace  MST-108x1.0  vs  MST-107x1.0 	0.996979	0.995310	0.998648
+			Adjusted Wallace  MST-109x1.0  vs  MST-108x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-110x1.0  vs  MST-109x1.0 	0.998989	0.997660	1.000318
+			Adjusted Wallace  MST-111x1.0  vs  MST-110x1.0 	0.999817	0.999500	1.000135
+			Adjusted Wallace  MST-112x1.0  vs  MST-111x1.0 	0.999951	0.999872	1.000030
+			Adjusted Wallace  MST-113x1.0  vs  MST-112x1.0 	0.996193	0.994364	0.998022
+			Adjusted Wallace  MST-114x1.0  vs  MST-113x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-115x1.0  vs  MST-114x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-116x1.0  vs  MST-115x1.0 	0.999751	0.999446	1.000057
+			Adjusted Wallace  MST-117x1.0  vs  MST-116x1.0 	0.996157	0.994138	0.998177
+			Adjusted Wallace  MST-118x1.0  vs  MST-117x1.0 	0.999828	0.999504	1.000151
+			Adjusted Wallace  MST-119x1.0  vs  MST-118x1.0 	0.990121	0.987298	0.992945
+			Adjusted Wallace  MST-120x1.0  vs  MST-119x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-121x1.0  vs  MST-120x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-122x1.0  vs  MST-121x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-123x1.0  vs  MST-122x1.0 	0.999934	0.999904	0.999964
+			Adjusted Wallace  MST-124x1.0  vs  MST-123x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-125x1.0  vs  MST-124x1.0 	0.997737	0.994261	1.001213
+			Adjusted Wallace  MST-126x1.0  vs  MST-125x1.0 	0.999471	0.998433	1.000508
+			Adjusted Wallace  MST-127x1.0  vs  MST-126x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-128x1.0  vs  MST-127x1.0 	0.998296	0.994910	1.001682
+			Adjusted Wallace  MST-129x1.0  vs  MST-128x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-130x1.0  vs  MST-129x1.0 	0.999467	0.998423	1.000511
+			Adjusted Wallace  MST-131x1.0  vs  MST-130x1.0 	0.999463	0.998411	1.000515
+			Adjusted Wallace  MST-132x1.0  vs  MST-131x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-133x1.0  vs  MST-132x1.0 	0.996223	0.993621	0.998825
+			Adjusted Wallace  MST-134x1.0  vs  MST-133x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-135x1.0  vs  MST-134x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-136x1.0  vs  MST-135x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-137x1.0  vs  MST-136x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-138x1.0  vs  MST-137x1.0 	0.996508	0.994801	0.998214
+			Adjusted Wallace  MST-139x1.0  vs  MST-138x1.0 	0.999362	0.999087	0.999638
+			Adjusted Wallace  MST-140x1.0  vs  MST-139x1.0 	0.998635	0.998282	0.998988
+			Adjusted Wallace  MST-141x1.0  vs  MST-140x1.0 	0.999290	0.998333	1.000247
+			Adjusted Wallace  MST-142x1.0  vs  MST-141x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-143x1.0  vs  MST-142x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-144x1.0  vs  MST-143x1.0 	0.999740	0.999418	1.000063
+			Adjusted Wallace  MST-145x1.0  vs  MST-144x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-146x1.0  vs  MST-145x1.0 	0.996462	0.991728	1.001195
+			Adjusted Wallace  MST-147x1.0  vs  MST-146x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-148x1.0  vs  MST-147x1.0 	0.999827	0.999511	1.000143
+			Adjusted Wallace  MST-149x1.0  vs  MST-148x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-150x1.0  vs  MST-149x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-151x1.0  vs  MST-150x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-152x1.0  vs  MST-151x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-153x1.0  vs  MST-152x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-154x1.0  vs  MST-153x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-155x1.0  vs  MST-154x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-156x1.0  vs  MST-155x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-157x1.0  vs  MST-156x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-158x1.0  vs  MST-157x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-159x1.0  vs  MST-158x1.0 	0.999953	0.999876	1.000029
+			Adjusted Wallace  MST-160x1.0  vs  MST-159x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-161x1.0  vs  MST-160x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-162x1.0  vs  MST-161x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-163x1.0  vs  MST-162x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-164x1.0  vs  MST-163x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-165x1.0  vs  MST-164x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-166x1.0  vs  MST-165x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-167x1.0  vs  MST-166x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-168x1.0  vs  MST-167x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-169x1.0  vs  MST-168x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-170x1.0  vs  MST-169x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-171x1.0  vs  MST-170x1.0 	0.999215	0.998236	1.000194
+			Adjusted Wallace  MST-172x1.0  vs  MST-171x1.0 	0.999043	0.997731	1.000356
+			Adjusted Wallace  MST-173x1.0  vs  MST-172x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-174x1.0  vs  MST-173x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-175x1.0  vs  MST-174x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-176x1.0  vs  MST-175x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-177x1.0  vs  MST-176x1.0 	0.999431	0.998316	1.000547
+			Adjusted Wallace  MST-178x1.0  vs  MST-177x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-179x1.0  vs  MST-178x1.0 	0.999458	0.999341	0.999574
+			Adjusted Wallace  MST-180x1.0  vs  MST-179x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-181x1.0  vs  MST-180x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-182x1.0  vs  MST-181x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-183x1.0  vs  MST-182x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-184x1.0  vs  MST-183x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-185x1.0  vs  MST-184x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-186x1.0  vs  MST-185x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-187x1.0  vs  MST-186x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-188x1.0  vs  MST-187x1.0 	0.997834	0.993759	1.001910
+			Adjusted Wallace  MST-189x1.0  vs  MST-188x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-190x1.0  vs  MST-189x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-191x1.0  vs  MST-190x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-192x1.0  vs  MST-191x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-193x1.0  vs  MST-192x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-194x1.0  vs  MST-193x1.0 	0.975940	0.962593	0.989288
+			Adjusted Wallace  MST-195x1.0  vs  MST-194x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-196x1.0  vs  MST-195x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-197x1.0  vs  MST-196x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-198x1.0  vs  MST-197x1.0 	0.997747	0.993639	1.001854
+			Adjusted Wallace  MST-199x1.0  vs  MST-198x1.0 	0.999643	0.998949	1.000337
+			Adjusted Wallace  MST-200x1.0  vs  MST-199x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-201x1.0  vs  MST-200x1.0 	0.940390	0.920754	0.960026
+			Adjusted Wallace  MST-202x1.0  vs  MST-201x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-203x1.0  vs  MST-202x1.0 	0.999816	0.999468	1.000165
+			Adjusted Wallace  MST-204x1.0  vs  MST-203x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-205x1.0  vs  MST-204x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-206x1.0  vs  MST-205x1.0 	0.846420	0.820858	0.871982
+			Adjusted Wallace  MST-207x1.0  vs  MST-206x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-208x1.0  vs  MST-207x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-209x1.0  vs  MST-208x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-210x1.0  vs  MST-209x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-211x1.0  vs  MST-210x1.0 	0.999671	0.999243	1.000099
+			Adjusted Wallace  MST-212x1.0  vs  MST-211x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-213x1.0  vs  MST-212x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-214x1.0  vs  MST-213x1.0 	0.999371	0.998519	1.000222
+			Adjusted Wallace  MST-215x1.0  vs  MST-214x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-216x1.0  vs  MST-215x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-217x1.0  vs  MST-216x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-218x1.0  vs  MST-217x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-219x1.0  vs  MST-218x1.0 	0.999829	0.999503	1.000154
+			Adjusted Wallace  MST-220x1.0  vs  MST-219x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-221x1.0  vs  MST-220x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-222x1.0  vs  MST-221x1.0 	0.520888	0.507813	0.533962
+			Adjusted Wallace  MST-223x1.0  vs  MST-222x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-224x1.0  vs  MST-223x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-225x1.0  vs  MST-224x1.0 	0.999993	0.999986	1.000000
+			Adjusted Wallace  MST-226x1.0  vs  MST-225x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-227x1.0  vs  MST-226x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-228x1.0  vs  MST-227x1.0 	0.999974	0.999962	0.999985
+			Adjusted Wallace  MST-229x1.0  vs  MST-228x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-230x1.0  vs  MST-229x1.0 	0.984743	0.973341	0.996144
+			Adjusted Wallace  MST-231x1.0  vs  MST-230x1.0 	0.986931	0.976366	0.997496
+			Adjusted Wallace  MST-232x1.0  vs  MST-231x1.0 	0.999985	0.999963	1.000007
+			Adjusted Wallace  MST-233x1.0  vs  MST-232x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-234x1.0  vs  MST-233x1.0 	0.999993	0.999987	1.000000
+			Adjusted Wallace  MST-235x1.0  vs  MST-234x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-236x1.0  vs  MST-235x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-237x1.0  vs  MST-236x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-238x1.0  vs  MST-237x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-239x1.0  vs  MST-238x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-240x1.0  vs  MST-239x1.0 	0.992311	0.991227	0.993394
+			Adjusted Wallace  MST-241x1.0  vs  MST-240x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-242x1.0  vs  MST-241x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-243x1.0  vs  MST-242x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-244x1.0  vs  MST-243x1.0 	0.939667	0.918226	0.961107
+			Adjusted Wallace  MST-245x1.0  vs  MST-244x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-246x1.0  vs  MST-245x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-247x1.0  vs  MST-246x1.0 	0.995854	0.995622	0.996087
+			Adjusted Wallace  MST-248x1.0  vs  MST-247x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-249x1.0  vs  MST-248x1.0 	0.999046	0.998268	0.999824
+			Adjusted Wallace  MST-250x1.0  vs  MST-249x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-251x1.0  vs  MST-250x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-252x1.0  vs  MST-251x1.0 	0.997843	0.993540	1.002147
+			Adjusted Wallace  MST-253x1.0  vs  MST-252x1.0 	0.999814	0.999451	1.000176
+			Adjusted Wallace  MST-254x1.0  vs  MST-253x1.0 	0.997652	0.996137	0.999167
+			Adjusted Wallace  MST-255x1.0  vs  MST-254x1.0 	0.985081	0.973927	0.996235
+			Adjusted Wallace  MST-256x1.0  vs  MST-255x1.0 	0.999994	0.999987	1.000000
+			Adjusted Wallace  MST-257x1.0  vs  MST-256x1.0 	0.999219	0.998356	1.000083
+			Adjusted Wallace  MST-258x1.0  vs  MST-257x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-259x1.0  vs  MST-258x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-260x1.0  vs  MST-259x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-261x1.0  vs  MST-260x1.0 	0.999734	0.999211	1.000256
+			Adjusted Wallace  MST-262x1.0  vs  MST-261x1.0 	0.999627	0.999123	1.000132
+			Adjusted Wallace  MST-263x1.0  vs  MST-262x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-264x1.0  vs  MST-263x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-265x1.0  vs  MST-264x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-266x1.0  vs  MST-265x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-267x1.0  vs  MST-266x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-268x1.0  vs  MST-267x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-269x1.0  vs  MST-268x1.0 	0.999421	0.998799	1.000043
+			Adjusted Wallace  MST-270x1.0  vs  MST-269x1.0 	0.998429	0.997460	0.999399
+			Adjusted Wallace  MST-271x1.0  vs  MST-270x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-272x1.0  vs  MST-271x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-273x1.0  vs  MST-272x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-274x1.0  vs  MST-273x1.0 	0.995719	0.989687	1.001750
+			Adjusted Wallace  MST-275x1.0  vs  MST-274x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-276x1.0  vs  MST-275x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-277x1.0  vs  MST-276x1.0 	0.997857	0.993581	1.002133
+			Adjusted Wallace  MST-278x1.0  vs  MST-277x1.0 	0.995722	0.989696	1.001749
+			Adjusted Wallace  MST-279x1.0  vs  MST-278x1.0 	0.999734	0.999211	1.000256
+			Adjusted Wallace  MST-280x1.0  vs  MST-279x1.0 	0.972416	0.970993	0.973839
+			Adjusted Wallace  MST-281x1.0  vs  MST-280x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-282x1.0  vs  MST-281x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-283x1.0  vs  MST-282x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-284x1.0  vs  MST-283x1.0 	0.977197	0.963672	0.990721
+			Adjusted Wallace  MST-285x1.0  vs  MST-284x1.0 	0.989559	0.980294	0.998824
+			Adjusted Wallace  MST-286x1.0  vs  MST-285x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-287x1.0  vs  MST-286x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-288x1.0  vs  MST-287x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-289x1.0  vs  MST-288x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-290x1.0  vs  MST-289x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-291x1.0  vs  MST-290x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-292x1.0  vs  MST-291x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-293x1.0  vs  MST-292x1.0 	0.995291	0.989374	1.001208
+			Adjusted Wallace  MST-294x1.0  vs  MST-293x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-295x1.0  vs  MST-294x1.0 	0.985960	0.983556	0.988364
+			Adjusted Wallace  MST-296x1.0  vs  MST-295x1.0 	0.999549	0.999150	0.999949
+			Adjusted Wallace  MST-297x1.0  vs  MST-296x1.0 	0.970384	0.968982	0.971787
+			Adjusted Wallace  MST-298x1.0  vs  MST-297x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-299x1.0  vs  MST-298x1.0 	0.893041	0.892222	0.893860
+			Adjusted Wallace  MST-300x1.0  vs  MST-299x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-301x1.0  vs  MST-300x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-302x1.0  vs  MST-301x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-303x1.0  vs  MST-302x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-304x1.0  vs  MST-303x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-305x1.0  vs  MST-304x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-306x1.0  vs  MST-305x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-307x1.0  vs  MST-306x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-308x1.0  vs  MST-307x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-309x1.0  vs  MST-308x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-310x1.0  vs  MST-309x1.0 	0.990394	0.981870	0.998918
+			Adjusted Wallace  MST-311x1.0  vs  MST-310x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-312x1.0  vs  MST-311x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-313x1.0  vs  MST-312x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-314x1.0  vs  MST-313x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-315x1.0  vs  MST-314x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-316x1.0  vs  MST-315x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-317x1.0  vs  MST-316x1.0 	0.996141	0.990705	1.001578
+			Adjusted Wallace  MST-318x1.0  vs  MST-317x1.0 	0.441463	0.418866	0.464061
+			Adjusted Wallace  MST-319x1.0  vs  MST-318x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-320x1.0  vs  MST-319x1.0 	0.995803	0.994475	0.997130
+			Adjusted Wallace  MST-321x1.0  vs  MST-320x1.0 	0.993390	0.985891	1.000890
+			Adjusted Wallace  MST-322x1.0  vs  MST-321x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-323x1.0  vs  MST-322x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-324x1.0  vs  MST-323x1.0 	0.997820	0.993467	1.002173
+			Adjusted Wallace  MST-325x1.0  vs  MST-324x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-326x1.0  vs  MST-325x1.0 	0.750173	0.712092	0.788253
+			Adjusted Wallace  MST-327x1.0  vs  MST-326x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-328x1.0  vs  MST-327x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-329x1.0  vs  MST-328x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-330x1.0  vs  MST-329x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-331x1.0  vs  MST-330x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-332x1.0  vs  MST-331x1.0 	0.988387	0.978051	0.998722
+			Adjusted Wallace  MST-333x1.0  vs  MST-332x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-334x1.0  vs  MST-333x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-335x1.0  vs  MST-334x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-336x1.0  vs  MST-335x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-337x1.0  vs  MST-336x1.0 	0.999989	0.999982	0.999996
+			Adjusted Wallace  MST-338x1.0  vs  MST-337x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-339x1.0  vs  MST-338x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-340x1.0  vs  MST-339x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-341x1.0  vs  MST-340x1.0 	0.999577	0.998993	1.000160
+			Adjusted Wallace  MST-342x1.0  vs  MST-341x1.0 	0.999728	0.999192	1.000265
+			Adjusted Wallace  MST-343x1.0  vs  MST-342x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-344x1.0  vs  MST-343x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-345x1.0  vs  MST-344x1.0 	0.990456	0.981154	0.999758
+			Adjusted Wallace  MST-346x1.0  vs  MST-345x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-347x1.0  vs  MST-346x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-348x1.0  vs  MST-347x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-349x1.0  vs  MST-348x1.0 	0.999913	0.999803	1.000022
+			Adjusted Wallace  MST-350x1.0  vs  MST-349x1.0 	0.999727	0.999187	1.000266
+			Adjusted Wallace  MST-351x1.0  vs  MST-350x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-352x1.0  vs  MST-351x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-353x1.0  vs  MST-352x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-354x1.0  vs  MST-353x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-355x1.0  vs  MST-354x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-356x1.0  vs  MST-355x1.0 	0.971699	0.955812	0.987587
+			Adjusted Wallace  MST-357x1.0  vs  MST-356x1.0 	0.995610	0.993674	0.997546
+			Adjusted Wallace  MST-358x1.0  vs  MST-357x1.0 	0.997633	0.992906	1.002360
+			Adjusted Wallace  MST-359x1.0  vs  MST-358x1.0 	0.991333	0.989505	0.993161
+			Adjusted Wallace  MST-360x1.0  vs  MST-359x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-361x1.0  vs  MST-360x1.0 	0.999703	0.999116	1.000290
+			Adjusted Wallace  MST-362x1.0  vs  MST-361x1.0 	0.613714	0.567821	0.659606
+			Adjusted Wallace  MST-363x1.0  vs  MST-362x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-364x1.0  vs  MST-363x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-365x1.0  vs  MST-364x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-366x1.0  vs  MST-365x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-367x1.0  vs  MST-366x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-368x1.0  vs  MST-367x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-369x1.0  vs  MST-368x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-370x1.0  vs  MST-369x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-371x1.0  vs  MST-370x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-372x1.0  vs  MST-371x1.0 	0.989621	0.986707	0.992535
+			Adjusted Wallace  MST-373x1.0  vs  MST-372x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-374x1.0  vs  MST-373x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-375x1.0  vs  MST-374x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-376x1.0  vs  MST-375x1.0 	0.828640	0.787555	0.869726
+			Adjusted Wallace  MST-377x1.0  vs  MST-376x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-378x1.0  vs  MST-377x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-379x1.0  vs  MST-378x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-380x1.0  vs  MST-379x1.0 	0.993641	0.984666	1.002616
+			Adjusted Wallace  MST-381x1.0  vs  MST-380x1.0 	0.987263	0.974570	0.999955
+			Adjusted Wallace  MST-382x1.0  vs  MST-381x1.0 	0.958616	0.935859	0.981373
+			Adjusted Wallace  MST-383x1.0  vs  MST-382x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-384x1.0  vs  MST-383x1.0 	0.999921	0.999772	1.000071
+			Adjusted Wallace  MST-385x1.0  vs  MST-384x1.0 	0.996708	0.990132	1.003284
+			Adjusted Wallace  MST-386x1.0  vs  MST-385x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-387x1.0  vs  MST-386x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-388x1.0  vs  MST-387x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-389x1.0  vs  MST-388x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-390x1.0  vs  MST-389x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-391x1.0  vs  MST-390x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-392x1.0  vs  MST-391x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-393x1.0  vs  MST-392x1.0 	0.996702	0.990114	1.003290
+			Adjusted Wallace  MST-394x1.0  vs  MST-393x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-395x1.0  vs  MST-394x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-396x1.0  vs  MST-395x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-397x1.0  vs  MST-396x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-398x1.0  vs  MST-397x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-399x1.0  vs  MST-398x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-400x1.0  vs  MST-399x1.0 	0.335207	0.265753	0.404662
+			Adjusted Wallace  MST-401x1.0  vs  MST-400x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-402x1.0  vs  MST-401x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-403x1.0  vs  MST-402x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-404x1.0  vs  MST-403x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-405x1.0  vs  MST-404x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-406x1.0  vs  MST-405x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-407x1.0  vs  MST-406x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-408x1.0  vs  MST-407x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-409x1.0  vs  MST-408x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-410x1.0  vs  MST-409x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-411x1.0  vs  MST-410x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-412x1.0  vs  MST-411x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-413x1.0  vs  MST-412x1.0 	0.992837	0.978528	1.007147
+			Adjusted Wallace  MST-414x1.0  vs  MST-413x1.0 	0.654507	0.559975	0.749038
+			Adjusted Wallace  MST-415x1.0  vs  MST-414x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-416x1.0  vs  MST-415x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-417x1.0  vs  MST-416x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-418x1.0  vs  MST-417x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-419x1.0  vs  MST-418x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-420x1.0  vs  MST-419x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-421x1.0  vs  MST-420x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-422x1.0  vs  MST-421x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-423x1.0  vs  MST-422x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-424x1.0  vs  MST-423x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-425x1.0  vs  MST-424x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-426x1.0  vs  MST-425x1.0 	0.989679	0.969058	1.010299
+			Adjusted Wallace  MST-427x1.0  vs  MST-426x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-428x1.0  vs  MST-427x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-429x1.0  vs  MST-428x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-430x1.0  vs  MST-429x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-431x1.0  vs  MST-430x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-432x1.0  vs  MST-431x1.0 	0.129321	-0.043710	0.302352
+			Adjusted Wallace  MST-433x1.0  vs  MST-432x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-434x1.0  vs  MST-433x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-435x1.0  vs  MST-434x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-436x1.0  vs  MST-435x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-437x1.0  vs  MST-436x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-438x1.0  vs  MST-437x1.0 	0.784185	0.535551	1.032818
+			Adjusted Wallace  MST-439x1.0  vs  MST-438x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-440x1.0  vs  MST-439x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-441x1.0  vs  MST-440x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-442x1.0  vs  MST-441x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-443x1.0  vs  MST-442x1.0 	0.908453	0.725550	1.091357
+			Adjusted Wallace  MST-444x1.0  vs  MST-443x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-445x1.0  vs  MST-444x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-446x1.0  vs  MST-445x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-447x1.0  vs  MST-446x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-448x1.0  vs  MST-447x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-449x1.0  vs  MST-448x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-450x1.0  vs  MST-449x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-451x1.0  vs  MST-450x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-452x1.0  vs  MST-451x1.0 	0.398612	-0.090387	0.887612
+			Adjusted Wallace  MST-453x1.0  vs  MST-452x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-454x1.0  vs  MST-453x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-455x1.0  vs  MST-454x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-456x1.0  vs  MST-455x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-457x1.0  vs  MST-456x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-458x1.0  vs  MST-457x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-459x1.0  vs  MST-458x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-460x1.0  vs  MST-459x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-461x1.0  vs  MST-460x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-462x1.0  vs  MST-461x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-463x1.0  vs  MST-462x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-464x1.0  vs  MST-463x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-465x1.0  vs  MST-464x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-466x1.0  vs  MST-465x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-467x1.0  vs  MST-466x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-468x1.0  vs  MST-467x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-469x1.0  vs  MST-468x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-470x1.0  vs  MST-469x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-471x1.0  vs  MST-470x1.0 	1.000000	1.000000	1.000000
+			Adjusted Wallace  MST-472x1.0  vs  MST-471x1.0 	0.000000	-0.997110	0.997110
+Get stability...
+		Determining stability regions with threshold:  0.99  and minimum n of  9
+		 block_8 MST-40x1.0->MST-39x1.0 MST-54x1.0->MST-53x1.0 15
+		 block_14 MST-79x1.0->MST-78x1.0 MST-193x1.0->MST-192x1.0 115
+		 block_17 MST-207x1.0->MST-206x1.0 MST-221x1.0->MST-220x1.0 15
+		 block_19 MST-232x1.0->MST-231x1.0 MST-243x1.0->MST-242x1.0 12
+		 block_20 MST-245x1.0->MST-244x1.0 MST-254x1.0->MST-253x1.0 10
+		 block_21 MST-256x1.0->MST-255x1.0 MST-279x1.0->MST-278x1.0 24
+		 block_23 MST-286x1.0->MST-285x1.0 MST-294x1.0->MST-293x1.0 9
+		 block_26 MST-300x1.0->MST-299x1.0 MST-317x1.0->MST-316x1.0 18
+		 block_29 MST-333x1.0->MST-332x1.0 MST-355x1.0->MST-354x1.0 23
+		 block_31 MST-363x1.0->MST-362x1.0 MST-371x1.0->MST-370x1.0 9
+		 block_34 MST-383x1.0->MST-382x1.0 MST-399x1.0->MST-398x1.0 17
+		 block_35 MST-401x1.0->MST-400x1.0 MST-413x1.0->MST-412x1.0 13
+		 block_36 MST-415x1.0->MST-414x1.0 MST-425x1.0->MST-424x1.0 11
+		 block_41 MST-453x1.0->MST-452x1.0 MST-471x1.0->MST-470x1.0 19
+
+comparing_partitions_v2.py is done!
+
+Generating nomenclature code...
+The nomenclature code has 1 partition levels and 0 metadata variable.
+
+-------------------- metadata_report.py --------------------
+
+version 1.0.2 last updated on 2023-03-28 
+
+/Users/veronicamixao/Desktop/reportree/ReporTree/scripts/metadata_report.py -m output/NG_822_metadata_w_partitions.tsv -p output/NG_822_partitions.tsv -o output/NG_822 --columns_summary_report n_sequence,first_seq_date,last_seq_date,timespan_days,country,n_country,MLST,NG_MAST,NG_STAR,folP_228S,rpsJ_57M,ponA_421P,porB_type,porB_120K,porB_121D,porB_121N,rpoB_553N,pro_mtrR_35Adel,pro_mtrR_A38C,mtrR_45D,mtrR_A39T,mtrR_R44H,gyrA_91F,gyrA_95G,gyrA_95N,parC_86N,parC_87I,parC_87R,parC_88P,parC_91K,penA_311V,penA_312M,penA_316T,penA_483S,penA_501V,penA_542S,penA_545S,penA_551S,23SrRNA_A204G,23SrRNA_C2597T,16SrRNA_C1184T,tetM,blaTEM --partitions2report MST-39x1.0,MST-78x1.0,MST-206x1.0,MST-231x1.0,MST-244x1.0,MST-255x1.0,MST-285x1.0,MST-299x1.0,MST-332x1.0,MST-362x1.0,MST-382x1.0,MST-400x1.0,MST-414x1.0,MST-452x1.0 --metadata2report country -f  --frequency-matrix no --count-matrix no 
+
+Getting information from the partitions table: output/NG_822_partitions.tsv
+Getting metadata information...
+		Samples present in partitions table but missing in metadata table: 
+		Samples not present in partitions table but present in metadata table: 
+Getting summary stats for the variables specified at '--partitions2report'...
+Getting summary stats for the variables specified at '--metadata2report'...
+metadata_report.py is done!
+
+------------------------------------------------------------
+
+ReporTree is done! If you found any issue please contact us!!
+
+
+End: 2023-03-28 16:34:57.295899
+Time elapsed: 0:02:02.867469
