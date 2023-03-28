@@ -1,0 +1,20 @@
+sample	date	country origin	source isolation
+sample1	2023-03-02	X Y Z	A
+sample2	2023-03-03	A	B
+sample3	2023-03-04	X Y Z	C
+sample3_2	2023-03-05	A	D
+sample3_3	2023-03-06	A	A
+sample4	2023-03-02	A	B
+sample5	2023-03-03	A	C
+sample6	2023-03-04	A	D
+sample7	2023-03-05	X Y Z	A
+sample8	2023-03-06	A	B
+sample9	2023-03-02	A	C
+sample9_2	2023-03-03	A	D
+sample10	2023-03-04	A	A
+sample11	2023-03-05	A	B
+sample12	2023-03-01	A	C
+sample13	2023-03-02	B	D
+sample14	2023	A	A
+sample15	2023-03-04	A	B
+sample_reference	2023-03-05	A	C
