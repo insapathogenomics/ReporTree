@@ -737,7 +737,8 @@ def main():
 		partitions = pandas.read_table(args.partitions, dtype = str)
 	else:
 		partitions = args.partitions
-
+		partitions_name = ""
+		
 
 	# adding partitions to metadata
 	
