@@ -106,7 +106,7 @@ _TIP: Users can interactively visualize and explore the ReporTree derived cluste
 
 ### Installation with conda:
 ```bash
-conda create -n reportree -c conda-forge -c bioconda -c etetoolkit python=3.8 biopython=1.77 pandas=1.1.3 numpy=1.19.2 grapetree=2.1 treecluster=1.0.3 ete3 scikit-learn cgmlst-dists snp-sites=2.5.1 pytest zip
+conda create -n reportree -c anaconda -c bioconda -c etetoolkit python=3.8 biopython=1.77 pandas=1.1.3 numpy=1.19.2 grapetree=2.1 treecluster=1.0.3 ete3 scikit-learn cgmlst-dists snp-sites=2.5.1
 git clone https://github.com/insapathogenomics/ReporTree
 cd ReporTree/scripts/
 git clone https://github.com/insapathogenomics/GrapeTree
