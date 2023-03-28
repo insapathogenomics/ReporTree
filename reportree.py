@@ -809,7 +809,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                 max_cluster += 1
                 new_cluster_name = "cluster_" + str(max_cluster)
                 conversion[cluster] = new_cluster_name
-    
+
     return conversion, changes
 
 def replace_cluster_names(conversion, mx):
@@ -846,7 +846,7 @@ def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 				out_partition = partition
 				for cluster in sorted(changes.keys()):
 					for old,old_l,modification,new,new_l,n_new_samples,new_samples in changes[cluster]:
-						print(str(out_partition) + "\t" + str(old) + "\t" + str(old_l) + "\t" + str(modification) + "\t" + str(new) + "\t" + new_l + "\t", n_new_samples + "\t" + new_samples, file = changes_output)
+						print(str(out_partition) + "\t" + str(old) + "\t" + str(old_l) + "\t" + str(modification) + "\t" + str(new) + "\t" + new_l + "\t" + n_new_samples + "\t" + new_samples, file = changes_output)
 		else:
 			if len(db_samples.keys()) == 1:
 				print_log("\tThe nomenclature column " + str(partition) + " was not found in the partitions table. Cluster names will be modified for all possible partitions!", log_name)
