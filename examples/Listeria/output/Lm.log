@@ -1,0 +1,70 @@
+
+******************** running reportree.py ********************
+
+version 2.0.0 last updated on 2023-03-28
+
+/Users/veronicamixao/Desktop/reportree/ReporTree/reportree.py -m input/Listeria_metadata.tsv -a input/Listeria_alleles.tsv --loci-called 0.95 --columns_summary_report country,n_country,source -out output/Lm --analysis grapetree --partitions2report 4,7,15 --nomenclature-code 150,7,4,country --nomenclature-file input/Listeria_nomenclature.tsv --sample_of_interest sample_0269,sample_0675,sample_0010
+start: 2023-03-28 15:47:51.526501
+
+Profiles file provided -> will run partitioning_grapetree.py:
+
+
+-------------------- partitioning_grapetree.py --------------------
+
+version 1.2.0 last updated on 2023-03-28 
+
+/Users/veronicamixao/Desktop/reportree/ReporTree/scripts/partitioning_grapetree.py -a input/Listeria_alleles.tsv -o output/Lm --method MSTreeV2 --missing 0 --n_proc 5 -thr max -d 1.0 --site-inclusion 0.0 -pct_thr none --loci-called 0.95 --missing-code 0 
+
+start: 2023-03-28 15:47:52.120045
+Cleaning the profile matrix using a threshold of >0.95 alleles/positions called...
+	From the 865 samples, 861 were kept in the profile matrix.
+Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 2000 alleles/positions)...
+Running GrapeTree...
+/Users/veronicamixao/miniconda3/envs/reportree2/bin/python /Users/veronicamixao/Desktop/reportree/ReporTree/scripts/GrapeTree/grapetree.py -p output/Lm_flt_samples_matrix.tsv -m MSTreeV2 -o output/Lm --missing 0 --n_proc 5
+
+Processing clustering threshold...
+Getting redundant sample information...
+Defining clusters...
+	Calculating clustering in range 0 1729 with a distance of 1.0
+Creating cluster composition file...
+Creating sample partitions file...
+
+partitioning_grapetree.py is done!
+
+End: 2023-03-28 15:48:31.604519
+Time elapsed: 0:00:39.484474
+
+Nomenclature file provided. Will work on cluster names...
+
+Generating nomenclature code...
+The nomenclature code has 3 partition levels and 1 metadata variable.
+
+-------------------- metadata_report.py --------------------
+
+version 1.0.2 last updated on 2023-03-28 
+
+/Users/veronicamixao/Desktop/reportree/ReporTree/scripts/metadata_report.py -m output/Lm_metadata_w_partitions.tsv -p output/Lm_partitions.tsv -o output/Lm --columns_summary_report country,n_country,source --partitions2report MST-4x1.0,MST-7x1.0,MST-15x1.0 --metadata2report nomenclature_code_2023-03-28 -f  --frequency-matrix no --count-matrix no 
+
+Getting information from the partitions table: output/Lm_partitions.tsv
+Getting metadata information...
+		Samples present in partitions table but missing in metadata table: 
+		Samples not present in partitions table but present in metadata table: sample_0329,sample_0183,sample_0317,sample_0184
+Getting summary stats for the variables specified at '--partitions2report'...
+Getting summary stats for the variables specified at '--metadata2report'...
+metadata_report.py is done!
+
+
+
+
+****************************** PROCESSING SAMPLES OF INTEREST ******************************
+
+
+Filtering partitions_summary.tsv according to samples of interest...
+
+------------------------------------------------------------
+
+ReporTree is done! If you found any issue please contact us!!
+
+
+End: 2023-03-28 15:48:39.420937
+Time elapsed: 0:00:47.894436
