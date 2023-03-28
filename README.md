@@ -396,35 +396,35 @@ These arguments take as input two variables separated by a comma (variable1,vari
 _TIP: If you want, you can split variable 2 in up to two variables. To this end you can indicate them separated by colon (e.g. lineage,country:iso_week)_
 
 
-### Simple ReporTree command line with an allele matrix as input to obtain the genetic clusters from a MST:
+#### Simple ReporTree command line with an allele matrix as input to obtain the genetic clusters from a MST:
 
 ```bash
 reportree.py -m metadata.tsv -a allele_matrix.tsv -out output --method MSTreeV2 -thr all --matrix-4-grapetree --columns_summary_report columns,summary,report --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 --analysis grapetree
 ```
 
 
-### Simple ReporTree command line with an alignment as input to obtain the genetic clusters with hierarchical clustering (single-linkage):
+#### Simple ReporTree command line with an alignment as input to obtain the genetic clusters with hierarchical clustering (single-linkage):
 
 ```bash
 reportree.py -m metadata.tsv -align alignment.fasta -out output -d dist --HC-threshold single --columns_summary_report columns,summary,report --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 --analysis HC
 ```
 
 
-### Simple ReporTree command line with a newick tree to obtain the genetic clusters:
+#### Simple ReporTree command line with a newick tree to obtain the genetic clusters:
 
 ```bash
 reportree.py -m metadata.tsv -t tree.nw -out output -d dist --method-threshold method1,method2-threshold --columns_summary_report columns,summary,report --partitions2report all --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2
 ```
 
 
-### More advanced ReporTree command line with an cgMLST allele matrix (e.g., _Listeria monocytogenes_) as input to obtain the genetic clusters from a MST and keep nomenclature from previous run (and generate hierarchical codes):
+#### More advanced ReporTree command line with an cgMLST allele matrix (e.g., _Listeria monocytogenes_) as input to obtain the genetic clusters from a MST and keep nomenclature from previous run (and generate hierarchical codes):
 
 ```bash
 reportree.py -m metadata.tsv -a allele_matrix.tsv -out output --loci-called 0.95 --method MSTreeV2 -thr all --matrix-4-grapetree --columns_summary_report columns,summary,report --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 --analysis grapetree --nomenclature-file previous_run_partitions.tsv --nomenclature-code 150,30,7
 ```
 
 
-### More advanced ReporTree command line with an wgMLST allele matrix (e.g., _Salmonella enterica_) as input to obtain the genetic clusters from a MST with levels defined as proportion, keep nomenclature from previous run (and generate hierarchical codes) and provide in-depth dynamic analysis (extended core) for samples of interest:
+#### More advanced ReporTree command line with an wgMLST allele matrix (e.g., _Salmonella enterica_) as input to obtain the genetic clusters from a MST with levels defined as proportion, keep nomenclature from previous run (and generate hierarchical codes) and provide in-depth dynamic analysis (extended core) for samples of interest:
 
 ```bash
 reportree.py -m metadata.tsv -a allele_matrix.tsv -out output --site-inclusion 0.99 --loci-called 0.95 --method MSTreeV2 -pct_thr 0.3,0.1,0.04 --matrix-4-grapetree --columns_summary_report columns,summary,report --metadata2report column1,column2 -f ‘column1 == observation;date > year-mm-dd’ --frequency-matrix variable1,variable2 --count-matrix variable1,variable2 --analysis grapetree --nomenclature-file previous_run_partitions.tsv --nomenclature-code 0.3,0.1,0.04 --sample_of_interest A,B,C --zoom-cluster-of-interest 0.04 --subtree-of-interest 20
