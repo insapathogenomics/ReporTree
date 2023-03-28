@@ -382,7 +382,7 @@ def info_samples_interest(samples, matrix, partitions, out):
 	partitions_mx = pandas.read_table(partitions)
 	singletons = []
 	do_not_exist = []
-	
+
 	with open(matrix, "r") as mx:
 		with open(out + "_SAMPLES_OF_INTEREST_partitions_summary.tsv", "w+") as outfile:
 			i = 0
@@ -398,7 +398,7 @@ def info_samples_interest(samples, matrix, partitions, out):
 						nomenclature = False
 				else:
 					if nomenclature:
-						samples_cluster = l[4].split(",")
+						samples_cluster = l[5].split(",")
 					else:
 						samples_cluster = l[3].split(",")
 					samples_observed = []
