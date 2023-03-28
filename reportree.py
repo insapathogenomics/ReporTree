@@ -849,7 +849,7 @@ def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 						print(str(out_partition) + "\t" + str(old) + "\t" + str(old_l) + "\t" + str(modification) + "\t" + str(new) + "\t" + new_l + "\t", n_new_samples + "\t" + new_samples, file = changes_output)
 		else:
 			if len(db_samples.keys()) == 1:
-				print_log("\tThe nomenclature column " + str(partition) + "was not found in the partitions table. Cluster names will be modified for all possible partitions!", log_name)
+				print_log("\tThe nomenclature column " + str(partition) + " was not found in the partitions table. Cluster names will be modified for all possible partitions!", log_name)
 				max_cluster, max_singleton = get_last_counters(mx_new[partition])
 				for new_partition in mx_original.columns[1:]:
 					conversion, changes = determine_new_cluster_names(old_samples, db_samples[partition], partition, mx_new_flt, new_partition, mx_original, max_cluster, max_singleton)
