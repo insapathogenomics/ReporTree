@@ -18,7 +18,7 @@ import pandas
 import ete3 as ete
 
 version = "1.1.0"
-last_updated = "2023-03-26"
+last_updated = "2023-03-28"
 
 treecluster = "TreeCluster.py"
 

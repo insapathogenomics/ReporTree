@@ -17,7 +17,7 @@ import datetime as datetime
 from Bio import SeqIO, AlignIO, Align, Alphabet
 
 version = "1.1.0"
-last_updated = "2023-03-26"
+last_updated = "2023-03-28"
 
 # functions	----------
 
@@ -328,6 +328,8 @@ def clean_position(mx, atcg, gaps, all_gaps, missing_code, log):
 	output: alignment no gaps or conserved positions
 	"""
 	
+	align_len = len(mx.columns) - 1
+
 	mx_id = mx[mx.columns[0]]
 	mx = mx.apply(lambda x: x.astype(str).str.upper())
     
