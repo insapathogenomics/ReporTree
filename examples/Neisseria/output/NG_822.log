@@ -1,25 +1,24 @@
 
 ******************** running reportree.py ********************
 
-version 1.0.0 last updated on 2022-09-23 
+version 2.0.0 last updated on 2023-03-28
 
-/Users/veronicamixao/ReporTree/reportree.py -m input/NG_Metadata_NEW.tsv -a input/Allelic_profile_matrix_MScgMLST_822_loci_3791_isolates_NEW.tab --output output/NG_822 --method MSTree --n_proc 1 --matrix-4-grapetree --columns_summary_report n_sequence,first_seq_date,last_seq_date,timespan_days,country,n_country,MLST,NG_MAST,NG_STAR,folP_228S,rpsJ_57M,ponA_421P,porB_type,porB_120K,porB_121D,porB_121N,rpoB_553N,pro_mtrR_35Adel,pro_mtrR_A38C,mtrR_45D,mtrR_A39T,mtrR_R44H,gyrA_91F,gyrA_95G,gyrA_95N,parC_86N,parC_87I,parC_87R,parC_88P,parC_91K,penA_311V,penA_312M,penA_316T,penA_483S,penA_501V,penA_542S,penA_545S,penA_551S,23SrRNA_A204G,23SrRNA_C2597T,16SrRNA_C1184T,tetM,blaTEM --partitions2report stability_regions -AdjW 0.99 -n 9 --metadata2report country --analysis grapetree 
-
-start: 2022-09-26 12:09:06.243161
+../../reportree.py -m input/NG_Metadata_NEW.tsv -a input/Allelic_profile_matrix_MScgMLST_822_loci_3791_isolates_NEW.tab --output output/NG_822 --method MSTree --n_proc 1 --matrix-4-grapetree --columns_summary_report n_sequence,first_seq_date,last_seq_date,timespan_days,country,n_country,MLST,NG_MAST,NG_STAR,folP_228S,rpsJ_57M,ponA_421P,porB_type,porB_120K,porB_121D,porB_121N,rpoB_553N,pro_mtrR_35Adel,pro_mtrR_A38C,mtrR_45D,mtrR_A39T,mtrR_R44H,gyrA_91F,gyrA_95G,gyrA_95N,parC_86N,parC_87I,parC_87R,parC_88P,parC_91K,penA_311V,penA_312M,penA_316T,penA_483S,penA_501V,penA_542S,penA_545S,penA_551S,23SrRNA_A204G,23SrRNA_C2597T,16SrRNA_C1184T,tetM,blaTEM --partitions2report stability_regions -AdjW 0.99 -n 9 --metadata2report country --analysis grapetree --nomenclature-file input/NG_nomenclature.tsv --nomenclature-code 39
+start: 2023-03-28 16:32:54.428430
 
 Profiles file provided -> will run partitioning_grapetree.py:
 
 
 -------------------- partitioning_grapetree.py --------------------
 
-version 1.0.0 last updated on 2022-09-23 
+version 1.2.0 last updated on 2023-03-28 
 
-/Users/veronicamixao/ReporTree/scripts/partitioning_grapetree.py -a input/Allelic_profile_matrix_MScgMLST_822_loci_3791_isolates_NEW.tab -o output/NG_822 --method MSTree --missing 0 --n_proc 1 -thr max -d 1.0 --matrix-4-grapetree --site-inclusion 0.0 
+/Users/veronicamixao/Desktop/reportree/ReporTree/scripts/partitioning_grapetree.py -a input/Allelic_profile_matrix_MScgMLST_822_loci_3791_isolates_NEW.tab -o output/NG_822 --method MSTree --missing 0 --n_proc 1 -thr max -d 1.0 --site-inclusion 0.0 -pct_thr none --loci-called 0.0 --missing-code 0 --matrix-4-grapetree 
 
-Keeping only sites/loci with information in >= 0.0% of the samples...
-	From the 822 loci/positions, 822 were kept in the matrix.
+start: 2023-03-28 16:32:55.073173
+Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 2000 alleles/positions)...
 Running GrapeTree...
-/Users/veronicamixao/miniconda3/envs/REPORTREE/bin/python /Users/veronicamixao/ReporTree/scripts/GrapeTree/grapetree.py -p output/NG_822_clean_missing_matrix.tsv -m MSTree -o output/NG_822 --missing 0 --n_proc 1
+/Users/veronicamixao/miniconda3/envs/reportree2/bin/python /Users/veronicamixao/Desktop/reportree/ReporTree/scripts/GrapeTree/grapetree.py -p temporary_clean_codes.tsv -m MSTree -o output/NG_822 --missing 0 --n_proc 1
 
 Processing clustering threshold...
 Getting redundant sample information...
@@ -29,11 +28,16 @@ Creating cluster composition file...
 Creating sample partitions file...
 
 partitioning_grapetree.py is done!
+
+End: 2023-03-28 16:34:32.064893
+Time elapsed: 0:01:36.991720
+
+Nomenclature file provided. Will work on cluster names...
 	'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...
 
 -------------------- comparing_partitions_v2.py --------------------
 
-/Users/veronicamixao/ReporTree/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 output/NG_822_partitions.tsv -t output/NG_822 -o1 0 -a stability -n 9 -thr 0.99 -log output/NG_822.log
+/Users/veronicamixao/Desktop/reportree/ReporTree/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 output/NG_822_partitions.tsv -t output/NG_822 -o1 0 -a stability -n 9 -thr 0.99 -log output/NG_822.log
 Preparing for stability analysis...
 Removing redundant samples...
 	The most discriminatory column found was MST-0x1.0
@@ -531,11 +535,14 @@ Get stability...
 
 comparing_partitions_v2.py is done!
 
+Generating nomenclature code...
+The nomenclature code has 1 partition levels and 0 metadata variable.
+
 -------------------- metadata_report.py --------------------
 
-version 1.0.0 last updated on 2022-09-12 
+version 1.0.2 last updated on 2023-03-28 
 
-/Users/veronicamixao/ReporTree/scripts/metadata_report.py -m input/NG_Metadata_NEW.tsv -p output/NG_822_partitions.tsv -o output/NG_822 --columns_summary_report n_sequence,first_seq_date,last_seq_date,timespan_days,country,n_country,MLST,NG_MAST,NG_STAR,folP_228S,rpsJ_57M,ponA_421P,porB_type,porB_120K,porB_121D,porB_121N,rpoB_553N,pro_mtrR_35Adel,pro_mtrR_A38C,mtrR_45D,mtrR_A39T,mtrR_R44H,gyrA_91F,gyrA_95G,gyrA_95N,parC_86N,parC_87I,parC_87R,parC_88P,parC_91K,penA_311V,penA_312M,penA_316T,penA_483S,penA_501V,penA_542S,penA_545S,penA_551S,23SrRNA_A204G,23SrRNA_C2597T,16SrRNA_C1184T,tetM,blaTEM --partitions2report MST-39x1.0,MST-78x1.0,MST-206x1.0,MST-231x1.0,MST-244x1.0,MST-255x1.0,MST-285x1.0,MST-299x1.0,MST-332x1.0,MST-362x1.0,MST-382x1.0,MST-400x1.0,MST-414x1.0,MST-452x1.0 --metadata2report country -f  --frequency-matrix no --count-matrix no 
+/Users/veronicamixao/Desktop/reportree/ReporTree/scripts/metadata_report.py -m output/NG_822_metadata_w_partitions.tsv -p output/NG_822_partitions.tsv -o output/NG_822 --columns_summary_report n_sequence,first_seq_date,last_seq_date,timespan_days,country,n_country,MLST,NG_MAST,NG_STAR,folP_228S,rpsJ_57M,ponA_421P,porB_type,porB_120K,porB_121D,porB_121N,rpoB_553N,pro_mtrR_35Adel,pro_mtrR_A38C,mtrR_45D,mtrR_A39T,mtrR_R44H,gyrA_91F,gyrA_95G,gyrA_95N,parC_86N,parC_87I,parC_87R,parC_88P,parC_91K,penA_311V,penA_312M,penA_316T,penA_483S,penA_501V,penA_542S,penA_545S,penA_551S,23SrRNA_A204G,23SrRNA_C2597T,16SrRNA_C1184T,tetM,blaTEM --partitions2report MST-39x1.0,MST-78x1.0,MST-206x1.0,MST-231x1.0,MST-244x1.0,MST-255x1.0,MST-285x1.0,MST-299x1.0,MST-332x1.0,MST-362x1.0,MST-382x1.0,MST-400x1.0,MST-414x1.0,MST-452x1.0 --metadata2report country -f  --frequency-matrix no --count-matrix no 
 
 Getting information from the partitions table: output/NG_822_partitions.tsv
 Getting metadata information...
@@ -550,5 +557,5 @@ metadata_report.py is done!
 ReporTree is done! If you found any issue please contact us!!
 
 
-End: 2022-09-26 12:10:37.851822
-Time elapsed: 0:01:31.608661
+End: 2023-03-28 16:34:57.295899
+Time elapsed: 0:02:02.867469

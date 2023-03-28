@@ -1,0 +1,866 @@
+sample	country	region	source	date	iso_year	iso_week_nr	iso_week	ST	note	nomenclature_code_2023-03-28	MST-4x1.0	MST-7x1.0	MST-15x1.0	pct_called	QUAL_called
+sample_0001	A	A1	clinical	2021-11-21	2021	46	2021W46	na	not_real_data_test_only	C35-C92-C37-A	cluster_37	cluster_92	cluster_105	0.9954233409610984	PASS
+sample_0002	B	B1	clinical	2021-10-11	2021	41	2021W41	na	not_real_data_test_only	C3-S314-S394-B	singleton_394	singleton_314	singleton_201	0.9965675057208238	PASS
+sample_0003	C	B1	clinical	2021-10-24	2021	42	2021W42	388	not_real_data_test_only	C16-S245-S325-C	singleton_325	singleton_245	singleton_131	0.9959954233409613	PASS
+sample_0004	A	A2	clinical	2021-10-18	2021	42	2021W42	77	not_real_data_test_only	C15-S170-S250-A	singleton_250	singleton_170	singleton_57	0.9954233409610984	PASS
+sample_0005	B	B2	clinical	2021-03-10	2021	10	2021W10	3	not_real_data_test_only	C32-S302-S382-B	singleton_382	singleton_302	singleton_189	0.9799771167048056	PASS
+sample_0006	C	B2	clinical	2021-09-23	2021	38	2021W38	217	not_real_data_test_only	C28-S321-S401-C	singleton_401	singleton_321	singleton_208	0.9782608695652174	PASS
+sample_0007	A	A3	clinical	2021-09-18	2021	37	2021W37	388	not_real_data_test_only	C16-S114-S194-A	singleton_194	singleton_114	singleton_6	0.9954233409610984	PASS
+sample_0008	B	B3	clinical	2021-12-09	2021	49	2021W49	217	not_real_data_test_only	C28-S256-S336-B	singleton_336	singleton_256	singleton_143	0.982837528604119	PASS
+sample_0009	C	B3	clinical	2021-09-09	2021	36	2021W36	121	not_real_data_test_only	C31-S224-S304-C	singleton_304	singleton_224	singleton_110	0.9879862700228832	PASS
+sample_0010	A	A4	clinical	2021-02-09	2021	6	2021W06	1	not_real_data_test_only	C35-C81-S445-A	singleton_445	cluster_81	cluster_84	0.9948512585812356	PASS
+sample_0011	B	B4	clinical	2021-08-29	2021	34	2021W34	1	not_real_data_test_only	C35-S119-S199-B	singleton_199	singleton_119	cluster_105	0.9925629290617848	PASS
+sample_0012	C	B4	clinical	2021-08-29	2021	34	2021W34	1	not_real_data_test_only	C35-S33-S109-C	singleton_109	singleton_33	cluster_102	0.9925629290617848	PASS
+sample_0013	A	A5	clinical	2021-02-08	2021	6	2021W06	6	not_real_data_test_only	C24-C102-S53-A	singleton_53	cluster_102	cluster_67	0.9971395881006864	PASS
+sample_0014	B	B5	clinical	2021-07-29	2021	30	2021W30	8	not_real_data_test_only	C21-S87-S167-B	singleton_167	singleton_87	cluster_103	0.9971395881006864	PASS
+sample_0015	C	B5	clinical	2021-07-28	2021	30	2021W30	451	not_real_data_test_only	S12-S359-S439-C	singleton_439	singleton_359	singleton_246	0.9959954233409613	PASS
+sample_0016	A	A6	clinical	2021-07-20	2021	29	2021W29	217	not_real_data_test_only	C28-S131-S211-A	singleton_211	singleton_131	singleton_18	0.9959954233409613	PASS
+sample_0017	B	B6	clinical	2021-07-14	2021	28	2021W28	87	not_real_data_test_only	C14-C106-S30-B	singleton_30	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0018	C	B6	clinical	2021-07-13	2021	28	2021W28	87	not_real_data_test_only	C14-C28-C33-C	cluster_33	cluster_28	cluster_100	0.9959954233409613	PASS
+sample_0019	A	A7	clinical	2021-04-07	2021	14	2021W14	1	not_real_data_test_only	C35-S248-S328-A	singleton_328	singleton_248	singleton_134	0.9948512585812356	PASS
+sample_0020	B	B7	clinical	2021-06-29	2021	26	2021W26	87	not_real_data_test_only	C14-C28-C33-B	cluster_33	cluster_28	cluster_100	0.9954233409610984	PASS
+sample_0021	C	B7	clinical	2021-06-26	2021	25	2021W25	1	not_real_data_test_only	C35-S77-S155-C	singleton_155	singleton_77	cluster_105	0.9959954233409613	PASS
+sample_0022	A	A8	clinical	2021-06-17	2021	24	2021W24	382	not_real_data_test_only	C13-S164-S244-A	singleton_244	singleton_164	singleton_51	0.9965675057208238	PASS
+sample_0023	B		clinical	2021-10-06	2021	40	2021W40	388	not_real_data_test_only	C16-S177-S257-B	singleton_257	singleton_177	singleton_63	0.9965675057208238	PASS
+sample_0024	C		clinical	2021-03-06	2021	9	2021W09	378	not_real_data_test_only	C12-S269-S349-C	singleton_349	singleton_269	singleton_156	0.9965675057208238	PASS
+sample_0025	A	A9	clinical	2021-02-06	2021	5	2021W05	3	not_real_data_test_only	C32-C104-S56-A	singleton_56	cluster_104	cluster_69	0.9959954233409613	PASS
+sample_0026	B	B1	clinical	2021-05-22	2021	20	2021W20	6	not_real_data_test_only	C24-C109-S73-B	singleton_73	cluster_109	cluster_107	0.9971395881006864	PASS
+sample_0027	C	B1	clinical	2021-10-05	2021	40	2021W40	1	not_real_data_test_only	C35-S318-S398-C	singleton_398	singleton_318	singleton_205	0.9959954233409613	PASS
+sample_0028	A		clinical	2021-05-05	2021	18	2021W18	7	not_real_data_test_only	C29-C77-C95-A	cluster_95	cluster_77	cluster_57	0.9959954233409613	PASS
+sample_0029	B	B2	clinical	2021-04-26	2021	17	2021W17	16	not_real_data_test_only	C19-C26.1-S62-B	singleton_62	cluster_26.1	cluster_19	0.9948512585812356	PASS
+sample_0030	C	B2	clinical	2021-04-13	2021	15	2021W15	217	not_real_data_test_only	C28-S285-S365-C	singleton_365	singleton_285	singleton_172	0.9954233409610984	PASS
+sample_0031	A	A1	clinical	2021-05-04	2021	18	2021W18	1	not_real_data_test_only	C35-S34-S110-A	singleton_110	singleton_34	cluster_79	0.9959954233409613	PASS
+sample_0032	B	B3	clinical	2021-03-23	2021	12	2021W12	1	not_real_data_test_only	C35-C29-C35-B	cluster_35	cluster_29	cluster_84	0.9959954233409613	PASS
+sample_0033	C	B3	clinical	2021-11-03	2021	44	2021W44	1	not_real_data_test_only	C35-S199-S279-C	singleton_279	singleton_199	singleton_85	0.9954233409610984	PASS
+sample_0034	A	A2	clinical	2021-02-15	2021	7	2021W07	217	not_real_data_test_only	C28-S277-S357-A	singleton_357	singleton_277	singleton_164	0.9965675057208238	PASS
+sample_0035	B	B4	clinical	2021-05-02	2021	17	2021W17	6	not_real_data_test_only	C24-C90-S32-B	singleton_32	cluster_90	cluster_63	0.9971395881006864	PASS
+sample_0036	C	B4	clinical	2021-01-02	2020	53	2020W53	217	not_real_data_test_only	C28-C38-C47-C	cluster_47	cluster_38	cluster_27	0.9954233409610984	PASS
+sample_0037	A	A3	clinical	2021-01-29	2021	4	2021W04	87	not_real_data_test_only	C14-C106-C79-A	cluster_79	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0038	B	B5	clinical	2021-01-13	2021	2	2021W02	1	not_real_data_test_only	C35-S28-S104-B	singleton_104	singleton_28	cluster_105	0.9948512585812356	PASS
+sample_0039	C	B5	clinical	2020-12-14	2020	51	2020W51	217	not_real_data_test_only	C28-S113-S193-C	singleton_193	singleton_113	singleton_5	0.9954233409610984	PASS
+sample_0040	A	A4	clinical	2020-11-20	2020	47	2020W47	392	not_real_data_test_only	S7-S354-S434-A	singleton_434	singleton_354	singleton_241	0.9965675057208238	PASS
+sample_0041	B	B6	clinical	2020-11-16	2020	47	2020W47	1	not_real_data_test_only	C35-S309-S389-B	singleton_389	singleton_309	singleton_196	0.9959954233409613	PASS
+sample_0042	C	B6	clinical	2020-10-18	2020	42	2020W42	18	not_real_data_test_only	S9-S356-S436-C	singleton_436	singleton_356	singleton_243	0.9977116704805492	PASS
+sample_0043	A	A5	clinical	2020-07-10	2020	28	2020W28	1	not_real_data_test_only	C35-S294-S374-A	singleton_374	singleton_294	singleton_181	0.9959954233409613	PASS
+sample_0044	B	B7	clinical	2020-09-17	2020	38	2020W38	87	not_real_data_test_only	C14-C59-S11-B	singleton_11	cluster_59	cluster_43	0.9942791762013728	PASS
+sample_0045	C	B7	clinical	2020-12-09	2020	50	2020W50	16	not_real_data_test_only	C19-S181-S261-C	singleton_261	singleton_181	singleton_67	0.9954233409610984	PASS
+sample_0046	A	A6	clinical	2020-07-09	2020	28	2020W28	14	not_real_data_test_only	C1-C11-C15-A	cluster_15	cluster_11	cluster_7	0.998283752860412	PASS
+sample_0047	B		clinical	2020-07-09	2020	28	2020W28	1	not_real_data_test_only	C35-S266-S346-B	singleton_346	singleton_266	singleton_153	0.9925629290617848	PASS
+sample_0048	C		clinical	2020-05-09	2020	19	2020W19	14	not_real_data_test_only	C1-C11-C15-C	cluster_15	cluster_11	cluster_7	0.9977116704805492	PASS
+sample_0049	A	A7	clinical	2020-03-09	2020	11	2020W11	37	not_real_data_test_only	C3-C20-C24-A	cluster_24	cluster_20	cluster_14	0.9954233409610984	PASS
+sample_0050	B	B1	clinical	2020-03-09	2020	11	2020W11	2	not_real_data_test_only	C30-S247-S327-B	singleton_327	singleton_247	singleton_133	0.9948512585812356	PASS
+sample_0051	C	B1	clinical	2020-08-22	2020	34	2020W34	77	not_real_data_test_only	C15-S171-S251-C	singleton_251	singleton_171	singleton_58	0.9948512585812356	PASS
+sample_0052	A	A8	clinical	2020-08-19	2020	34	2020W34	37	not_real_data_test_only	C3-C20-C24-A	cluster_24	cluster_20	cluster_14	0.9959954233409613	PASS
+sample_0053	B	B2	clinical	2020-08-17	2020	34	2020W34	1	not_real_data_test_only	C35-C91-S69-B	singleton_69	cluster_91	cluster_105	0.9919908466819222	PASS
+sample_0054	A	A9	clinical	2020-08-13	2020	33	2020W33	87	not_real_data_test_only	C14-C54-C67-A	cluster_67	cluster_54	cluster_100	0.9954233409610984	PASS
+sample_0055	B	B3	clinical	2020-08-13	2020	33	2020W33	1	not_real_data_test_only	C35-S149-S229-B	singleton_229	singleton_149	singleton_36	0.9954233409610984	PASS
+sample_0056	C	B2	clinical	2020-08-13	2020	33	2020W33	87	not_real_data_test_only	C14-C54-C67-C	cluster_67	cluster_54	cluster_100	0.9948512585812356	PASS
+sample_0057	C	B3	clinical	2020-06-08	2020	24	2020W24	3	not_real_data_test_only	C32-S138-S218-C	singleton_218	singleton_138	singleton_25	0.9942791762013728	PASS
+sample_0058	A		clinical	2020-07-30	2020	31	2020W31	217	not_real_data_test_only	C28-S67-S145-A	singleton_145	singleton_67	cluster_89	0.9948512585812356	PASS
+sample_0059	B	B4	clinical	2020-07-29	2020	31	2020W31	1	not_real_data_test_only	C35-S107-S187-B	singleton_187	singleton_107	cluster_105	0.975400457665904	PASS
+sample_0060	C	B4	clinical	2020-07-27	2020	31	2020W31	3	not_real_data_test_only	C32-S74-S152-C	singleton_152	singleton_74	cluster_69	0.9959954233409613	PASS
+sample_0061	A	A1	clinical	2020-07-22	2020	30	2020W30	1	not_real_data_test_only	C35-C93-C38-A	cluster_38	cluster_93	cluster_64	0.9937070938215103	PASS
+sample_0062	B	B5	clinical	2020-07-22	2020	30	2020W30	1	not_real_data_test_only	C35-S335-S415-B	singleton_415	singleton_335	singleton_222	0.9959954233409613	PASS
+sample_0063	A	A2	clinical	2020-07-20	2020	30	2020W30	1	not_real_data_test_only	C35-C92-C37-A	cluster_37	cluster_92	cluster_105	0.9908466819221968	PASS
+sample_0064	C	B5	clinical	2020-07-20	2020	30	2020W30	1	not_real_data_test_only	C35-C78-C96-C	cluster_96	cluster_78	cluster_102	0.9948512585812356	PASS
+sample_0065	B	B6	clinical	2020-07-07	2020	28	2020W28	2	not_real_data_test_only	C30-C97-C104-B	cluster_104	cluster_97	cluster_91	0.9942791762013728	PASS
+sample_0066	A	A3	clinical	2020-06-25	2020	26	2020W26	219	not_real_data_test_only	C25-C35-C44-A	cluster_44	cluster_35	cluster_24	0.9971395881006864	PASS
+sample_0067	B	B7	clinical	2020-06-25	2020	26	2020W26	219	not_real_data_test_only	C25-C35-C44-B	cluster_44	cluster_35	cluster_24	0.9965675057208238	PASS
+sample_0068	C	B6	clinical	2020-06-25	2020	26	2020W26	1	not_real_data_test_only	C35-S32-S108-C	singleton_108	singleton_32	cluster_102	0.9937070938215103	PASS
+sample_0069	C	B7	clinical	2020-06-16	2020	25	2020W25	217	not_real_data_test_only	C28-S182-S262-C	singleton_262	singleton_182	singleton_68	0.9954233409610984	PASS
+sample_0070	A	A4	clinical	2020-08-06	2020	32	2020W32	8	not_real_data_test_only	C21-S205-S285-A	singleton_285	singleton_205	singleton_91	0.9965675057208238	PASS
+sample_0071	B		clinical	2020-08-06	2020	32	2020W32	1	not_real_data_test_only	C35-C92-C4-B	cluster_4	cluster_92	cluster_105	0.9954233409610984	PASS
+sample_0072	C		clinical	2020-08-06	2020	32	2020W32	1	not_real_data_test_only	C35-C92-C4-C	cluster_4	cluster_92	cluster_105	0.9942791762013728	PASS
+sample_0073	A	A5	clinical	2020-04-06	2020	15	2020W15	382	not_real_data_test_only	C13-S73-S151-A	singleton_151	singleton_73	cluster_94	0.9971395881006864	PASS
+sample_0074	B	B1	clinical	2020-03-06	2020	10	2020W10	3	not_real_data_test_only	C32-C83-S9-B	singleton_9	cluster_83	cluster_59	0.9948512585812356	PASS
+sample_0075	C	B1	clinical	2020-05-31	2020	22	2020W22	na	not_real_data_test_only	C27-S324-S404-C	singleton_404	singleton_324	singleton_211	0.9965675057208238	PASS
+sample_0076	A	A6	clinical	2020-05-26	2020	22	2020W22	378	not_real_data_test_only	C12-C89-S25-A	singleton_25	cluster_89	cluster_95	0.9977116704805492	PASS
+sample_0077	B	B2	clinical	2020-05-26	2020	22	2020W22	1	not_real_data_test_only	C35-S310-S390-B	singleton_390	singleton_310	singleton_197	0.9954233409610984	PASS
+sample_0078	A	A7	clinical	2020-05-18	2020	21	2020W21	1	not_real_data_test_only	C35-C118-C114-A	cluster_114	cluster_118	cluster_105	0.9959954233409613	PASS
+sample_0079	C	B2	clinical	2020-05-18	2020	21	2020W21	1	not_real_data_test_only	C35-C118-C114-C	cluster_114	cluster_118	cluster_105	0.9959954233409613	PASS
+sample_0080	B	B3	clinical	2020-08-05	2020	32	2020W32	1	not_real_data_test_only	C35-C95-C103-B	cluster_103	cluster_95	cluster_102	0.9948512585812356	PASS
+sample_0081	C	B3	clinical	2020-04-05	2020	14	2020W14	1	not_real_data_test_only	C35-C81-S37-C	singleton_37	cluster_81	cluster_84	0.9954233409610984	PASS
+sample_0082	A	A8	clinical	2020-02-05	2020	6	2020W06	666	not_real_data_test_only	C17-S219-S299-A	singleton_299	singleton_219	singleton_105	0.9931350114416476	PASS
+sample_0083	B	B4	clinical	2020-04-29	2020	18	2020W18	na	not_real_data_test_only	C28-S217-S297-B	singleton_297	singleton_217	singleton_103	0.9959954233409613	PASS
+sample_0084	A	A9	clinical	2020-04-28	2020	18	2020W18	666	not_real_data_test_only	C17-S299-S379-A	singleton_379	singleton_299	singleton_186	0.9942791762013728	PASS
+sample_0085	C	B4	clinical	2020-04-28	2020	18	2020W18	219	not_real_data_test_only	C25-S332-S412-C	singleton_412	singleton_332	singleton_219	0.9971395881006864	PASS
+sample_0086	B	B5	clinical	2020-04-16	2020	16	2020W16	16	not_real_data_test_only	C19-C26.1-C31.1-B	cluster_31.1	cluster_26.1	cluster_19	0.9948512585812356	PASS
+sample_0087	C	B5	clinical	2020-03-20	2020	12	2020W12	1	not_real_data_test_only	C35-S346-S426-C	singleton_426	singleton_346	singleton_233	0.9954233409610984	PASS
+sample_0088	A		clinical	2020-02-14	2020	7	2020W07	9	not_real_data_test_only	C26-S21-S97-A	singleton_97	singleton_21	cluster_28	0.998283752860412	PASS
+sample_0089	B	B6	clinical	2020-02-13	2020	7	2020W07	3	not_real_data_test_only	C32-S178-S258-B	singleton_258	singleton_178	singleton_64	0.9959954233409613	PASS
+sample_0090	C	B6	clinical	2020-01-31	2020	5	2020W05	1	not_real_data_test_only	C35-S183-S263-C	singleton_263	singleton_183	singleton_69	0.9942791762013728	PASS
+sample_0091	A	A1	clinical	2020-06-01	2020	23	2020W23	3	not_real_data_test_only	C32-S340-S420-A	singleton_420	singleton_340	singleton_227	0.9897025171624714	PASS
+sample_0092	B	B7	clinical	2019-02-12	2019	7	2019W07	1	not_real_data_test_only	C35-S265-S345-B	singleton_345	singleton_265	singleton_152	0.9948512585812356	PASS
+sample_0093	C	B7	clinical	2019-11-29	2019	48	2019W48	1	not_real_data_test_only	C35-C93-C38-C	cluster_38	cluster_93	cluster_64	0.9954233409610984	PASS
+sample_0094	A	A2	clinical	2019-11-25	2019	48	2019W48	87	not_real_data_test_only	C14-C106-S31-A	singleton_31	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0095	B		clinical	2019-11-18	2019	47	2019W47	87	not_real_data_test_only	C14-S144-S224-B	singleton_224	singleton_144	singleton_31	0.9959954233409613	PASS
+sample_0096	A	A3	clinical	2019-10-11	2019	41	2019W41	9	not_real_data_test_only	C26-C124-C119-A	cluster_119	cluster_124	cluster_111	0.9971395881006864	PASS
+sample_0097	C		clinical	2019-10-11	2019	41	2019W41	9	not_real_data_test_only	C26-C124-C119-C	cluster_119	cluster_124	cluster_111	0.9971395881006864	PASS
+sample_0098	B	B1	clinical	2019-07-11	2019	28	2019W28	1	not_real_data_test_only	C35-C93-C38-B	cluster_38	cluster_93	cluster_64	0.9914187643020596	PASS
+sample_0099	C	B1	clinical	2019-10-27	2019	43	2019W43	1	not_real_data_test_only	C35-C68-C85-C	cluster_85	cluster_68	cluster_50	0.9948512585812356	PASS
+sample_0100	A	A4	clinical	2019-08-10	2019	32	2019W32	1	not_real_data_test_only	C35-S197-S277-A	singleton_277	singleton_197	singleton_83	0.9954233409610984	PASS
+sample_0101	B	B2	clinical	2019-09-23	2019	39	2019W39	121	not_real_data_test_only	C31-S50-S128-B	singleton_128	singleton_50	cluster_51	0.9971395881006864	PASS
+sample_0102	C	B2	clinical	2019-09-21	2019	38	2019W38	87	not_real_data_test_only	C14-S148-S228-C	singleton_228	singleton_148	singleton_35	0.9954233409610984	PASS
+sample_0103	A	A5	clinical	2019-09-16	2019	38	2019W38	3	not_real_data_test_only	C32-S278-S358-A	singleton_358	singleton_278	singleton_165	0.9965675057208238	PASS
+sample_0104	B	B3	clinical	2019-09-14	2019	37	2019W37	1	not_real_data_test_only	C35-S166-S246-B	singleton_246	singleton_166	singleton_53	0.9959954233409613	PASS
+sample_0105	C	B3	clinical	2019-08-16	2019	33	2019W33	1	not_real_data_test_only	C35-C93-C38-C	cluster_38	cluster_93	cluster_64	0.9937070938215103	PASS
+sample_0106	A	A6	clinical	2019-08-15	2019	33	2019W33	388	not_real_data_test_only	C16-S95-S175-A	singleton_175	singleton_95	cluster_96	0.9925629290617848	PASS
+sample_0107	B	B4	clinical	2019-08-13	2019	33	2019W33	1	not_real_data_test_only	C35-C93-C38-B	cluster_38	cluster_93	cluster_64	0.9931350114416476	PASS
+sample_0108	C	B4	clinical	2019-08-13	2019	33	2019W33	1	not_real_data_test_only	C35-C93-C38-C	cluster_38	cluster_93	cluster_64	0.9937070938215103	PASS
+sample_0109	A	A7	clinical	2019-08-08	2019	32	2019W32	1	not_real_data_test_only	C35-C93-C38-A	cluster_38	cluster_93	cluster_64	0.9925629290617848	PASS
+sample_0110	B	B5	clinical	2019-07-08	2019	28	2019W28	382	not_real_data_test_only	C13-C103-C98-B	cluster_98	cluster_103	cluster_68	0.9971395881006864	PASS
+sample_0111	C	B5	clinical	2019-06-08	2019	23	2019W23	1	not_real_data_test_only	C35-S161-S241-C	singleton_241	singleton_161	singleton_48	0.9891304347826086	PASS
+sample_0112	A	A8	clinical	2019-07-29	2019	31	2019W31	29	not_real_data_test_only	C11-C116-S123-A	singleton_123	cluster_116	cluster_92	0.9931350114416476	PASS
+sample_0113	B	B6	clinical	2019-11-07	2019	45	2019W45	1	not_real_data_test_only	C35-C68-C85-B	cluster_85	cluster_68	cluster_50	0.9942791762013728	PASS
+sample_0114	C	B6	clinical	2019-08-07	2019	32	2019W32	692	not_real_data_test_only	C35-S246-S326-C	singleton_326	singleton_246	singleton_132	0.9954233409610984	PASS
+sample_0115	A	A9	clinical	2019-07-07	2019	27	2019W27	388	not_real_data_test_only	C16-S103-S183-A	singleton_183	singleton_103	cluster_106	0.9954233409610984	PASS
+sample_0116	B	B7	clinical	2019-03-07	2019	10	2019W10	219	not_real_data_test_only	C25-S200-S280-B	singleton_280	singleton_200	singleton_86	0.9965675057208238	PASS
+sample_0117	C	B7	clinical	2019-06-27	2019	26	2019W26	2	not_real_data_test_only	C30-S315-S395-C	singleton_395	singleton_315	singleton_202	0.990274599542334	PASS
+sample_0118	A		clinical	2019-06-21	2019	25	2019W25	7	not_real_data_test_only	C29-C19-C23-A	cluster_23	cluster_19	cluster_13	0.9977116704805492	PASS
+sample_0119	B		clinical	2019-06-21	2019	25	2019W25	7	not_real_data_test_only	C29-C19-C23-B	cluster_23	cluster_19	cluster_13	0.998283752860412	PASS
+sample_0120	C		clinical	2019-06-18	2019	25	2019W25	1	not_real_data_test_only	C35-S127-S207-C	singleton_207	singleton_127	singleton_14	0.9931350114416476	PASS
+sample_0121	A	A1	clinical	2019-12-06	2019	49	2019W49	1	not_real_data_test_only	C35-C93-C38-A	cluster_38	cluster_93	cluster_64	0.9942791762013728	PASS
+sample_0122	B	B1	clinical	2019-07-06	2019	27	2019W27	na	not_real_data_test_only	S16-S364-S444-B	singleton_444	singleton_364	singleton_250	0.9885583524027459	PASS
+sample_0123	C	B1	clinical	2019-04-06	2019	14	2019W14	9	not_real_data_test_only	C26-C12-C16-C	cluster_16	cluster_12	cluster_88	0.9971395881006864	PASS
+sample_0124	A	A2	food	2019-05-21	2019	21	2019W21	1	not_real_data_test_only	C35-C46-C59-A	cluster_59	cluster_46	cluster_84	0.9954233409610984	PASS
+sample_0125	B	B2	food	2019-05-21	2019	21	2019W21	155	not_real_data_test_only	C33-C22-C27-B	cluster_27	cluster_22	cluster_16	0.9965675057208238	PASS
+sample_0126	A	A3	clinical	2019-05-17	2019	20	2019W20	1	not_real_data_test_only	C35-C46-C59-A	cluster_59	cluster_46	cluster_84	0.9908466819221968	PASS
+sample_0127	C	B2	clinical	2019-05-17	2019	20	2019W20	1	not_real_data_test_only	C35-C46-C59-C	cluster_59	cluster_46	cluster_84	0.9959954233409613	PASS
+sample_0128	B	B3	clinical	2019-10-05	2019	40	2019W40	1	not_real_data_test_only	C35-S337-S417-B	singleton_417	singleton_337	singleton_224	0.9948512585812356	PASS
+sample_0129	C	B3	clinical	2019-09-05	2019	36	2019W36	na	not_real_data_test_only	C18-S242-S322-C	singleton_322	singleton_242	singleton_128	0.9977116704805492	PASS
+sample_0130	A	A4	clinical	2019-07-05	2019	27	2019W27	1	not_real_data_test_only	C35-C78-C96-A	cluster_96	cluster_78	cluster_102	0.9919908466819222	PASS
+sample_0131	B	B4	clinical	2019-04-05	2019	14	2019W14	6	not_real_data_test_only	C24-S240-S320-B	singleton_320	singleton_240	singleton_126	0.9971395881006864	PASS
+sample_0132	C	B4	clinical	2019-01-05	2019	1	2019W01	87	not_real_data_test_only	C14-C106-C79-C	cluster_79	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0133	A	A5	clinical	2019-12-04	2019	49	2019W49	1	not_real_data_test_only	C35-S97-S177-A	singleton_177	singleton_97	cluster_105	0.9879862700228832	PASS
+sample_0134	B	B5	clinical	2019-10-04	2019	40	2019W40	1	not_real_data_test_only	C35-S108-S188-B	singleton_188	singleton_108	cluster_105	0.9736842105263158	PASS
+sample_0135	A	A6	clinical	2019-08-04	2019	31	2019W31	1	not_real_data_test_only	C35-S172-S252-A	singleton_252	singleton_172	singleton_59	0.9948512585812356	PASS
+sample_0136	B	B6	clinical	2019-08-04	2019	31	2019W31	217	not_real_data_test_only	C28-S255-S335-B	singleton_335	singleton_255	singleton_142	0.9937070938215103	PASS
+sample_0137	C	B5	clinical	2019-08-04	2019	31	2019W31	1	not_real_data_test_only	C35-C93-C38-C	cluster_38	cluster_93	cluster_64	0.9931350114416476	PASS
+sample_0138	C	B6	clinical	2019-03-22	2019	12	2019W12	1	not_real_data_test_only	C35-S70-S148-C	singleton_148	singleton_70	cluster_105	0.9948512585812356	PASS
+sample_0139	A	A7	clinical	2019-03-21	2019	12	2019W12	382	not_real_data_test_only	C13-C103-C98-A	cluster_98	cluster_103	cluster_68	0.9965675057208238	PASS
+sample_0140	B	B7	clinical	2019-03-20	2019	12	2019W12	6	not_real_data_test_only	C24-S303-S383-B	singleton_383	singleton_303	singleton_190	0.9977116704805492	PASS
+sample_0141	C	B7	clinical	2019-04-03	2019	14	2019W14	3	not_real_data_test_only	C32-S209-S289-C	singleton_289	singleton_209	singleton_95	0.9942791762013728	PASS
+sample_0142	A	A8	clinical	2019-02-23	2019	8	2019W08	9	not_real_data_test_only	C26-S311-S391-A	singleton_391	singleton_311	singleton_198	0.9971395881006864	PASS
+sample_0143	B		clinical	2019-02-20	2019	8	2019W08	6	not_real_data_test_only	C24-C102-C101-B	cluster_101	cluster_102	cluster_67	0.9937070938215103	PASS
+sample_0144	C		clinical	2019-02-19	2019	8	2019W08	1	not_real_data_test_only	C35-C105-S57-C	singleton_57	cluster_105	cluster_84	0.9954233409610984	PASS
+sample_0145	A	A9	clinical	2019-02-18	2019	8	2019W08	206	not_real_data_test_only	S1-S348-S428-A	singleton_428	singleton_348	singleton_235	0.9965675057208238	PASS
+sample_0146	B	B1	clinical	2019-02-15	2019	7	2019W07	87	not_real_data_test_only	C14-C106-S6-B	singleton_6	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0147	C	B1	clinical	2019-10-02	2019	40	2019W40	2	not_real_data_test_only	C30-C74-C91-C	cluster_91	cluster_74	cluster_55	0.9959954233409613	PASS
+sample_0148	A		clinical	2019-06-02	2019	22	2019W22	87	not_real_data_test_only	C14-C59-C72-A	cluster_72	cluster_59	cluster_43	0.9942791762013728	PASS
+sample_0149	B	B2	clinical	2019-12-01	2019	48	2019W48	876	not_real_data_test_only	C35-S232-S312-B	singleton_312	singleton_232	singleton_118	0.9942791762013728	PASS
+sample_0150	C	B2	clinical	2019-10-01	2019	40	2019W40	3	not_real_data_test_only	C32-S11-S87-C	singleton_87	singleton_11	cluster_73	0.9954233409610984	PASS
+sample_0151	A	A1	clinical	2019-07-01	2019	27	2019W27	3	not_real_data_test_only	C32-C104-S55-A	singleton_55	cluster_104	cluster_69	0.9965675057208238	PASS
+sample_0152	B	B3	clinical	2018-12-30	2018	52	2018W52	4	not_real_data_test_only	C34-S298-S378-B	singleton_378	singleton_298	singleton_185	0.9954233409610984	PASS
+sample_0153	A	A2	clinical	2018-12-29	2018	52	2018W52	382	not_real_data_test_only	C13-C117-C113-A	cluster_113	cluster_117	cluster_94	0.9971395881006864	PASS
+sample_0154	C	B3	clinical	2018-12-29	2018	52	2018W52	382	not_real_data_test_only	C13-C117-C113-C	cluster_113	cluster_117	cluster_94	0.9971395881006864	PASS
+sample_0155	B	B4	clinical	2018-12-28	2018	52	2018W52	1	not_real_data_test_only	C35-C93-C38-B	cluster_38	cluster_93	cluster_64	0.9954233409610984	PASS
+sample_0156	C	B4	clinical	2018-12-23	2018	51	2018W51	213	not_real_data_test_only	S3-S350-S430-C	singleton_430	singleton_350	singleton_237	0.9948512585812356	PASS
+sample_0157	A	A3	clinical	2018-12-22	2018	51	2018W51	388	not_real_data_test_only	C16-C122-C117-A	cluster_117	cluster_122	cluster_106	0.9959954233409613	PASS
+sample_0158	B	B5	clinical	2018-12-22	2018	51	2018W51	388	not_real_data_test_only	C16-C122-C117-B	cluster_117	cluster_122	cluster_106	0.9959954233409613	PASS
+sample_0159	C	B5	clinical	2018-12-15	2018	50	2018W50	1	not_real_data_test_only	C35-C94-S40-C	singleton_40	cluster_94	cluster_65	0.9948512585812356	PASS
+sample_0160	A	A4	clinical	2018-11-14	2018	46	2018W46	1	not_real_data_test_only	C35-S15-S91-A	singleton_91	singleton_15	cluster_74	0.9954233409610984	PASS
+sample_0161	B	B6	clinical	2018-10-16	2018	42	2018W42	5	not_real_data_test_only	C18-S347-S427-B	singleton_427	singleton_347	singleton_234	0.998283752860412	PASS
+sample_0162	C	B6	clinical	2018-09-10	2018	37	2018W37	1	not_real_data_test_only	C35-S333-S413-C	singleton_413	singleton_333	singleton_220	0.9885583524027459	PASS
+sample_0163	A	A5	clinical	2018-05-10	2018	19	2018W19	219	not_real_data_test_only	C25-S282-S362-A	singleton_362	singleton_282	singleton_169	0.9914187643020596	PASS
+sample_0164	B	B7	clinical	2018-05-10	2018	19	2018W19	1	not_real_data_test_only	C35-S293-S373-B	singleton_373	singleton_293	singleton_180	0.9954233409610984	PASS
+sample_0165	A	A6	clinical	2018-01-10	2018	2	2018W02	6	not_real_data_test_only	C24-S317-S397-A	singleton_397	singleton_317	singleton_204	0.9948512585812356	PASS
+sample_0166	C	B7	clinical	2018-01-10	2018	2	2018W02	7	not_real_data_test_only	C29-C77-S27-C	singleton_27	cluster_77	cluster_57	0.9965675057208238	PASS
+sample_0167	B		clinical	2018-09-27	2018	39	2018W39	1	not_real_data_test_only	C35-S286-S366-B	singleton_366	singleton_286	singleton_173	0.9954233409610984	PASS
+sample_0168	C		clinical	2018-09-16	2018	37	2018W37	1	not_real_data_test_only	C35-C93-C1-C	cluster_1	cluster_93	cluster_64	0.9942791762013728	PASS
+sample_0169	A	A7	clinical	2018-07-09	2018	28	2018W28	2	not_real_data_test_only	C30-C52-C65-A	cluster_65	cluster_52	cluster_37	0.9954233409610984	PASS
+sample_0170	B	B1	clinical	2018-08-18	2018	33	2018W33	16	not_real_data_test_only	C19-C26.1-C31.1-B	cluster_31.1	cluster_26.1	cluster_19	0.9834096109839816	PASS
+sample_0171	C	B1	clinical	2018-08-17	2018	33	2018W33	16	not_real_data_test_only	C19-C26.1-C31.1-C	cluster_31.1	cluster_26.1	cluster_19	0.9959954233409613	PASS
+sample_0172	A	A8	clinical	2018-07-28	2018	30	2018W30	378	not_real_data_test_only	C12-C44-C56-A	cluster_56	cluster_44	cluster_31	0.9959954233409613	PASS
+sample_0173	B	B2	clinical	2018-07-27	2018	30	2018W30	9	not_real_data_test_only	C26-S365-S50-B	singleton_50	singleton_365	cluster_88	0.9965675057208238	PASS
+sample_0174	C	B2	clinical	2018-07-25	2018	30	2018W30	378	not_real_data_test_only	C12-C44-C56-C	cluster_56	cluster_44	cluster_31	0.9959954233409613	PASS
+sample_0175	A	A9	clinical	2018-07-23	2018	30	2018W30	1	not_real_data_test_only	C35-C92-S45-A	singleton_45	cluster_92	cluster_105	0.9937070938215103	PASS
+sample_0176	B	B3	clinical	2018-07-20	2018	29	2018W29	217	not_real_data_test_only	C28-S66-S144-B	singleton_144	singleton_66	cluster_89	0.9965675057208238	PASS
+sample_0177	C	B3	clinical	2018-07-13	2018	28	2018W28	1	not_real_data_test_only	C35-C82-C58-C	cluster_58	cluster_82	cluster_58	0.9959954233409613	PASS
+sample_0178	A		clinical	2018-03-07	2018	10	2018W10	378	not_real_data_test_only	C12-S99-S179-A	singleton_179	singleton_99	cluster_95	0.9525171624713958	PASS
+sample_0179	B	B4	clinical	2018-01-07	2018	1	2018W01	87	not_real_data_test_only	C14-C106-C3-B	cluster_3	cluster_106	cluster_100	0.9942791762013728	PASS
+sample_0180	A	A1	clinical	2018-06-19	2018	25	2018W25	7	not_real_data_test_only	C29-C77-C95-A	cluster_95	cluster_77	cluster_57	0.9937070938215103	PASS
+sample_0181	C	B4	clinical	2018-06-19	2018	25	2018W25	6	not_real_data_test_only	C24-S257-S337-C	singleton_337	singleton_257	singleton_144	0.9742562929061784	PASS
+sample_0182	B	B5	clinical	2018-06-18	2018	25	2018W25	1	not_real_data_test_only	C35-C93-C38-B	cluster_38	cluster_93	cluster_64	0.9839816933638444	PASS
+sample_0183	C	B5	clinical	2018-06-15	2018	24	2018W24	9	not_real_data_test_only	-C				0.9433638443935928	excluded
+sample_0184	A	A2	clinical	2018-10-06	2018	40	2018W40	16	not_real_data_test_only	-A				0.9496567505720824	excluded
+sample_0185	B	B6	clinical	2018-07-06	2018	27	2018W27	1	not_real_data_test_only	C35-S35-S111-B	singleton_111	singleton_35	cluster_79	0.9885583524027459	PASS
+sample_0186	C	B6	clinical	2018-04-06	2018	14	2018W14	1	not_real_data_test_only	C35-C92-S46-C	singleton_46	cluster_92	cluster_105	0.9908466819221968	PASS
+sample_0187	A	A3	clinical	2018-05-15	2018	20	2018W20	1	not_real_data_test_only	C35-C93-S71-A	singleton_71	cluster_93	cluster_64	0.96395881006865	PASS
+sample_0188	B	B7	clinical	2018-05-14	2018	20	2018W20	1	not_real_data_test_only	C35-C93-S70-B	singleton_70	cluster_93	cluster_64	0.986842105263158	PASS
+sample_0189	C	B7	clinical	2018-10-05	2018	40	2018W40	1	not_real_data_test_only	C35-C93-C38-C	cluster_38	cluster_93	cluster_64	0.9919908466819222	PASS
+sample_0190	A	A4	clinical	2018-08-05	2018	31	2018W31	1	not_real_data_test_only	C35-C93-C38-A	cluster_38	cluster_93	cluster_64	0.9954233409610984	PASS
+sample_0191	B		clinical	2018-04-23	2018	17	2018W17	16	not_real_data_test_only	C19-C26.1-C31.1-B	cluster_31.1	cluster_26.1	cluster_19	0.9959954233409613	PASS
+sample_0192	C		clinical	2018-10-04	2018	40	2018W40	2	not_real_data_test_only	C30-S128-S208-C	singleton_208	singleton_128	singleton_15	0.9925629290617848	PASS
+sample_0193	A	A5	clinical	2018-09-04	2018	36	2018W36	2	not_real_data_test_only	C30-S320-S400-A	singleton_400	singleton_320	singleton_207	0.9845537757437072	PASS
+sample_0194	B	B1	clinical	2018-08-04	2018	31	2018W31	87	not_real_data_test_only	C14-C106-C79-B	cluster_79	cluster_106	cluster_100	0.9965675057208238	PASS
+sample_0195	C	B1	clinical	2018-02-04	2018	5	2018W05	1	not_real_data_test_only	C35-C93-C38-C	cluster_38	cluster_93	cluster_64	0.9954233409610984	PASS
+sample_0196	A	A6	clinical	2018-03-29	2018	13	2018W13	504	not_real_data_test_only	S4-S351-S431-A	singleton_431	singleton_351	singleton_238	0.9948512585812356	PASS
+sample_0197	B	B2	clinical	2018-11-03	2018	44	2018W44	388	not_real_data_test_only	C16-S89-S169-B	singleton_169	singleton_89	cluster_96	0.9965675057208238	PASS
+sample_0198	C	B2	clinical	2018-02-25	2018	8	2018W08	2	not_real_data_test_only	C30-C97-C104-C	cluster_104	cluster_97	cluster_91	0.9937070938215103	PASS
+sample_0199	A	A7	clinical	2018-02-19	2018	8	2018W08	1	not_real_data_test_only	C35-S316-S396-A	singleton_396	singleton_316	singleton_203	0.9954233409610984	PASS
+sample_0200	B	B3	clinical	2018-11-02	2018	44	2018W44	1	not_real_data_test_only	C35-S43-S119-B	singleton_119	singleton_43	cluster_105	0.9959954233409613	PASS
+sample_0201	C	B3	clinical	2018-01-27	2018	4	2018W04	1	not_real_data_test_only	C35-S308-S388-C	singleton_388	singleton_308	singleton_195	0.9959954233409613	PASS
+sample_0202	A	A8	clinical	2018-01-23	2018	4	2018W04	4	not_real_data_test_only	C34-C84-C100-A	cluster_100	cluster_84	cluster_60	0.9937070938215103	PASS
+sample_0203	B	B4	clinical	2018-01-17	2018	3	2018W03	9	not_real_data_test_only	C26-C12-C16-B	cluster_16	cluster_12	cluster_88	0.9959954233409613	PASS
+sample_0204	C	B4	clinical	2018-01-17	2018	3	2018W03	9	not_real_data_test_only	C26-C12-C16-C	cluster_16	cluster_12	cluster_88	0.9965675057208238	PASS
+sample_0205	A	A9	clinical	2018-01-14	2018	2	2018W02	1	not_real_data_test_only	C35-C93-C1-A	cluster_1	cluster_93	cluster_64	0.9954233409610984	PASS
+sample_0206	B	B5	clinical	2018-03-01	2018	9	2018W09	1	not_real_data_test_only	C35-C92-C37-B	cluster_37	cluster_92	cluster_105	0.9948512585812356	PASS
+sample_0207	C	B5	clinical	2017-12-24	2017	51	2017W51	1	not_real_data_test_only	C35-S175-S255-C	singleton_255	singleton_175	singleton_61	0.9937070938215103	PASS
+sample_0208	A		clinical	2017-11-28	2017	48	2017W48	1	not_real_data_test_only	C35-S165-S245-A	singleton_245	singleton_165	singleton_52	0.9959954233409613	PASS
+sample_0209	B	B6	clinical	2017-11-24	2017	47	2017W47	1	not_real_data_test_only	C35-C32-C41-B	cluster_41	cluster_32	cluster_21	0.9931350114416476	PASS
+sample_0210	C	B6	clinical	2017-10-18	2017	42	2017W42	2	not_real_data_test_only	C30-C52-C65-C	cluster_65	cluster_52	cluster_37	0.9948512585812356	PASS
+sample_0211	A	A1	clinical	2017-04-10	2017	15	2017W15	87	not_real_data_test_only	C14-C106-S5-A	singleton_5	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0212	B	B7	clinical	2017-09-29	2017	39	2017W39	1	not_real_data_test_only	C35-C93-C1-B	cluster_1	cluster_93	cluster_64	0.9937070938215103	PASS
+sample_0213	C	B7	clinical	2017-09-22	2017	38	2017W38	1	not_real_data_test_only	C35-C32-C41-C	cluster_41	cluster_32	cluster_21	0.9948512585812356	PASS
+sample_0214	A	A2	clinical	2017-09-16	2017	37	2017W37	1	not_real_data_test_only	C35-S203-S283-A	singleton_283	singleton_203	singleton_89	0.9937070938215103	PASS
+sample_0215	B		clinical	2017-03-09	2017	10	2017W10	26	not_real_data_test_only	C4-C34-C43-B	cluster_43	cluster_34	cluster_23	0.9977116704805492	PASS
+sample_0216	C		clinical	2017-03-09	2017	10	2017W10	1	not_real_data_test_only	C35-C92-C37-C	cluster_37	cluster_92	cluster_105	0.9948512585812356	PASS
+sample_0217	A	A3	clinical	2017-08-26	2017	34	2017W34	403	not_real_data_test_only	C7-C47-C60-A	cluster_60	cluster_47	cluster_32	0.9959954233409613	PASS
+sample_0218	B	B1	clinical	2017-04-08	2017	14	2017W14	1	not_real_data_test_only	C35-S51-S129-B	singleton_129	singleton_51	cluster_83	0.9959954233409613	PASS
+sample_0219	C	B1	clinical	2017-07-30	2017	30	2017W30	1	not_real_data_test_only	C35-C92-C37-C	cluster_37	cluster_92	cluster_105	0.9954233409610984	PASS
+sample_0220	A	A4	clinical	2017-07-29	2017	30	2017W30	26	not_real_data_test_only	C4-C34-C43-A	cluster_43	cluster_34	cluster_23	0.9977116704805492	PASS
+sample_0221	B	B2	clinical	2017-07-23	2017	29	2017W29	382	not_real_data_test_only	C13-S260-S340-B	singleton_340	singleton_260	singleton_147	0.9971395881006864	PASS
+sample_0222	C	B2	clinical	2017-12-07	2017	49	2017W49	26	not_real_data_test_only	C4-C34-C43-C	cluster_43	cluster_34	cluster_23	0.9977116704805492	PASS
+sample_0223	A	A5	clinical	2017-06-07	2017	23	2017W23	217	not_real_data_test_only	C28-S254-S334-A	singleton_334	singleton_254	singleton_141	0.9965675057208238	PASS
+sample_0224	B	B3	clinical	2017-06-30	2017	26	2017W26	378	not_real_data_test_only	C12-C37-C46-B	cluster_46	cluster_37	cluster_26	0.9954233409610984	PASS
+sample_0225	C	B3	clinical	2017-06-25	2017	25	2017W25	378	not_real_data_test_only	C12-C99-C105-C	cluster_105	cluster_99	cluster_95	0.9965675057208238	PASS
+sample_0226	A	A6	clinical	2017-06-24	2017	25	2017W25	6	not_real_data_test_only	C24-S212-S292-A	singleton_292	singleton_212	singleton_98	0.9977116704805492	PASS
+sample_0227	B	B4	clinical	2017-06-20	2017	25	2017W25	1	not_real_data_test_only	C35-S104-S184-B	singleton_184	singleton_104	cluster_44	0.9954233409610984	PASS
+sample_0228	C	B4	clinical	2017-06-13	2017	24	2017W24	87	not_real_data_test_only	C14-C106-C79-C	cluster_79	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0229	A	A7	clinical	2017-12-06	2017	49	2017W49	6	not_real_data_test_only	C24-S140-S220-A	singleton_220	singleton_140	singleton_27	0.9977116704805492	PASS
+sample_0230	B	B5	clinical	2017-11-06	2017	45	2017W45	378	not_real_data_test_only	C12-C37-C46-B	cluster_46	cluster_37	cluster_26	0.9954233409610984	PASS
+sample_0231	C	B5	clinical	2017-10-06	2017	40	2017W40	217	not_real_data_test_only	C28-S210-S290-C	singleton_290	singleton_210	singleton_96	0.9931350114416476	PASS
+sample_0232	A	A8	clinical	2017-05-18	2017	20	2017W20	8	not_real_data_test_only	C21-S152-S232-A	singleton_232	singleton_152	singleton_39	0.9954233409610984	PASS
+sample_0233	B	B6	clinical	2017-05-17	2017	20	2017W20	6	not_real_data_test_only	C24-C102-C74-B	cluster_74	cluster_102	cluster_67	0.9931350114416476	PASS
+sample_0234	C	B6	clinical	2017-05-16	2017	20	2017W20	6	not_real_data_test_only	C24-C102-C74-C	cluster_74	cluster_102	cluster_67	0.9971395881006864	PASS
+sample_0235	A	A9	clinical	2017-08-05	2017	31	2017W31	121	not_real_data_test_only	C31-C80-S21-A	singleton_21	cluster_80	cluster_87	0.9977116704805492	PASS
+sample_0236	B	B7	clinical	2017-06-05	2017	23	2017W23	16	not_real_data_test_only	C19-C26.1-C31.1-B	cluster_31.1	cluster_26.1	cluster_19	0.9959954233409613	PASS
+sample_0237	C	B7	clinical	2017-03-30	2017	13	2017W13	1	not_real_data_test_only	C35-S78-S156-C	singleton_156	singleton_78	cluster_105	0.9959954233409613	PASS
+sample_0238	A		clinical	2017-03-24	2017	12	2017W12	6	not_real_data_test_only	C24-C102-C101-A	cluster_101	cluster_102	cluster_67	0.9971395881006864	PASS
+sample_0239	B		clinical	2017-03-23	2017	12	2017W12	87	not_real_data_test_only	C14-C61-C75-B	cluster_75	cluster_61	cluster_100	0.9959954233409613	PASS
+sample_0240	C		clinical	2017-03-13	2017	11	2017W11	26	not_real_data_test_only	C4-C34-C43-C	cluster_43	cluster_34	cluster_23	0.9965675057208238	PASS
+sample_0241	A	A1	clinical	2017-02-19	2017	7	2017W07	1	not_real_data_test_only	C35-C93-C1-A	cluster_1	cluster_93	cluster_64	0.9942791762013728	PASS
+sample_0242	B	B1	clinical	2017-01-25	2017	4	2017W04	121	not_real_data_test_only	C31-S227-S307-B	singleton_307	singleton_227	singleton_113	0.998283752860412	PASS
+sample_0243	C	B1	clinical	2016-11-22	2016	47	2016W47	1	not_real_data_test_only	C35-S341-S421-C	singleton_421	singleton_341	singleton_228	0.9959954233409613	PASS
+sample_0244	A	A2	clinical	2016-10-25	2016	43	2016W43	1	not_real_data_test_only	C35-C92-C37-A	cluster_37	cluster_92	cluster_105	0.9954233409610984	PASS
+sample_0245	B	B2	clinical	2016-06-10	2016	23	2016W23	388	not_real_data_test_only	C16-S167-S247-B	singleton_247	singleton_167	singleton_54	0.9959954233409613	PASS
+sample_0246	C	B2	clinical	2016-06-09	2016	23	2016W23	1	not_real_data_test_only	C35-C92-C37-C	cluster_37	cluster_92	cluster_105	0.9954233409610984	PASS
+sample_0247	A	A3	clinical	2016-08-27	2016	34	2016W34	219	not_real_data_test_only	C25-S239-S319-A	singleton_319	singleton_239	singleton_125	0.9971395881006864	PASS
+sample_0248	B	B3	clinical	2016-11-08	2016	45	2016W45	378	not_real_data_test_only	C12-C89-S26-B	singleton_26	cluster_89	cluster_95	0.9959954233409613	PASS
+sample_0249	A	A4	clinical	2016-07-14	2016	28	2016W28	87	not_real_data_test_only	C14-S207-S287-A	singleton_287	singleton_207	singleton_93	0.9954233409610984	PASS
+sample_0250	C	B3	clinical	2016-07-14	2016	28	2016W28	87	not_real_data_test_only	C14-C106-C79-C	cluster_79	cluster_106	cluster_100	0.9931350114416476	PASS
+sample_0251	B	B4	clinical	2016-06-25	2016	25	2016W25	6	not_real_data_test_only	C24-C109-S72-B	singleton_72	cluster_109	cluster_107	0.9959954233409613	PASS
+sample_0252	C	B4	clinical	2016-06-15	2016	24	2016W24	1	not_real_data_test_only	C35-C45-C57-C	cluster_57	cluster_45	cluster_84	0.9959954233409613	PASS
+sample_0253	A	A5	clinical	2016-09-06	2016	36	2016W36	1	not_real_data_test_only	C35-C93-C1-A	cluster_1	cluster_93	cluster_64	0.9954233409610984	PASS
+sample_0254	B	B5	clinical	2016-08-06	2016	31	2016W31	1	not_real_data_test_only	C35-S198-S278-B	singleton_278	singleton_198	singleton_84	0.9954233409610984	PASS
+sample_0255	A	A6	clinical	2016-05-24	2016	21	2016W21	2	not_real_data_test_only	C30-S124-S204-A	singleton_204	singleton_124	singleton_11	0.9959954233409613	PASS
+sample_0256	C	B5	clinical	2016-05-24	2016	21	2016W21	2	not_real_data_test_only	C30-C74-C91-C	cluster_91	cluster_74	cluster_55	0.9959954233409613	PASS
+sample_0257	B	B6	clinical	2016-05-19	2016	20	2016W20	121	not_real_data_test_only	C31-C80-C51-B	cluster_51	cluster_80	cluster_87	0.9977116704805492	PASS
+sample_0258	C	B6	clinical	2016-05-19	2016	20	2016W20	155	not_real_data_test_only	C33-S82-S162-C	singleton_162	singleton_82	cluster_99	0.998283752860412	PASS
+sample_0259	A	A7	clinical	2016-08-04	2016	31	2016W31	1	not_real_data_test_only	C35-S13-S89-A	singleton_89	singleton_13	cluster_102	0.9954233409610984	PASS
+sample_0260	B	B7	clinical	2016-02-04	2016	5	2016W05	217	not_real_data_test_only	C28-S230-S310-B	singleton_310	singleton_230	singleton_116	0.9965675057208238	PASS
+sample_0261	C	B7	clinical	2016-01-04	2016	1	2016W01	219	not_real_data_test_only	C25-S86-S166-C	singleton_166	singleton_86	cluster_24	0.9971395881006864	PASS
+sample_0262	A	A8	clinical	2016-02-22	2016	8	2016W08	87	not_real_data_test_only	C14-C61-C75-A	cluster_75	cluster_61	cluster_100	0.9959954233409613	PASS
+sample_0263	B		clinical	2016-09-02	2016	35	2016W35	14	not_real_data_test_only	C1-C11-C15-B	cluster_15	cluster_11	cluster_7	0.998283752860412	PASS
+sample_0264	C		clinical	2016-07-02	2016	26	2016W26	14	not_real_data_test_only	C1-C11-C15-C	cluster_15	cluster_11	cluster_7	0.998283752860412	PASS
+sample_0265	A	A9	clinical	2016-01-29	2016	4	2016W04	1	not_real_data_test_only	C35-C91-S36-A	singleton_36	cluster_91	cluster_105	0.9954233409610984	PASS
+sample_0266	B	B1	clinical	2016-01-20	2016	3	2016W03	121	not_real_data_test_only	C31-S38-S114-B	singleton_114	singleton_38	cluster_87	0.9977116704805492	PASS
+sample_0267	C	B1	clinical	2015-12-31	2015	53	2015W53	1	not_real_data_test_only	C35-C62-C76-C	cluster_76	cluster_62	cluster_105	0.9959954233409613	PASS
+sample_0268	A		clinical	2015-12-30	2015	53	2015W53	217	not_real_data_test_only	C28-S88-S168-A	singleton_168	singleton_88	cluster_90	0.9965675057208238	PASS
+sample_0269	B	B2	clinical	2015-12-28	2015	53	2015W53	1	not_real_data_test_only	C35-C93-C1-B	cluster_1	cluster_93	cluster_64	0.9937070938215103	PASS
+sample_0270	C	B2	clinical	2015-03-12	2015	11	2015W11	1	not_real_data_test_only	C35-S153-S233-C	singleton_233	singleton_153	singleton_40	0.9954233409610984	PASS
+sample_0271	A	A1	clinical	2015-11-29	2015	48	2015W48	6	not_real_data_test_only	C24-S243-S323-A	singleton_323	singleton_243	singleton_129	0.9965675057208238	PASS
+sample_0272	B	B3	clinical	2015-11-25	2015	48	2015W48	388	not_real_data_test_only	C16-C23-C28-B	cluster_28	cluster_23	cluster_17	0.9965675057208238	PASS
+sample_0273	C	B3	clinical	2015-11-25	2015	48	2015W48	388	not_real_data_test_only	C16-C23-C28-C	cluster_28	cluster_23	cluster_17	0.9965675057208238	PASS
+sample_0274	A	A2	clinical	2015-12-11	2015	50	2015W50	382	not_real_data_test_only	C13-C121-C116-A	cluster_116	cluster_121	cluster_94	0.9971395881006864	PASS
+sample_0275	B	B4	clinical	2015-08-11	2015	33	2015W33	382	not_real_data_test_only	C13-C121-C116-B	cluster_116	cluster_121	cluster_94	0.9971395881006864	PASS
+sample_0276	A	A3	food	2015-10-30	2015	44	2015W44	121	not_real_data_test_only	C31-C21-S34-A	singleton_34	cluster_21	cluster_15	0.9954233409610984	PASS
+sample_0277	B	B5	food	2015-10-30	2015	44	2015W44	121	not_real_data_test_only	C31-S2-S76-B	singleton_76	singleton_2	cluster_5	0.9937070938215103	PASS
+sample_0278	C	B4	food	2015-10-30	2015	44	2015W44	4	not_real_data_test_only	C34-S26-S102-C	singleton_102	singleton_26	cluster_78	0.9959954233409613	PASS
+sample_0279	C	B5	clinical	2015-09-23	2015	39	2015W39	1	not_real_data_test_only	C35-C30-S66-C	singleton_66	cluster_30	cluster_102	0.9937070938215103	PASS
+sample_0280	A	A4	clinical	2015-07-09	2015	28	2015W28	388	not_real_data_test_only	C16-S297-S377-A	singleton_377	singleton_297	singleton_184	0.9931350114416476	PASS
+sample_0281	B	B6	clinical	2015-08-15	2015	33	2015W33	na	not_real_data_test_only	C30-C13-C99-B	cluster_99	cluster_13	cluster_8	0.9954233409610984	PASS
+sample_0282	C	B6	clinical	2015-04-08	2015	15	2015W15	na	not_real_data_test_only	C35-S16-S92-C	singleton_92	singleton_16	cluster_74	0.9925629290617848	PASS
+sample_0283	A	A5	clinical	2015-01-08	2015	2	2015W02	na	not_real_data_test_only	C30-C13-C99-A	cluster_99	cluster_13	cluster_8	0.9954233409610984	PASS
+sample_0284	B	B7	clinical	2015-07-18	2015	29	2015W29	8	not_real_data_test_only	C21-C39-C48-B	cluster_48	cluster_39	cluster_103	0.9919908466819222	PASS
+sample_0285	C	B7	clinical	2015-07-17	2015	29	2015W29	219	not_real_data_test_only	C25-C125-C120-C	cluster_120	cluster_125	cluster_112	0.9965675057208238	PASS
+sample_0286	A	A6	clinical	2015-09-07	2015	37	2015W37	87	not_real_data_test_only	C14-C106-C79-A	cluster_79	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0287	B		clinical	2015-05-07	2015	19	2015W19	87	not_real_data_test_only	C14-S137-S217-B	singleton_217	singleton_137	singleton_24	0.9959954233409613	PASS
+sample_0288	C		clinical	2015-06-30	2015	27	2015W27	6	not_real_data_test_only	C24-S292-S372-C	singleton_372	singleton_292	singleton_179	0.9965675057208238	PASS
+sample_0289	A	A7	clinical	2015-06-18	2015	25	2015W25	na	not_real_data_test_only	C35-S307-S387-A	singleton_387	singleton_307	singleton_194	0.9959954233409613	PASS
+sample_0290	B	B1	clinical	2015-06-15	2015	25	2015W25	6	not_real_data_test_only	C24-S49-S127-B	singleton_127	singleton_49	cluster_107	0.9971395881006864	PASS
+sample_0291	C	B1	clinical	2015-06-14	2015	24	2015W24	1	not_real_data_test_only	C35-S237-S317-C	singleton_317	singleton_237	singleton_123	0.9925629290617848	PASS
+sample_0292	A	A8	clinical	2015-05-30	2015	22	2015W22	87	not_real_data_test_only	C14-C106-C79-A	cluster_79	cluster_106	cluster_100	0.9937070938215103	PASS
+sample_0293	B	B2	clinical	2015-05-26	2015	22	2015W22	1	not_real_data_test_only	C35-C29-C35-B	cluster_35	cluster_29	cluster_84	0.9954233409610984	PASS
+sample_0294	C	B2	clinical	2015-05-24	2015	21	2015W21	1	not_real_data_test_only	C35-S174-S254-C	singleton_254	singleton_174	singleton_60	0.9942791762013728	PASS
+sample_0295	A	A9	clinical	2015-05-21	2015	21	2015W21	6	not_real_data_test_only	C24-C17-C21-A	cluster_21	cluster_17	cluster_11	0.9954233409610984	PASS
+sample_0296	B	B3	clinical	2015-05-18	2015	21	2015W21	1	not_real_data_test_only	C35-S44-S120-B	singleton_120	singleton_44	cluster_105	0.9948512585812356	PASS
+sample_0297	C	B3	clinical	2015-12-05	2015	49	2015W49	217	not_real_data_test_only	C28-S279-S359-C	singleton_359	singleton_279	singleton_166	0.9937070938215103	PASS
+sample_0298	A		clinical	2015-05-05	2015	19	2015W19	1	not_real_data_test_only	C35-C53-C66-A	cluster_66	cluster_53	cluster_38	0.9948512585812356	PASS
+sample_0299	B	B4	clinical	2015-03-05	2015	10	2015W10	29	not_real_data_test_only	C11-C112-S79-B	singleton_79	cluster_112	cluster_92	0.9965675057208238	PASS
+sample_0300	C	B4	food	2015-04-29	2015	18	2015W18	na	not_real_data_test_only	C26-S141-S221-C	singleton_221	singleton_141	singleton_28	0.9908466819221968	PASS
+sample_0301	A	A1	clinical	2015-04-27	2015	18	2015W18	na	not_real_data_test_only	C24-C111-C109-A	cluster_109	cluster_111	cluster_70	0.9937070938215103	PASS
+sample_0302	B	B5	clinical	2015-04-27	2015	18	2015W18	1	not_real_data_test_only	C35-S154-S234-B	singleton_234	singleton_154	singleton_41	0.9954233409610984	PASS
+sample_0303	C	B5	clinical	2015-04-24	2015	17	2015W17	8	not_real_data_test_only	C21-C96-S52-C	singleton_52	cluster_96	cluster_103	0.9971395881006864	PASS
+sample_0304	A	A2	clinical	2015-11-04	2015	45	2015W45	1	not_real_data_test_only	C35-C53-C66-A	cluster_66	cluster_53	cluster_38	0.9954233409610984	PASS
+sample_0305	B	B6	clinical	2015-10-04	2015	40	2015W40	6	not_real_data_test_only	C24-S228-S308-B	singleton_308	singleton_228	singleton_114	0.9977116704805492	PASS
+sample_0306	C	B6	clinical	2015-03-16	2015	12	2015W12	388	not_real_data_test_only	C16-S42-S118-C	singleton_118	singleton_42	cluster_81	0.9954233409610984	PASS
+sample_0307	A	A3	clinical	2015-03-15	2015	11	2015W11	na	not_real_data_test_only	C1-S64-S142-A	singleton_142	singleton_64	cluster_7	0.9954233409610984	PASS
+sample_0308	B	B7	clinical	2015-12-03	2015	49	2015W49	1	not_real_data_test_only	C35-S1-S75-B	singleton_75	singleton_1	cluster_84	0.9942791762013728	PASS
+sample_0309	C	B7	clinical	2015-02-25	2015	9	2015W09	6	not_real_data_test_only	C24-C17-C21-C	cluster_21	cluster_17	cluster_11	0.9948512585812356	PASS
+sample_0310	A	A4	food	2015-02-18	2015	8	2015W08	6	not_real_data_test_only	C24-C113-C110-A	cluster_110	cluster_113	cluster_71	0.9937070938215103	PASS
+sample_0311	B		clinical	2015-09-02	2015	36	2015W36	14	not_real_data_test_only	C1-C11-C15-B	cluster_15	cluster_11	cluster_7	0.998283752860412	PASS
+sample_0312	C		clinical	2015-04-02	2015	14	2015W14	1	not_real_data_test_only	C35-C81-C40-C	cluster_40	cluster_81	cluster_84	0.9942791762013728	PASS
+sample_0313	A	A5	clinical	2015-01-28	2015	5	2015W05	na	not_real_data_test_only	C25-S250-S330-A	singleton_330	singleton_250	singleton_136	0.9971395881006864	PASS
+sample_0314	B	B1	food	2015-01-24	2015	4	2015W04	6	not_real_data_test_only	C24-C113-C110-B	cluster_110	cluster_113	cluster_71	0.9822654462242564	PASS
+sample_0315	A	A6	clinical	2015-01-20	2015	4	2015W04	3	not_real_data_test_only	C32-C83-S8-A	singleton_8	cluster_83	cluster_59	0.9965675057208238	PASS
+sample_0316	C	B1	clinical	2015-01-20	2015	4	2015W04	200	not_real_data_test_only	C5-C36-C45-C	cluster_45	cluster_36	cluster_25	0.9971395881006864	PASS
+sample_0317	B	B2	food	2015-01-16	2015	3	2015W03	1	not_real_data_test_only	-B				0.9313501144164759	excluded
+sample_0318	C	B2	food	2015-01-16	2015	3	2015W03	1	not_real_data_test_only	C35-S366-S446-C	singleton_446	singleton_366	singleton_139	0.9942791762013728	PASS
+sample_0319	A	A7	clinical	2015-08-01	2015	31	2015W31	1	not_real_data_test_only	C35-C62-C76-A	cluster_76	cluster_62	cluster_105	0.9959954233409613	PASS
+sample_0320	B	B3	food	2014-12-15	2014	51	2014W51	121	not_real_data_test_only	C31-S202-S282-B	singleton_282	singleton_202	singleton_88	0.9948512585812356	PASS
+sample_0321	A	A8	food	2014-04-12	2014	15	2014W15	7	not_real_data_test_only	C2-C16-C20-A	cluster_20	cluster_16	cluster_10	0.9948512585812356	PASS
+sample_0322	C	B3	clinical	2014-04-12	2014	15	2014W15	1	not_real_data_test_only	C35-C42-C54-C	cluster_54	cluster_42	cluster_29	0.9965675057208238	PASS
+sample_0323	B	B4	clinical	2014-11-27	2014	48	2014W48	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9959954233409613	PASS
+sample_0324	C	B4	clinical	2014-11-17	2014	47	2014W47	1	not_real_data_test_only	C35-C27-C32-C	cluster_32	cluster_27	cluster_102	0.9959954233409613	PASS
+sample_0325	A	A9	clinical	2014-05-11	2014	19	2014W19	1	not_real_data_test_only	C35-S125-S205-A	singleton_205	singleton_125	singleton_12	0.9959954233409613	PASS
+sample_0326	B	B5	clinical	2014-03-11	2014	11	2014W11	155	not_real_data_test_only	C33-C40-C49-B	cluster_49	cluster_40	cluster_93	0.998283752860412	PASS
+sample_0327	A		food	2014-10-21	2014	43	2014W43	54	not_real_data_test_only	C23-S331-S411-A	singleton_411	singleton_331	singleton_218	0.9965675057208238	PASS
+sample_0328	A	A1	food	2014-10-21	2014	43	2014W43	1	not_real_data_test_only	C35-S188-S268-A	singleton_268	singleton_188	singleton_74	0.9805491990846682	PASS
+sample_0329	B	B6	food	2014-10-21	2014	43	2014W43	na	not_real_data_test_only	-B				0.8964530892448512	excluded
+sample_0330	C	B5	food	2014-10-21	2014	43	2014W43	121	not_real_data_test_only	C31-S189-S269-C	singleton_269	singleton_189	singleton_75	0.97883295194508	PASS
+sample_0331	C	B6	food	2014-10-21	2014	43	2014W43	1	not_real_data_test_only	C35-S133-S213-C	singleton_213	singleton_133	singleton_20	0.9805491990846682	PASS
+sample_0332	B	B7	food	2014-10-17	2014	42	2014W42	3	not_real_data_test_only	C32-S135-S215-B	singleton_215	singleton_135	singleton_22	0.9708237986270024	PASS
+sample_0333	C	B7	clinical	2014-10-15	2014	42	2014W42	217	not_real_data_test_only	C28-C126-C121-C	cluster_121	cluster_126	cluster_113	0.9965675057208238	PASS
+sample_0334	A	A2	clinical	2014-05-10	2014	19	2014W19	1	not_real_data_test_only	C35-C3-C6-A	cluster_6	cluster_3	cluster_2	0.9954233409610984	PASS
+sample_0335	B		clinical	2014-09-22	2014	39	2014W39	1	not_real_data_test_only	C35-C62-S74-B	singleton_74	cluster_62	cluster_105	0.9954233409610984	PASS
+sample_0336	C		clinical	2014-09-18	2014	38	2014W38	1	not_real_data_test_only	C35-C93-S38-C	singleton_38	cluster_93	cluster_64	0.9954233409610984	PASS
+sample_0337	A	A3	food	2014-08-26	2014	35	2014W35	121	not_real_data_test_only	C31-S117-S197-A	singleton_197	singleton_117	cluster_108	0.9959954233409613	PASS
+sample_0338	B	B1	clinical	2014-01-08	2014	2	2014W02	na	not_real_data_test_only	C35-C82-C81-B	cluster_81	cluster_82	cluster_58	0.9954233409610984	PASS
+sample_0339	C	B1	clinical	2014-07-17	2014	29	2014W29	2	not_real_data_test_only	C30-C73-C90-C	cluster_90	cluster_73	cluster_54	0.9965675057208238	PASS
+sample_0340	A	A4	food	2014-06-25	2014	26	2014W26	7	not_real_data_test_only	C29-S338-S418-A	singleton_418	singleton_338	singleton_225	0.9679633867276888	PASS
+sample_0341	B	B2	clinical	2014-06-23	2014	26	2014W26	4	not_real_data_test_only	C34-C115-C112-B	cluster_112	cluster_115	cluster_78	0.9965675057208238	PASS
+sample_0342	C	B2	clinical	2014-03-06	2014	10	2014W10	4	not_real_data_test_only	C34-C51-C64-C	cluster_64	cluster_51	cluster_36	0.9959954233409613	PASS
+sample_0343	A	A5	food	2014-05-19	2014	21	2014W21	9	not_real_data_test_only	C26-S187-S267-A	singleton_267	singleton_187	singleton_73	0.9851258581235698	PASS
+sample_0344	B	B3	food	2014-11-05	2014	45	2014W45	8	not_real_data_test_only	C21-C120-S159-B	singleton_159	cluster_120	cluster_98	0.9919908466819222	PASS
+sample_0345	C	B3	food	2014-08-05	2014	32	2014W32	8	not_real_data_test_only	C21-C120-S160-C	singleton_160	cluster_120	cluster_98	0.9822654462242564	PASS
+sample_0346	A	A6	food	2014-04-29	2014	18	2014W18	9	not_real_data_test_only	C26-S36-S112-A	singleton_112	singleton_36	cluster_88	0.986842105263158	PASS
+sample_0347	B	B4	clinical	2014-04-25	2014	17	2014W17	666	not_real_data_test_only	C17-S120-S200-B	singleton_200	singleton_120	cluster_109	0.9925629290617848	PASS
+sample_0348	C	B4	food	2014-04-22	2014	17	2014W17	29	not_real_data_test_only	C9-C114-C111-C	cluster_111	cluster_114	cluster_76	0.9919908466819222	PASS
+sample_0349	A	A7	clinical	2014-04-17	2014	16	2014W16	2	not_real_data_test_only	C30-C74-C91-A	cluster_91	cluster_74	cluster_55	0.9954233409610984	PASS
+sample_0350	B	B5	clinical	2014-03-29	2014	13	2014W13	3	not_real_data_test_only	C32-S158-S238-B	singleton_238	singleton_158	singleton_45	0.9942791762013728	PASS
+sample_0351	C	B5	clinical	2014-03-20	2014	12	2014W12	1	not_real_data_test_only	C35-C50-C63-C	cluster_63	cluster_50	cluster_35	0.9959954233409613	PASS
+sample_0352	A	A8	clinical	2014-03-13	2014	11	2014W11	8	not_real_data_test_only	C21-S47-S125-A	singleton_125	singleton_47	cluster_103	0.9971395881006864	PASS
+sample_0353	B	B6	clinical	2014-03-13	2014	11	2014W11	8	not_real_data_test_only	C21-C39-C48-B	cluster_48	cluster_39	cluster_103	0.9959954233409613	PASS
+sample_0354	C	B6	food	2014-03-13	2014	11	2014W11	9	not_real_data_test_only	C26-C12-S68-C	singleton_68	cluster_12	cluster_88	0.9931350114416476	PASS
+sample_0355	A	A9	clinical	2014-05-03	2014	18	2014W18	8	not_real_data_test_only	C21-S39-S115-A	singleton_115	singleton_39	cluster_103	0.9965675057208238	PASS
+sample_0356	A		food	2014-05-03	2014	18	2014W18	9	not_real_data_test_only	C26-S81-S161-A	singleton_161	singleton_81	cluster_9	0.9811212814645308	PASS
+sample_0357	A	A1	food	2014-05-03	2014	18	2014W18	na	not_real_data_test_only	S11-S358-S438-A	singleton_438	singleton_358	singleton_245	0.9897025171624714	PASS
+sample_0358	B	B7	food	2014-05-03	2014	18	2014W18	9	not_real_data_test_only	C26-C100-S48-B	singleton_48	cluster_100	cluster_66	0.9805491990846682	PASS
+sample_0359	B		food	2014-05-03	2014	18	2014W18	3	not_real_data_test_only	C32-S129-S209-B	singleton_209	singleton_129	singleton_16	0.9959954233409613	PASS
+sample_0360	C	B7	food	2014-05-03	2014	18	2014W18	2	not_real_data_test_only	C30-S273-S353-C	singleton_353	singleton_273	singleton_160	0.9942791762013728	PASS
+sample_0361	C		food	2014-05-03	2014	18	2014W18	na	not_real_data_test_only	C21-C56-C69-C	cluster_69	cluster_56	cluster_40	0.9942791762013728	PASS
+sample_0362	B	B1	clinical	2014-02-25	2014	9	2014W09	1	not_real_data_test_only	C35-C50-C63-B	cluster_63	cluster_50	cluster_35	0.9954233409610984	PASS
+sample_0363	A	A2	food	2014-02-17	2014	8	2014W08	29	not_real_data_test_only	C11-C116-S124-A	singleton_124	cluster_116	cluster_92	0.9742562929061784	PASS
+sample_0364	C	B1	food	2014-02-17	2014	8	2014W08	121	not_real_data_test_only	C31-S159-S239-C	singleton_239	singleton_159	singleton_46	0.9977116704805492	PASS
+sample_0365	B	B2	clinical	2014-02-16	2014	7	2014W07	8	not_real_data_test_only	C21-C39-C48-B	cluster_48	cluster_39	cluster_103	0.9959954233409613	PASS
+sample_0366	C	B2	clinical	2014-09-02	2014	36	2014W36	1	not_real_data_test_only	C35-C94-S39-C	singleton_39	cluster_94	cluster_65	0.9959954233409613	PASS
+sample_0367	A	A3	food	2014-01-24	2014	4	2014W04	9	not_real_data_test_only	C26-C12-C16-A	cluster_16	cluster_12	cluster_88	0.9834096109839816	PASS
+sample_0368	B	B3	food	2014-01-24	2014	4	2014W04	29	not_real_data_test_only	C9-C114-C111-B	cluster_111	cluster_114	cluster_76	0.982837528604119	PASS
+sample_0369	C	B3	clinical	2014-01-21	2014	4	2014W04	2	not_real_data_test_only	C30-C31-C39-C	cluster_39	cluster_31	cluster_20	0.9954233409610984	PASS
+sample_0370	A	A4	clinical	2014-01-13	2014	3	2014W03	200	not_real_data_test_only	C5-C36-C45-A	cluster_45	cluster_36	cluster_25	0.9965675057208238	PASS
+sample_0371	B	B4	food	2014-01-13	2014	3	2014W03	na	not_real_data_test_only	C11-C112-S80-B	singleton_80	cluster_112	cluster_92	0.982837528604119	PASS
+sample_0372	C	B4	food	2014-07-01	2014	27	2014W27	9	not_real_data_test_only	C26-S323-S403-C	singleton_403	singleton_323	singleton_210	0.9977116704805492	PASS
+sample_0373	A	A5	clinical	2013-12-18	2013	51	2013W51	2	not_real_data_test_only	C30-C48-S23-A	singleton_23	cluster_48	cluster_33	0.9965675057208238	PASS
+sample_0374	B	B5	clinical	2013-11-27	2013	48	2013W48	2	not_real_data_test_only	C30-C31-C39-B	cluster_39	cluster_31	cluster_20	0.9942791762013728	PASS
+sample_0375	C	B5	food	2013-11-25	2013	48	2013W48	121	not_real_data_test_only	C31-C119-C115-C	cluster_115	cluster_119	cluster_97	0.986842105263158	PASS
+sample_0376	A	A6	food	2013-05-11	2013	19	2013W19	6	not_real_data_test_only	C24-C111-C109-A	cluster_109	cluster_111	cluster_70	0.9925629290617848	PASS
+sample_0377	B	B6	clinical	2013-04-11	2013	15	2013W15	8	not_real_data_test_only	C21-S29-S105-B	singleton_105	singleton_29	cluster_103	0.9965675057208238	PASS
+sample_0378	C	B6	clinical	2013-10-28	2013	44	2013W44	2	not_real_data_test_only	C30-C48-C61-C	cluster_61	cluster_48	cluster_33	0.9954233409610984	PASS
+sample_0379	A	A7	food	2013-10-24	2013	43	2013W43	2	not_real_data_test_only	C30-S343-S423-A	singleton_423	singleton_343	singleton_230	0.975400457665904	PASS
+sample_0380	B	B7	food	2013-10-20	2013	42	2013W42	121	not_real_data_test_only	C31-C119-C115-B	cluster_115	cluster_119	cluster_97	0.9856979405034324	PASS
+sample_0381	C	B7	food	2013-10-20	2013	42	2013W42	121	not_real_data_test_only	C31-C119-C115-C	cluster_115	cluster_119	cluster_97	0.9805491990846682	PASS
+sample_0382	A	A8	clinical	2013-09-20	2013	38	2013W38	87	not_real_data_test_only	C14-C61-C75-A	cluster_75	cluster_61	cluster_100	0.9954233409610984	PASS
+sample_0383	A	A9	clinical	2013-06-19	2013	25	2013W25	155	not_real_data_test_only	C33-C40-C49-A	cluster_49	cluster_40	cluster_93	0.998283752860412	PASS
+sample_0384	B		clinical	2013-06-19	2013	25	2013W25	217	not_real_data_test_only	C28-C18-C22-B	cluster_22	cluster_18	cluster_12	0.9965675057208238	PASS
+sample_0385	C		clinical	2013-06-19	2013	25	2013W25	217	not_real_data_test_only	C28-C18-C22-C	cluster_22	cluster_18	cluster_12	0.9954233409610984	PASS
+sample_0386	B	B1	clinical	2013-05-06	2013	19	2013W19	1	not_real_data_test_only	C35-C81-C40-B	cluster_40	cluster_81	cluster_84	0.9959954233409613	PASS
+sample_0387	C	B1	clinical	2013-01-05	2013	1	2013W01	219	not_real_data_test_only	C25-C125-C120-C	cluster_120	cluster_125	cluster_112	0.9965675057208238	PASS
+sample_0388	A		clinical	2013-04-22	2013	17	2013W17	2	not_real_data_test_only	C30-C48-C61-A	cluster_61	cluster_48	cluster_33	0.9965675057208238	PASS
+sample_0389	B	B2	clinical	2013-04-15	2013	16	2013W16	224	not_real_data_test_only	C22-S275-S355-B	singleton_355	singleton_275	singleton_162	0.998283752860412	PASS
+sample_0390	C	B2	food	2013-10-04	2013	40	2013W40	388	not_real_data_test_only	C16-S267-S347-C	singleton_347	singleton_267	singleton_154	0.9794050343249427	PASS
+sample_0391	A	A1	clinical	2013-09-04	2013	36	2013W36	1	not_real_data_test_only	C35-C62-C76-A	cluster_76	cluster_62	cluster_105	0.9959954233409613	PASS
+sample_0392	B	B3	clinical	2013-01-04	2013	1	2013W01	1	not_real_data_test_only	C35-S106-S186-B	singleton_186	singleton_106	cluster_102	0.9948512585812356	PASS
+sample_0393	C	B3	clinical	2013-01-04	2013	1	2013W01	1	not_real_data_test_only	C35-C92-C37-C	cluster_37	cluster_92	cluster_105	0.9954233409610984	PASS
+sample_0394	A	A2	clinical	2013-03-19	2013	12	2013W12	4	not_real_data_test_only	C34-S195-S275-A	singleton_275	singleton_195	singleton_81	0.9959954233409613	PASS
+sample_0395	B	B4	clinical	2013-03-19	2013	12	2013W12	219	not_real_data_test_only	C25-S313-S393-B	singleton_393	singleton_313	singleton_200	0.9971395881006864	PASS
+sample_0396	C	B4	clinical	2013-03-16	2013	11	2013W11	na	not_real_data_test_only	C17-S218-S298-C	singleton_298	singleton_218	singleton_104	0.9948512585812356	PASS
+sample_0397	A	A3	clinical	2013-12-03	2013	49	2013W49	1	not_real_data_test_only	C35-C3-C6-A	cluster_6	cluster_3	cluster_2	0.9959954233409613	PASS
+sample_0398	A	A4	food	2013-12-03	2013	49	2013W49	121	not_real_data_test_only	C31-C69-C86-A	cluster_86	cluster_69	cluster_51	0.9856979405034324	PASS
+sample_0399	B	B5	food	2013-12-03	2013	49	2013W49	1	not_real_data_test_only	C35-S327-S407-B	singleton_407	singleton_327	singleton_214	0.9771167048054921	PASS
+sample_0400	B	B6	food	2013-12-03	2013	49	2013W49	121	not_real_data_test_only	C31-C69-C86-B	cluster_86	cluster_69	cluster_51	0.9965675057208238	PASS
+sample_0401	C	B5	food	2013-12-03	2013	49	2013W49	121	not_real_data_test_only	C31-C9-S15-C	singleton_15	cluster_9	cluster_5	0.9856979405034324	PASS
+sample_0402	A	A5	food	2013-02-28	2013	9	2013W09	91	not_real_data_test_only	S10-S357-S437-A	singleton_437	singleton_357	singleton_244	0.9891304347826086	PASS
+sample_0403	C	B6	food	2013-02-28	2013	9	2013W09	9	not_real_data_test_only	C26-C14-C18-C	cluster_18	cluster_14	cluster_9	0.9971395881006864	PASS
+sample_0404	B	B7	clinical	2013-10-02	2013	40	2013W40	101	not_real_data_test_only	C36-C128-C123-B	cluster_123	cluster_128	cluster_115	0.998283752860412	PASS
+sample_0405	C	B7	clinical	2013-09-02	2013	36	2013W36	736	not_real_data_test_only	C10-C123-C118-C	cluster_118	cluster_123	cluster_110	0.9977116704805492	PASS
+sample_0406	A	A6	clinical	2013-04-02	2013	14	2013W14	4	not_real_data_test_only	C34-C115-C112-A	cluster_112	cluster_115	cluster_78	0.9965675057208238	PASS
+sample_0407	B		clinical	2013-01-31	2013	5	2013W05	217	not_real_data_test_only	C28-C126-C121-B	cluster_121	cluster_126	cluster_113	0.9965675057208238	PASS
+sample_0408	C		clinical	2013-01-30	2013	5	2013W05	3	not_real_data_test_only	C32-S196-S276-C	singleton_276	singleton_196	singleton_82	0.9959954233409613	PASS
+sample_0409	A	A7	clinical	2013-01-23	2013	4	2013W04	87	not_real_data_test_only	C14-S14-S90-A	singleton_90	singleton_14	cluster_100	0.9931350114416476	PASS
+sample_0410	B	B1	clinical	2013-01-14	2013	3	2013W03	4	not_real_data_test_only	C34-S191-S271-B	singleton_271	singleton_191	singleton_77	0.9965675057208238	PASS
+sample_0411	C	B1	clinical	2013-12-01	2013	48	2013W48	6	not_real_data_test_only	C24-S80-S158-C	singleton_158	singleton_80	cluster_70	0.9977116704805492	PASS
+sample_0412	A	A8	food	2012-04-12	2012	15	2012W15	121	not_real_data_test_only	C31-S176-S256-A	singleton_256	singleton_176	singleton_62	0.9879862700228832	PASS
+sample_0413	A	A9	food	2012-03-12	2012	11	2012W11	121	not_real_data_test_only	C31-S37-S113-A	singleton_113	singleton_37	cluster_51	0.9622425629290616	PASS
+sample_0414	A		food	2012-03-12	2012	11	2012W11	20	not_real_data_test_only	C8-C87-S19-A	singleton_19	cluster_87	cluster_62	0.9977116704805492	PASS
+sample_0415	B	B2	food	2012-03-12	2012	11	2012W11	155	not_real_data_test_only	C33-C66-C83-B	cluster_83	cluster_66	cluster_48	0.9942791762013728	PASS
+sample_0416	B	B3	food	2012-03-12	2012	11	2012W11	155	not_real_data_test_only	C33-C66-C83-B	cluster_83	cluster_66	cluster_48	0.998283752860412	PASS
+sample_0417	B	B4	food	2012-03-12	2012	11	2012W11	20	not_real_data_test_only	C8-C87-S20-B	singleton_20	cluster_87	cluster_62	0.9977116704805492	PASS
+sample_0418	C	B2	food	2012-03-12	2012	11	2012W11	121	not_real_data_test_only	C31-S118-S198-C	singleton_198	singleton_118	cluster_108	0.9931350114416476	PASS
+sample_0419	C	B3	food	2012-03-12	2012	11	2012W11	87	not_real_data_test_only	C14-C106-C34-C	cluster_34	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0420	C	B4	food	2012-11-27	2012	48	2012W48	217	not_real_data_test_only	C28-S147-S227-C	singleton_227	singleton_147	singleton_34	0.9954233409610984	PASS
+sample_0421	A	A1	food	2012-11-26	2012	48	2012W48	1	not_real_data_test_only	C35-S102-S182-A	singleton_182	singleton_102	cluster_105	0.9959954233409613	PASS
+sample_0422	B	B5	clinical	2012-11-22	2012	47	2012W47	87	not_real_data_test_only	C14-C106-C11-B	cluster_11	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0423	C	B5	food	2012-11-16	2012	46	2012W46	1	not_real_data_test_only	C35-C42-C54-C	cluster_54	cluster_42	cluster_29	0.9959954233409613	PASS
+sample_0424	A	A2	food	2012-11-15	2012	46	2012W46	1	not_real_data_test_only	C35-C42-C54-A	cluster_54	cluster_42	cluster_29	0.9959954233409613	PASS
+sample_0425	A	A3	food	2012-11-14	2012	46	2012W46	1	not_real_data_test_only	C35-C42-C54-A	cluster_54	cluster_42	cluster_29	0.9959954233409613	PASS
+sample_0426	B	B6	food	2012-11-14	2012	46	2012W46	1	not_real_data_test_only	C35-C42-C54-B	cluster_54	cluster_42	cluster_29	0.9965675057208238	PASS
+sample_0427	B	B7	food	2012-11-14	2012	46	2012W46	1	not_real_data_test_only	C35-C42-C54-B	cluster_54	cluster_42	cluster_29	0.9965675057208238	PASS
+sample_0428	C	B6	food	2012-11-14	2012	46	2012W46	na	not_real_data_test_only	C31-S7-S83-C	singleton_83	singleton_7	cluster_72	0.9965675057208238	PASS
+sample_0429	A	A4	food	2012-12-11	2012	50	2012W50	9	not_real_data_test_only	C26-S226-S306-A	singleton_306	singleton_226	singleton_112	0.998283752860412	PASS
+sample_0430	C	B7	food	2012-12-11	2012	50	2012W50	6	not_real_data_test_only	C24-S263-S343-C	singleton_343	singleton_263	singleton_150	0.9959954233409613	PASS
+sample_0431	B		food	2012-06-11	2012	24	2012W24	9	not_real_data_test_only	C26-C14-C18-B	cluster_18	cluster_14	cluster_9	0.9977116704805492	PASS
+sample_0432	A	A5	food	2012-10-18	2012	42	2012W42	1	not_real_data_test_only	C35-C6-C9-A	cluster_9	cluster_6	cluster_102	0.9948512585812356	PASS
+sample_0433	B	B1	food	2012-10-18	2012	42	2012W42	1	not_real_data_test_only	C35-C6-C9-B	cluster_9	cluster_6	cluster_102	0.9954233409610984	PASS
+sample_0434	C		food	2012-10-18	2012	42	2012W42	8	not_real_data_test_only	C21-S109-S189-C	singleton_189	singleton_109	singleton_1	0.9971395881006864	PASS
+sample_0435	C	B1	food	2012-10-17	2012	42	2012W42	7	not_real_data_test_only	C29-S184-S264-C	singleton_264	singleton_184	singleton_70	0.9937070938215103	PASS
+sample_0436	A	A6	food	2012-10-15	2012	42	2012W42	9	not_real_data_test_only	C26-S186-S266-A	singleton_266	singleton_186	singleton_72	0.9965675057208238	PASS
+sample_0437	B	B2	clinical	2012-09-14	2012	37	2012W37	382	not_real_data_test_only	C13-C103-S16-B	singleton_16	cluster_103	cluster_68	0.9971395881006864	PASS
+sample_0438	A	A7	clinical	2012-04-09	2012	15	2012W15	6	not_real_data_test_only	C24-C15-C19-A	cluster_19	cluster_15	cluster_107	0.9977116704805492	PASS
+sample_0439	C	B2	clinical	2012-04-09	2012	15	2012W15	6	not_real_data_test_only	C24-C15-C19-C	cluster_19	cluster_15	cluster_107	0.9971395881006864	PASS
+sample_0440	B	B3	clinical	2012-08-22	2012	34	2012W34	382	not_real_data_test_only	C13-C103-S17-B	singleton_17	cluster_103	cluster_68	0.9776887871853548	PASS
+sample_0441	A	A8	clinical	2012-01-06	2012	1	2012W01	87	not_real_data_test_only	C14-C106-C11-A	cluster_11	cluster_106	cluster_100	0.9942791762013728	PASS
+sample_0442	C	B3	clinical	2012-01-06	2012	1	2012W01	87	not_real_data_test_only	C14-C106-C11-C	cluster_11	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0443	B	B4	clinical	2012-09-02	2012	35	2012W35	736	not_real_data_test_only	C10-C123-C118-B	cluster_118	cluster_123	cluster_110	0.9977116704805492	PASS
+sample_0444	C	B4	clinical	2011-10-12	2011	41	2011W41	1	not_real_data_test_only	C35-C81-C93-C	cluster_93	cluster_81	cluster_84	0.9954233409610984	PASS
+sample_0445	A	A9	clinical	2011-08-12	2011	32	2011W32	1	not_real_data_test_only	C35-C81-C93-A	cluster_93	cluster_81	cluster_84	0.9954233409610984	PASS
+sample_0446	B	B5	clinical	2011-10-28	2011	43	2011W43	6	not_real_data_test_only	C24-S241-S321-B	singleton_321	singleton_241	singleton_127	0.9971395881006864	PASS
+sample_0447	C	B5	clinical	2011-10-10	2011	41	2011W41	87	not_real_data_test_only	C14-C106-C3-C	cluster_3	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0448	A		clinical	2011-01-10	2011	2	2011W02	1	not_real_data_test_only	C35-C92-C37-A	cluster_37	cluster_92	cluster_105	0.9954233409610984	PASS
+sample_0449	B	B6	clinical	2011-09-16	2011	37	2011W37	1	not_real_data_test_only	C35-C76-C94-B	cluster_94	cluster_76	cluster_56	0.9954233409610984	PASS
+sample_0450	C	B6	clinical	2011-09-13	2011	37	2011W37	6	not_real_data_test_only	C24-C90-S33-C	singleton_33	cluster_90	cluster_63	0.9954233409610984	PASS
+sample_0451	A	A1	clinical	2011-12-09	2011	49	2011W49	1	not_real_data_test_only	C35-C92-C37-A	cluster_37	cluster_92	cluster_105	0.9954233409610984	PASS
+sample_0452	B	B7	clinical	2011-12-09	2011	49	2011W49	1	not_real_data_test_only	C35-S280-S360-B	singleton_360	singleton_280	singleton_167	0.9954233409610984	PASS
+sample_0453	C	B7	clinical	2011-08-09	2011	32	2011W32	1	not_real_data_test_only	C35-C105-S58-C	singleton_58	cluster_105	cluster_84	0.9959954233409613	PASS
+sample_0454	A	A2	clinical	2011-04-09	2011	14	2011W14	1	not_real_data_test_only	C35-S304-S384-A	singleton_384	singleton_304	singleton_191	0.9948512585812356	PASS
+sample_0455	B		clinical	2011-08-28	2011	34	2011W34	388	not_real_data_test_only	C16-S90-S170-B	singleton_170	singleton_90	cluster_96	0.9959954233409613	PASS
+sample_0456	C		clinical	2011-09-08	2011	36	2011W36	2	not_real_data_test_only	C30-S101-S181-C	singleton_181	singleton_101	cluster_104	0.9959954233409613	PASS
+sample_0457	A	A3	clinical	2011-07-28	2011	30	2011W30	3	not_real_data_test_only	C32-S215-S295-A	singleton_295	singleton_215	singleton_101	0.9965675057208238	PASS
+sample_0458	B	B1	clinical	2011-07-21	2011	29	2011W29	217	not_real_data_test_only	C28-S69-S147-B	singleton_147	singleton_69	cluster_90	0.9948512585812356	PASS
+sample_0459	A	A4	clinical	2011-07-19	2011	29	2011W29	1	not_real_data_test_only	C35-C79-C97-A	cluster_97	cluster_79	cluster_84	0.9959954233409613	PASS
+sample_0460	C	B1	clinical	2011-07-19	2011	29	2011W29	1	not_real_data_test_only	C35-C81-C40-C	cluster_40	cluster_81	cluster_84	0.9931350114416476	PASS
+sample_0461	B	B2	clinical	2011-06-27	2011	26	2011W26	na	not_real_data_test_only	C27-S325-S405-B	singleton_405	singleton_325	singleton_212	0.9959954233409613	PASS
+sample_0462	C	B2	clinical	2011-06-24	2011	25	2011W25	1	not_real_data_test_only	C35-C81-C93-C	cluster_93	cluster_81	cluster_84	0.9959954233409613	PASS
+sample_0463	A	A5	clinical	2011-06-21	2011	25	2011W25	2	not_real_data_test_only	C30-C74-S28-A	singleton_28	cluster_74	cluster_55	0.9959954233409613	PASS
+sample_0464	B	B3	clinical	2011-06-20	2011	25	2011W25	87	not_real_data_test_only	C14-C106-C34-B	cluster_34	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0465	C	B3	clinical	2011-07-06	2011	27	2011W27	2	not_real_data_test_only	C30-S100-S180-C	singleton_180	singleton_100	cluster_104	0.9959954233409613	PASS
+sample_0466	A	A6	clinical	2011-05-26	2011	21	2011W21	121	not_real_data_test_only	C31-S229-S309-A	singleton_309	singleton_229	singleton_115	0.9965675057208238	PASS
+sample_0467	B	B4	clinical	2011-05-05	2011	18	2011W18	1	not_real_data_test_only	C35-S342-S422-B	singleton_422	singleton_342	singleton_229	0.9891304347826086	PASS
+sample_0468	C	B4	clinical	2011-04-27	2011	17	2011W17	1	not_real_data_test_only	C35-C81-C40-C	cluster_40	cluster_81	cluster_84	0.9931350114416476	PASS
+sample_0469	A	A7	clinical	2011-04-16	2011	15	2011W15	219	not_real_data_test_only	C25-S251-S331-A	singleton_331	singleton_251	singleton_137	0.990274599542334	PASS
+sample_0470	B	B5	clinical	2011-04-14	2011	15	2011W15	5	not_real_data_test_only	C18-S221-S301-B	singleton_301	singleton_221	singleton_107	0.9816933638443937	PASS
+sample_0471	A	A8	clinical	2011-02-04	2011	5	2011W05	426	not_real_data_test_only	C6-C43-C55-A	cluster_55	cluster_43	cluster_30	0.9959954233409613	PASS
+sample_0472	C	B5	clinical	2011-02-04	2011	5	2011W05	426	not_real_data_test_only	C6-C43-C55-C	cluster_55	cluster_43	cluster_30	0.9965675057208238	PASS
+sample_0473	B	B6	clinical	2011-03-23	2011	12	2011W12	1	not_real_data_test_only	C35-C95-C103-B	cluster_103	cluster_95	cluster_102	0.9948512585812356	PASS
+sample_0474	C	B6	clinical	2011-03-16	2011	11	2011W11	378	not_real_data_test_only	C12-S163-S243-C	singleton_243	singleton_163	singleton_50	0.9971395881006864	PASS
+sample_0475	A	A9	clinical	2011-09-03	2011	35	2011W35	388	not_real_data_test_only	C16-S75-S153-A	singleton_153	singleton_75	cluster_96	0.9965675057208238	PASS
+sample_0476	B	B7	clinical	2011-08-03	2011	31	2011W31	1	not_real_data_test_only	C35-C81-S67-B	singleton_67	cluster_81	cluster_84	0.9937070938215103	PASS
+sample_0477	C	B7	clinical	2011-07-03	2011	26	2011W26	2	not_real_data_test_only	C30-C98-S44-C	singleton_44	cluster_98	cluster_80	0.9937070938215103	PASS
+sample_0478	A		clinical	2011-05-03	2011	18	2011W18	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0479	B		clinical	2011-04-03	2011	13	2011W13	4	not_real_data_test_only	C34-C84-C100-B	cluster_100	cluster_84	cluster_60	0.9959954233409613	PASS
+sample_0480	C		clinical	2011-04-03	2011	13	2011W13	3	not_real_data_test_only	C32-S146-S226-C	singleton_226	singleton_146	singleton_33	0.9954233409610984	PASS
+sample_0481	A	A1	clinical	2011-02-28	2011	9	2011W09	1	not_real_data_test_only	C35-S3-S77-A	singleton_77	singleton_3	cluster_102	0.9891304347826086	PASS
+sample_0482	B	B1	environmental	2011-02-25	2011	8	2011W08	8	not_real_data_test_only	C21-C96-S42-B	singleton_42	cluster_96	cluster_103	0.9942791762013728	PASS
+sample_0483	C	B1	clinical	2011-02-24	2011	8	2011W08	6	not_real_data_test_only	C24-S150-S230-C	singleton_230	singleton_150	singleton_37	0.9959954233409613	PASS
+sample_0484	A	A2	clinical	2011-02-18	2011	7	2011W07	87	not_real_data_test_only	C14-C106-S59-A	singleton_59	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0485	B	B2	clinical	2011-02-13	2011	6	2011W06	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9948512585812356	PASS
+sample_0486	C	B2	clinical	2011-07-02	2011	26	2011W26	2	not_real_data_test_only	C30-S270-S350-C	singleton_350	singleton_270	singleton_157	0.9965675057208238	PASS
+sample_0487	A	A3	clinical	2011-01-26	2011	4	2011W04	1	not_real_data_test_only	C35-C82-C58-A	cluster_58	cluster_82	cluster_58	0.9959954233409613	PASS
+sample_0488	B	B3	clinical	2011-01-26	2011	4	2011W04	1	not_real_data_test_only	C35-C82-C58-B	cluster_58	cluster_82	cluster_58	0.9959954233409613	PASS
+sample_0489	C	B3	clinical	2011-01-21	2011	3	2011W03	2	not_real_data_test_only	C30-S122-S202-C	singleton_202	singleton_122	singleton_9	0.9822654462242564	PASS
+sample_0490	A	A4	clinical	2011-01-13	2011	2	2011W02	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9954233409610984	PASS
+sample_0491	B	B4	clinical	2011-10-01	2011	39	2011W39	219	not_real_data_test_only	C25-S322-S402-B	singleton_402	singleton_322	singleton_209	0.9959954233409613	PASS
+sample_0492	A	A5	clinical	2011-01-01	2010	52	2010W52	87	not_real_data_test_only	C14-S94-S174-A	singleton_174	singleton_94	cluster_100	0.9954233409610984	PASS
+sample_0493	C	B4	clinical	2011-01-01	2010	52	2010W52	1	not_real_data_test_only	C35-S19-S95-C	singleton_95	singleton_19	cluster_75	0.9845537757437072	PASS
+sample_0494	B	B5	clinical	2010-12-20	2010	51	2010W51	1	not_real_data_test_only	C35-S116-S196-B	singleton_196	singleton_116	singleton_8	0.9942791762013728	PASS
+sample_0495	C	B5	clinical	2010-11-29	2010	48	2010W48	382	not_real_data_test_only	C13-S223-S303-C	singleton_303	singleton_223	singleton_109	0.9959954233409613	PASS
+sample_0496	A	A6	clinical	2010-11-27	2010	47	2010W47	2	not_real_data_test_only	C30-C33-C42-A	cluster_42	cluster_33	cluster_22	0.9959954233409613	PASS
+sample_0497	B	B6	clinical	2010-11-21	2010	46	2010W46	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9959954233409613	PASS
+sample_0498	C	B6	clinical	2010-11-20	2010	46	2010W46	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9914187643020596	PASS
+sample_0499	A	A7	clinical	2010-11-15	2010	46	2010W46	1	not_real_data_test_only	C35-C79-C97-A	cluster_97	cluster_79	cluster_84	0.990274599542334	PASS
+sample_0500	B	B7	clinical	2010-05-11	2010	19	2010W19	1	not_real_data_test_only	C35-C81-C40-B	cluster_40	cluster_81	cluster_84	0.9954233409610984	PASS
+sample_0501	C	B7	clinical	2010-10-28	2010	43	2010W43	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9937070938215103	PASS
+sample_0502	A	A8	clinical	2010-02-10	2010	6	2010W06	5	not_real_data_test_only	C18-S268-S348-A	singleton_348	singleton_268	singleton_155	0.9965675057208238	PASS
+sample_0503	B		clinical	2010-09-24	2010	38	2010W38	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9959954233409613	PASS
+sample_0504	C		clinical	2010-09-23	2010	38	2010W38	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0505	A	A9	clinical	2010-08-09	2010	32	2010W32	1	not_real_data_test_only	C35-S4-S78-A	singleton_78	singleton_4	cluster_102	0.9874141876430206	PASS
+sample_0506	B	B1	clinical	2010-08-09	2010	32	2010W32	7	not_real_data_test_only	C29-S110-S190-B	singleton_190	singleton_110	singleton_2	0.9965675057208238	PASS
+sample_0507	C	B1	food	2010-03-09	2010	10	2010W10	1	not_real_data_test_only	C35-C4-C7-C	cluster_7	cluster_4	cluster_3	0.9845537757437072	PASS
+sample_0508	A		clinical	2010-08-15	2010	32	2010W32	2	not_real_data_test_only	C30-C33-C42-A	cluster_42	cluster_33	cluster_22	0.990274599542334	PASS
+sample_0509	B	B2	clinical	2010-08-13	2010	32	2010W32	388	not_real_data_test_only	C16-S281-S361-B	singleton_361	singleton_281	singleton_168	0.9942791762013728	PASS
+sample_0510	A	A1	clinical	2010-07-29	2010	30	2010W30	1	not_real_data_test_only	C35-C4-C7-A	cluster_7	cluster_4	cluster_3	0.9959954233409613	PASS
+sample_0511	C	B2	clinical	2010-07-29	2010	30	2010W30	8	not_real_data_test_only	C21-S30-S106-C	singleton_106	singleton_30	cluster_103	0.9937070938215103	PASS
+sample_0512	B	B3	clinical	2010-09-07	2010	36	2010W36	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9942791762013728	PASS
+sample_0513	C	B3	clinical	2010-06-07	2010	23	2010W23	1	not_real_data_test_only	C35-S12-S88-C	singleton_88	singleton_12	cluster_105	0.9954233409610984	PASS
+sample_0514	A	A2	clinical	2010-06-25	2010	25	2010W25	736	not_real_data_test_only	C10-S59-S137-A	singleton_137	singleton_59	cluster_86	0.9977116704805492	PASS
+sample_0515	B	B4	clinical	2010-06-23	2010	25	2010W25	1	not_real_data_test_only	C35-C4-C7-B	cluster_7	cluster_4	cluster_3	0.9959954233409613	PASS
+sample_0516	C	B4	clinical	2010-06-18	2010	24	2010W24	1	not_real_data_test_only	C35-C81-C40-C	cluster_40	cluster_81	cluster_84	0.9925629290617848	PASS
+sample_0517	A	A3	clinical	2010-12-06	2010	49	2010W49	2	not_real_data_test_only	C30-C73-C90-A	cluster_90	cluster_73	cluster_54	0.9959954233409613	PASS
+sample_0518	B	B5	clinical	2010-11-06	2010	44	2010W44	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0519	C	B5	clinical	2010-09-06	2010	36	2010W36	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0520	A	A4	clinical	2010-06-06	2010	22	2010W22	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9959954233409613	PASS
+sample_0521	B	B6	clinical	2010-05-31	2010	22	2010W22	388	not_real_data_test_only	C16-S98-S178-B	singleton_178	singleton_98	cluster_96	0.9845537757437072	PASS
+sample_0522	C	B6	clinical	2010-05-30	2010	21	2010W21	2	not_real_data_test_only	C30-C85-S13-C	singleton_13	cluster_85	cluster_61	0.9937070938215103	PASS
+sample_0523	A	A5	clinical	2010-05-19	2010	20	2010W20	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9931350114416476	PASS
+sample_0524	B	B7	clinical	2010-05-17	2010	20	2010W20	6	not_real_data_test_only	C24-S48-S126-B	singleton_126	singleton_48	cluster_107	0.9965675057208238	PASS
+sample_0525	C	B7	clinical	2010-06-05	2010	22	2010W22	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0526	A	A6	clinical	2010-04-05	2010	14	2010W14	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0527	B		clinical	2010-04-27	2010	17	2010W17	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9874141876430206	PASS
+sample_0528	C		clinical	2010-04-15	2010	15	2010W15	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9954233409610984	PASS
+sample_0529	A	A7	clinical	2010-07-04	2010	26	2010W26	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0530	B	B1	clinical	2010-01-04	2010	1	2010W01	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9925629290617848	PASS
+sample_0531	C	B1	clinical	2010-02-22	2010	8	2010W08	87	not_real_data_test_only	C14-C106-C3-C	cluster_3	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0532	A	A8	clinical	2010-02-16	2010	7	2010W07	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9925629290617848	PASS
+sample_0533	B	B2	clinical	2010-03-02	2010	9	2010W09	217	not_real_data_test_only	C28-C127-C122-B	cluster_122	cluster_127	cluster_114	0.9965675057208238	PASS
+sample_0534	A	A9	clinical	2010-01-02	2009	53	2009W53	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0535	C	B2	clinical	2010-01-02	2009	53	2009W53	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0536	B	B3	clinical	2010-01-30	2010	4	2010W04	1	not_real_data_test_only	C35-S115-S195-B	singleton_195	singleton_115	singleton_7	0.9954233409610984	PASS
+sample_0537	C	B3	clinical	2010-01-28	2010	4	2010W04	217	not_real_data_test_only	C28-C127-C122-C	cluster_122	cluster_127	cluster_114	0.9965675057208238	PASS
+sample_0538	A		clinical	2010-01-27	2010	4	2010W04	87	not_real_data_test_only	C14-C110-C108-A	cluster_108	cluster_110	cluster_100	0.9959954233409613	PASS
+sample_0539	B	B4	clinical	2010-01-27	2010	4	2010W04	87	not_real_data_test_only	C14-C110-C108-B	cluster_108	cluster_110	cluster_100	0.9959954233409613	PASS
+sample_0540	C	B4	clinical	2010-01-25	2010	4	2010W04	3	not_real_data_test_only	C32-S151-S231-C	singleton_231	singleton_151	singleton_38	0.9959954233409613	PASS
+sample_0541	A	A1	clinical	2010-01-18	2010	3	2010W03	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9948512585812356	PASS
+sample_0542	B	B5	clinical	2010-01-17	2010	2	2010W02	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0543	C	B5	clinical	2010-12-01	2010	48	2010W48	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0544	A	A2	clinical	2010-11-01	2010	44	2010W44	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0545	B	B6	clinical	2010-04-01	2010	13	2010W13	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9919908466819222	PASS
+sample_0546	C	B6	clinical	2010-03-01	2010	9	2010W09	1	not_real_data_test_only	C35-S252-S332-C	singleton_332	singleton_252	singleton_138	0.9959954233409613	PASS
+sample_0547	A	A3	clinical	2010-01-01	2009	53	2009W53	1	not_real_data_test_only	C35-S305-S385-A	singleton_385	singleton_305	singleton_192	0.9948512585812356	PASS
+sample_0548	A	A4	clinical	2009-12-13	2009	50	2009W50	1	not_real_data_test_only	C35-C4-C7-A	cluster_7	cluster_4	cluster_3	0.9959954233409613	PASS
+sample_0549	B	B7	clinical	2009-12-13	2009	50	2009W50	101	not_real_data_test_only	C36-C128-C123-B	cluster_123	cluster_128	cluster_115	0.998283752860412	PASS
+sample_0550	C	B7	clinical	2009-12-13	2009	50	2009W50	1	not_real_data_test_only	C35-C4-C7-C	cluster_7	cluster_4	cluster_3	0.9954233409610984	PASS
+sample_0551	B		clinical	2009-01-07	2009	2	2009W02	1	not_real_data_test_only	C35-S208-S288-B	singleton_288	singleton_208	singleton_94	0.9948512585812356	PASS
+sample_0552	C		clinical	2009-06-29	2009	27	2009W27	736	not_real_data_test_only	C10-S222-S302-C	singleton_302	singleton_222	singleton_108	0.9965675057208238	PASS
+sample_0553	A	A5	clinical	2009-05-26	2009	22	2009W22	3	not_real_data_test_only	C32-S134-S214-A	singleton_214	singleton_134	singleton_21	0.9954233409610984	PASS
+sample_0554	B	B1	clinical	2009-05-18	2009	21	2009W21	217	not_real_data_test_only	C28-S132-S212-B	singleton_212	singleton_132	singleton_19	0.9856979405034324	PASS
+sample_0555	C	B1	clinical	2009-09-04	2009	36	2009W36	7	not_real_data_test_only	C29-S5-S81-C	singleton_81	singleton_5	cluster_57	0.9965675057208238	PASS
+sample_0556	A	A6	clinical	2009-03-22	2009	12	2009W12	1	not_real_data_test_only	C35-C81-C40-A	cluster_40	cluster_81	cluster_84	0.9959954233409613	PASS
+sample_0557	B	B2	clinical	2009-02-25	2009	9	2009W09	87	not_real_data_test_only	C14-S96-S176-B	singleton_176	singleton_96	cluster_100	0.990274599542334	PASS
+sample_0558	A	A7	clinical	2009-09-02	2009	36	2009W36	3	not_real_data_test_only	C32-C57-C70-A	cluster_70	cluster_57	cluster_41	0.9942791762013728	PASS
+sample_0559	C	B2	clinical	2009-09-02	2009	36	2009W36	3	not_real_data_test_only	C32-C57-C70-C	cluster_70	cluster_57	cluster_41	0.9948512585812356	PASS
+sample_0560	B	B3	clinical	2009-01-22	2009	4	2009W04	4	not_real_data_test_only	C34-S326-S406-B	singleton_406	singleton_326	singleton_213	0.9954233409610984	PASS
+sample_0561	C	B3	clinical	2009-01-13	2009	3	2009W03	4	not_real_data_test_only	C34-S194-S274-C	singleton_274	singleton_194	singleton_80	0.9959954233409613	PASS
+sample_0562	A	A8	clinical	2009-06-01	2009	23	2009W23	1	not_real_data_test_only	C35-S344-S424-A	singleton_424	singleton_344	singleton_231	0.9959954233409613	PASS
+sample_0563	B	B4	clinical	2008-11-15	2008	46	2008W46	87	not_real_data_test_only	C14-S57-S135-B	singleton_135	singleton_57	cluster_100	0.9851258581235698	PASS
+sample_0564	C	B4	food	2008-03-09	2008	10	2008W10	87	not_real_data_test_only	C14-C106-S4-C	singleton_4	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0565	A	A9	food	2007-04-17	2007	16	2007W16	6	not_real_data_test_only	C24-S300-S380-A	singleton_380	singleton_300	singleton_187	0.9942791762013728	PASS
+sample_0566	B	B5	food	2007-02-21	2007	8	2007W08	1	not_real_data_test_only	C35-S139-S219-B	singleton_219	singleton_139	singleton_26	0.9942791762013728	PASS
+sample_0567	C	B5	food	2007-02-16	2007	7	2007W07	87	not_real_data_test_only	C14-C106-C3-C	cluster_3	cluster_106	cluster_100	0.9937070938215103	PASS
+sample_0568	A		food	2006-07-11	2006	28	2006W28	87	not_real_data_test_only	C14-C106-C78-A	cluster_78	cluster_106	cluster_100	0.9948512585812356	PASS
+sample_0569	B	B6	food	2006-07-11	2006	28	2006W28	87	not_real_data_test_only	C14-C106-C78-B	cluster_78	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0570	C	B6	food	2005-12-07	2005	49	2005W49	87	not_real_data_test_only	C14-C106-C3-C	cluster_3	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0571	A	A1	food	2005-08-06	2005	31	2005W31	87	not_real_data_test_only	C14-C106-C3-A	cluster_3	cluster_106	cluster_100	0.9925629290617848	PASS
+sample_0572	B	B7	food	2005-02-28	2005	9	2005W09	87	not_real_data_test_only	C14-C106-C78-B	cluster_78	cluster_106	cluster_100	0.9965675057208238	PASS
+sample_0573	C	B7	food	2005-02-16	2005	7	2005W07	87	not_real_data_test_only	C14-C106-C3-C	cluster_3	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0574	A	A2	food	2004-04-11	2004	15	2004W15	87	not_real_data_test_only	C14-S53-S131-A	singleton_131	singleton_53	cluster_100	0.9959954233409613	PASS
+sample_0575	B		food	2004-05-27	2004	22	2004W22	87	not_real_data_test_only	C14-C106-S65-B	singleton_65	cluster_106	cluster_100	0.9948512585812356	PASS
+sample_0576	C		food	2004-04-13	2004	16	2004W16	8	not_real_data_test_only	C21-S63-S141-C	singleton_141	singleton_63	cluster_103	0.9965675057208238	PASS
+sample_0577	A	A3	food	2004-06-04	2004	23	2004W23	na	not_real_data_test_only	C31-S334-S414-A	singleton_414	singleton_334	singleton_221	0.9959954233409613	PASS
+sample_0578	B	B1	food	2004-03-30	2004	14	2004W14	87	not_real_data_test_only	C14-C106-C3-B	cluster_3	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0579	A	A4	clinical	2021-01-01	2020	53	2020W53	217	not_real_data_test_only	C28-C38-C47-A	cluster_47	cluster_38	cluster_27	0.9942791762013728	PASS
+sample_0580	C	B1	clinical	2021-01-01	2020	53	2020W53	1	not_real_data_test_only	C35-S52-S130-C	singleton_130	singleton_52	cluster_83	0.9959954233409613	PASS
+sample_0581	B	B2	clinical	2020-01-01	2020	1	2020W01	217	not_real_data_test_only	C28-S68-S146-B	singleton_146	singleton_68	cluster_90	0.9965675057208238	PASS
+sample_0582	A	A5	food	2019-01-01	2019	1	2019W01	155	not_real_data_test_only	C33-C22-C27-A	cluster_27	cluster_22	cluster_16	0.9959954233409613	PASS
+sample_0583	A	A6	food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-C46-C59-A	cluster_59	cluster_46	cluster_84	0.9959954233409613	PASS
+sample_0584	A	A7	food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-C46-C59-A	cluster_59	cluster_46	cluster_84	0.9954233409610984	PASS
+sample_0585	A	A8	food	2019-01-01	2019	1	2019W01	2	not_real_data_test_only	C30-C63-C77-A	cluster_77	cluster_63	cluster_45	0.9965675057208238	PASS
+sample_0586	A	A9	food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-C46-C59-A	cluster_59	cluster_46	cluster_84	0.9954233409610984	PASS
+sample_0587	A		food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-C46-S49-A	singleton_49	cluster_46	cluster_84	0.9799771167048056	PASS
+sample_0588	B	B3	food	2019-01-01	2019	1	2019W01	155	not_real_data_test_only	C33-C22-C27-B	cluster_27	cluster_22	cluster_16	0.9965675057208238	PASS
+sample_0589	B	B4	food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-C46-C59-B	cluster_59	cluster_46	cluster_84	0.9959954233409613	PASS
+sample_0590	B	B5	food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-C46-C59-B	cluster_59	cluster_46	cluster_84	0.9925629290617848	PASS
+sample_0591	B	B6	food	2019-01-01	2019	1	2019W01	2	not_real_data_test_only	C30-S328-S408-B	singleton_408	singleton_328	singleton_215	0.9948512585812356	PASS
+sample_0592	B	B7	food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-C46-C59-B	cluster_59	cluster_46	cluster_84	0.9954233409610984	PASS
+sample_0593	B		food	2019-01-01	2019	1	2019W01	9	not_real_data_test_only	C26-S72-S150-B	singleton_150	singleton_72	cluster_28	0.9977116704805492	PASS
+sample_0594	C	B2	clinical	2019-01-01	2019	1	2019W01	8	not_real_data_test_only	C21-C71-C88-C	cluster_88	cluster_71	cluster_103	0.9965675057208238	PASS
+sample_0595	C	B3	food	2019-01-01	2019	1	2019W01	155	not_real_data_test_only	C33-C22-C27-C	cluster_27	cluster_22	cluster_16	0.9971395881006864	PASS
+sample_0596	C	B4	food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-C46-C59-C	cluster_59	cluster_46	cluster_84	0.9954233409610984	PASS
+sample_0597	C	B5	food	2019-01-01	2019	1	2019W01	2	not_real_data_test_only	C30-C63-C77-C	cluster_77	cluster_63	cluster_45	0.9954233409610984	PASS
+sample_0598	C	B6	food	2019-01-01	2019	1	2019W01	1	not_real_data_test_only	C35-S157-S237-C	singleton_237	singleton_157	singleton_44	0.9948512585812356	PASS
+sample_0599	C	B7	food	2019-01-01	2019	1	2019W01	155	not_real_data_test_only	C33-C22-C27-C	cluster_27	cluster_22	cluster_16	0.9977116704805492	PASS
+sample_0600	A	A1	food	2018-01-01	2018	1	2018W01	155	not_real_data_test_only	C33-S62-S140-A	singleton_140	singleton_62	cluster_93	0.9965675057208238	PASS
+sample_0601	A	A2	food	2018-01-01	2018	1	2018W01	na	not_real_data_test_only	C30-C24-C29-A	cluster_29	cluster_24	cluster_18	0.9931350114416476	PASS
+sample_0602	B	B1	food	2018-01-01	2018	1	2018W01	2	not_real_data_test_only	C30-S8-S84-B	singleton_84	singleton_8	cluster_45	0.9959954233409613	PASS
+sample_0603	B	B2	food	2018-01-01	2018	1	2018W01	9	not_real_data_test_only	C26-S84-S164-B	singleton_164	singleton_84	cluster_77	0.998283752860412	PASS
+sample_0604	C		food	2018-01-01	2018	1	2018W01	87	not_real_data_test_only	C14-C106-S29-C	singleton_29	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0605	C	B1	food	2018-01-01	2018	1	2018W01	1	not_real_data_test_only	C35-C45-C57-C	cluster_57	cluster_45	cluster_84	0.9959954233409613	PASS
+sample_0606	A	A3	clinical	2017-01-01	2016	52	2016W52	1	not_real_data_test_only	C35-C91-S35-A	singleton_35	cluster_91	cluster_105	0.9965675057208238	PASS
+sample_0607	A	A4	clinical	2017-01-01	2016	52	2016W52	1	not_real_data_test_only	C35-S31-S107-A	singleton_107	singleton_31	cluster_74	0.9931350114416476	PASS
+sample_0608	A	A5	food	2017-01-01	2016	52	2016W52	87	not_real_data_test_only	C14-C61-C75-A	cluster_75	cluster_61	cluster_100	0.9942791762013728	PASS
+sample_0609	A	A6	food	2017-01-01	2016	52	2016W52	4	not_real_data_test_only	C34-S190-S270-A	singleton_270	singleton_190	singleton_76	0.9965675057208238	PASS
+sample_0610	A	A7	food	2017-01-01	2016	52	2016W52	736	not_real_data_test_only	C10-S58-S136-A	singleton_136	singleton_58	cluster_86	0.9977116704805492	PASS
+sample_0611	A	A8	food	2017-01-01	2016	52	2016W52	121	not_real_data_test_only	C31-C80-C52-A	cluster_52	cluster_80	cluster_87	0.9977116704805492	PASS
+sample_0612	B	B3	clinical	2017-01-01	2016	52	2016W52	382	not_real_data_test_only	C13-C121-C116-B	cluster_116	cluster_121	cluster_94	0.9971395881006864	PASS
+sample_0613	B	B4	clinical	2017-01-01	2016	52	2016W52	1	not_real_data_test_only	C35-C93-C1-B	cluster_1	cluster_93	cluster_64	0.9954233409610984	PASS
+sample_0614	B	B5	food	2017-01-01	2016	52	2016W52	403	not_real_data_test_only	C7-C47-C60-B	cluster_60	cluster_47	cluster_32	0.9954233409610984	PASS
+sample_0615	B	B6	food	2017-01-01	2016	52	2016W52	121	not_real_data_test_only	C31-C80-C52-B	cluster_52	cluster_80	cluster_87	0.9965675057208238	PASS
+sample_0616	B	B7	food	2017-01-01	2016	52	2016W52	155	not_real_data_test_only	C33-S83-S163-B	singleton_163	singleton_83	cluster_99	0.998283752860412	PASS
+sample_0617	B		food	2017-01-01	2016	52	2016W52	1	not_real_data_test_only	C35-S274-S354-B	singleton_354	singleton_274	singleton_161	0.9937070938215103	PASS
+sample_0618	C	B2	clinical	2017-01-01	2016	52	2016W52	87	not_real_data_test_only	C14-C106-C79-C	cluster_79	cluster_106	cluster_100	0.9954233409610984	PASS
+sample_0619	C	B3	clinical	2017-01-01	2016	52	2016W52	87	not_real_data_test_only	C14-C106-C3-C	cluster_3	cluster_106	cluster_100	0.9959954233409613	PASS
+sample_0620	C	B4	environmental	2017-01-01	2016	52	2016W52	na	not_real_data_test_only	C21-C56-C69-C	cluster_69	cluster_56	cluster_40	0.9971395881006864	PASS
+sample_0621	C	B5	food	2017-01-01	2016	52	2016W52	363	not_real_data_test_only	S8-S355-S435-C	singleton_435	singleton_355	singleton_242	0.9965675057208238	PASS
+sample_0622	C	B6	food	2017-01-01	2016	52	2016W52	2	not_real_data_test_only	C30-S284-S364-C	singleton_364	singleton_284	singleton_171	0.9959954233409613	PASS
+sample_0623	C	B7	food	2017-01-01	2016	52	2016W52	1	not_real_data_test_only	C35-C92-S64-C	singleton_64	cluster_92	cluster_105	0.9948512585812356	PASS
+sample_0624	A	A9	clinical	2016-01-01	2015	53	2015W53	1	not_real_data_test_only	C35-C108-C107-A	cluster_107	cluster_108	cluster_84	0.9925629290617848	PASS
+sample_0625	A		clinical	2016-01-01	2015	53	2015W53	1	not_real_data_test_only	C35-C64-C80-A	cluster_80	cluster_64	cluster_46	0.9954233409610984	PASS
+sample_0626	A	A1	clinical	2016-01-01	2015	53	2015W53	26	not_real_data_test_only	C4-S330-S410-A	singleton_410	singleton_330	singleton_217	0.9977116704805492	PASS
+sample_0627	A	A2	food	2016-01-01	2015	53	2015W53	121	not_real_data_test_only	C31-S56-S134-A	singleton_134	singleton_56	cluster_51	0.9948512585812356	PASS
+sample_0628	A	A3	food	2016-01-01	2015	53	2015W53	1	not_real_data_test_only	C35-S173-S253-A	singleton_253	singleton_173	cluster_58	0.9948512585812356	PASS
+sample_0629	A	A4	food	2016-01-01	2015	53	2015W53	7	not_real_data_test_only	C29-C1-C2-A	cluster_2	cluster_1	cluster_1	0.9965675057208238	PASS
+sample_0630	A	A5	food	2016-01-01	2015	53	2015W53	7	not_real_data_test_only	C2-C16-C20-A	cluster_20	cluster_16	cluster_10	0.9965675057208238	PASS
+sample_0631	A	A6	food	2016-01-01	2015	53	2015W53	121	not_real_data_test_only	C31-C21-C25-A	cluster_25	cluster_21	cluster_15	0.9971395881006864	PASS
+sample_0632	A	A7	food	2016-01-01	2015	53	2015W53	9	not_real_data_test_only	C26-S23-S99-A	singleton_99	singleton_23	cluster_77	0.998283752860412	PASS
+sample_0633	B	B1	clinical	2016-01-01	2015	53	2015W53	388	not_real_data_test_only	C16-S179-S259-B	singleton_259	singleton_179	singleton_65	0.9959954233409613	PASS
+sample_0634	B	B2	clinical	2016-01-01	2015	53	2015W53	1	not_real_data_test_only	C35-C81-S61-B	singleton_61	cluster_81	cluster_84	0.9954233409610984	PASS
+sample_0635	B	B3	food	2016-01-01	2015	53	2015W53	7	not_real_data_test_only	C2-C16-C20-B	cluster_20	cluster_16	cluster_10	0.9965675057208238	PASS
+sample_0636	B	B4	food	2016-01-01	2015	53	2015W53	2	not_real_data_test_only	C30-S295-S375-B	singleton_375	singleton_295	singleton_182	0.9948512585812356	PASS
+sample_0637	B	B5	food	2016-01-01	2015	53	2015W53	7	not_real_data_test_only	C29-C1-C2-B	cluster_2	cluster_1	cluster_1	0.9977116704805492	PASS
+sample_0638	B	B6	food	2016-01-01	2015	53	2015W53	7	not_real_data_test_only	C29-C1-S14-B	singleton_14	cluster_1	cluster_1	0.990274599542334	PASS
+sample_0639	B	B7	food	2016-01-01	2015	53	2015W53	7	not_real_data_test_only	C29-C1-S1-B	singleton_1	cluster_1	cluster_1	0.998283752860412	PASS
+sample_0640	B		food	2016-01-01	2015	53	2015W53	na	not_real_data_test_only	C26-S143-S223-B	singleton_223	singleton_143	singleton_30	0.9959954233409613	PASS
+sample_0641	C		clinical	2016-01-01	2015	53	2015W53	1	not_real_data_test_only	C35-C64-C80-C	cluster_80	cluster_64	cluster_46	0.9948512585812356	PASS
+sample_0642	C	B1	clinical	2016-01-01	2015	53	2015W53	1	not_real_data_test_only	C35-C108-C107-C	cluster_107	cluster_108	cluster_84	0.9942791762013728	PASS
+sample_0643	C	B2	clinical	2016-01-01	2015	53	2015W53	87	not_real_data_test_only	C14-C54-S7-C	singleton_7	cluster_54	cluster_100	0.9959954233409613	PASS
+sample_0644	C	B3	food	2016-01-01	2015	53	2015W53	7	not_real_data_test_only	C29-C1-C2-C	cluster_2	cluster_1	cluster_1	0.998283752860412	PASS
+sample_0645	C	B4	food	2016-01-01	2015	53	2015W53	121	not_real_data_test_only	C31-C88-C53-C	cluster_53	cluster_88	cluster_87	0.9977116704805492	PASS
+sample_0646	C	B5	food	2016-01-01	2015	53	2015W53	1	not_real_data_test_only	C35-C4-C7-C	cluster_7	cluster_4	cluster_3	0.9948512585812356	PASS
+sample_0647	C	B6	food	2016-01-01	2015	53	2015W53	7	not_real_data_test_only	C29-C1-C2-C	cluster_2	cluster_1	cluster_1	0.9971395881006864	PASS
+sample_0648	C	B7	food	2016-01-01	2015	53	2015W53	121	not_real_data_test_only	C31-C21-C25-C	cluster_25	cluster_21	cluster_15	0.9971395881006864	PASS
+sample_0649	C		food	2016-01-01	2015	53	2015W53	121	not_real_data_test_only	C31-C88-C53-C	cluster_53	cluster_88	cluster_87	0.9971395881006864	PASS
+sample_0650	A	A8	food	2015-01-01	2015	1	2015W01	5	not_real_data_test_only	C18-S220-S300-A	singleton_300	singleton_220	singleton_106	0.9965675057208238	PASS
+sample_0651	A	A9	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C29-C1-C2-A	cluster_2	cluster_1	cluster_1	0.998283752860412	PASS
+sample_0652	A		food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C29-C1-C2-A	cluster_2	cluster_1	cluster_1	0.9977116704805492	PASS
+sample_0653	A	A1	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	S2-S349-S429-A	singleton_429	singleton_349	singleton_236	0.9977116704805492	PASS
+sample_0654	A	A2	food	2015-01-01	2015	1	2015W01	1	not_real_data_test_only	C35-C30-C36-A	cluster_36	cluster_30	cluster_102	0.9954233409610984	PASS
+sample_0655	A	A3	food	2015-01-01	2015	1	2015W01	1	not_real_data_test_only	C35-C29-C35-A	cluster_35	cluster_29	cluster_84	0.9959954233409613	PASS
+sample_0656	A	A4	food	2015-01-01	2015	1	2015W01	2	not_real_data_test_only	C30-C75-C92-A	cluster_92	cluster_75	cluster_80	0.9948512585812356	PASS
+sample_0657	A	A5	food	2015-01-01	2015	1	2015W01	59	not_real_data_test_only	C20-S233-S313-A	singleton_313	singleton_233	singleton_119	0.9954233409610984	PASS
+sample_0658	A	A6	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C29-C1-C2-A	cluster_2	cluster_1	cluster_1	0.9977116704805492	PASS
+sample_0659	A	A7	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C29-C1-C2-A	cluster_2	cluster_1	cluster_1	0.9977116704805492	PASS
+sample_0660	A	A8	food	2015-01-01	2015	1	2015W01	3	not_real_data_test_only	C32-S92-S172-A	singleton_172	singleton_92	cluster_101	0.9959954233409613	PASS
+sample_0661	A	A9	food	2015-01-01	2015	1	2015W01	na	not_real_data_test_only	C28-S312-S392-A	singleton_392	singleton_312	singleton_199	0.9971395881006864	PASS
+sample_0662	A		food	2015-01-01	2015	1	2015W01	87	not_real_data_test_only	C14-C59-C72-A	cluster_72	cluster_59	cluster_43	0.9959954233409613	PASS
+sample_0663	B	B1	food	2015-01-01	2015	1	2015W01	87	not_real_data_test_only	C14-C59-C72-B	cluster_72	cluster_59	cluster_43	0.9959954233409613	PASS
+sample_0664	B	B2	food	2015-01-01	2015	1	2015W01	8	not_real_data_test_only	C21-C71-C88-B	cluster_88	cluster_71	cluster_103	0.9965675057208238	PASS
+sample_0665	B	B3	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C2-C16-C20-B	cluster_20	cluster_16	cluster_10	0.9971395881006864	PASS
+sample_0666	B	B4	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C2-C16-C20-B	cluster_20	cluster_16	cluster_10	0.9971395881006864	PASS
+sample_0667	B	B5	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C29-C1-C2-B	cluster_2	cluster_1	cluster_1	0.9977116704805492	PASS
+sample_0668	B	B6	food	2015-01-01	2015	1	2015W01	3	not_real_data_test_only	C32-S231-S311-B	singleton_311	singleton_231	singleton_117	0.9959954233409613	PASS
+sample_0669	B	B7	food	2015-01-01	2015	1	2015W01	2	not_real_data_test_only	C30-C75-C92-B	cluster_92	cluster_75	cluster_80	0.9959954233409613	PASS
+sample_0670	B		food	2015-01-01	2015	1	2015W01	16	not_real_data_test_only	C19-S180-S260-B	singleton_260	singleton_180	singleton_66	0.9959954233409613	PASS
+sample_0671	B	B1	food	2015-01-01	2015	1	2015W01	9	not_real_data_test_only	C26-C41-C50-B	cluster_50	cluster_41	cluster_28	0.998283752860412	PASS
+sample_0672	B	B2	food	2015-01-01	2015	1	2015W01	3	not_real_data_test_only	C32-S145-S225-B	singleton_225	singleton_145	singleton_32	0.9959954233409613	PASS
+sample_0673	B	B3	food	2015-01-01	2015	1	2015W01	2	not_real_data_test_only	C30-C107-C106-B	cluster_106	cluster_107	cluster_91	0.9931350114416476	PASS
+sample_0674	B	B4	food	2015-01-01	2015	1	2015W01	8	not_real_data_test_only	C21-C96-S41-B	singleton_41	cluster_96	cluster_103	0.9965675057208238	PASS
+sample_0675	B	B5	food	2015-01-01	2015	1	2015W01	na	not_real_data_test_only	C30-C13-C17-B	cluster_17	cluster_13	cluster_8	0.9925629290617848	PASS
+sample_0676	C	B1	food	2015-01-01	2015	1	2015W01	1	not_real_data_test_only	C35-S91-S171-C	singleton_171	singleton_91	cluster_79	0.9959954233409613	PASS
+sample_0677	C	B2	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C2-C16-S22-C	singleton_22	cluster_16	cluster_10	0.9965675057208238	PASS
+sample_0678	C	B3	food	2015-01-01	2015	1	2015W01	6	not_real_data_test_only	C24-S235-S315-C	singleton_315	singleton_235	singleton_121	0.9971395881006864	PASS
+sample_0679	C	B4	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C29-C1-C2-C	cluster_2	cluster_1	cluster_1	0.9971395881006864	PASS
+sample_0680	C	B5	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C2-C16-C20-C	cluster_20	cluster_16	cluster_10	0.9971395881006864	PASS
+sample_0681	C	B6	food	2015-01-01	2015	1	2015W01	2	not_real_data_test_only	C30-S111-S191-C	singleton_191	singleton_111	singleton_3	0.9959954233409613	PASS
+sample_0682	C	B7	food	2015-01-01	2015	1	2015W01	1	not_real_data_test_only	C35-S18-S94-C	singleton_94	singleton_18	cluster_75	0.9959954233409613	PASS
+sample_0683	C		food	2015-01-01	2015	1	2015W01	3	not_real_data_test_only	C32-S329-S409-C	singleton_409	singleton_329	singleton_216	0.9937070938215103	PASS
+sample_0684	C	B1	food	2015-01-01	2015	1	2015W01	2	not_real_data_test_only	C30-C75-C92-C	cluster_92	cluster_75	cluster_80	0.9959954233409613	PASS
+sample_0685	C	B2	food	2015-01-01	2015	1	2015W01	7	not_real_data_test_only	C2-S40-S116-C	singleton_116	singleton_40	cluster_10	0.9965675057208238	PASS
+sample_0686	C	B3	food	2015-01-01	2015	1	2015W01	na	not_real_data_test_only	C31-S6-S82-C	singleton_82	singleton_6	cluster_72	0.998283752860412	PASS
+sample_0687	C	B4	food	2015-01-01	2015	1	2015W01	na	not_real_data_test_only	C30-C13-C17-C	cluster_17	cluster_13	cluster_8	0.9954233409610984	PASS
+sample_0688	C	B5	food	2015-01-01	2015	1	2015W01	87	not_real_data_test_only	C14-C59-C72-C	cluster_72	cluster_59	cluster_43	0.9959954233409613	PASS
+sample_0689	A	A1	clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C55-C68-A	cluster_68	cluster_55	cluster_39	0.9914187643020596	PASS
+sample_0690	A	A2	clinical	2014-01-01	2014	1	2014W01	na	not_real_data_test_only	C35-C82-C81-A	cluster_81	cluster_82	cluster_58	0.9948512585812356	PASS
+sample_0691	A	A3	clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C27-C32-A	cluster_32	cluster_27	cluster_102	0.9959954233409613	PASS
+sample_0692	A	A4	clinical	2014-01-01	2014	1	2014W01	382	not_real_data_test_only	C13-S271-S351-A	singleton_351	singleton_271	singleton_158	0.9954233409610984	PASS
+sample_0693	A	A5	clinical	2014-01-01	2014	1	2014W01	6	not_real_data_test_only	C24-S259-S339-A	singleton_339	singleton_259	singleton_146	0.9977116704805492	PASS
+sample_0694	A	A6	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C119-C115-A	cluster_115	cluster_119	cluster_97	0.9805491990846682	PASS
+sample_0695	A	A7	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C88-S3-A	singleton_3	cluster_88	cluster_87	0.9971395881006864	PASS
+sample_0696	A	A8	food	2014-01-01	2014	1	2014W01	7	not_real_data_test_only	C29-C70-S18-A	singleton_18	cluster_70	cluster_52	0.998283752860412	PASS
+sample_0697	A	A9	food	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C5-C8-A	cluster_8	cluster_5	cluster_102	0.9948512585812356	PASS
+sample_0698	A		food	2014-01-01	2014	1	2014W01	87	not_real_data_test_only	C14-C61-C75-A	cluster_75	cluster_61	cluster_100	0.9954233409610984	PASS
+sample_0699	A	A1	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C80-C52-A	cluster_52	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0700	A	A2	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C88-C26-A	cluster_26	cluster_88	cluster_87	0.9971395881006864	PASS
+sample_0701	A	A3	food	2014-01-01	2014	1	2014W01	3	not_real_data_test_only	C32-S262-S342-A	singleton_342	singleton_262	singleton_149	0.9959954233409613	PASS
+sample_0702	A	A4	food	2014-01-01	2014	1	2014W01	530	not_real_data_test_only	S13-S360-S440-A	singleton_440	singleton_360	singleton_247	0.9816933638443937	PASS
+sample_0703	A	A5	food	2014-01-01	2014	1	2014W01	na	not_real_data_test_only	C31-S214-S294-A	singleton_294	singleton_214	singleton_100	0.9971395881006864	PASS
+sample_0704	B	B6	clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C2-C5-B	cluster_5	cluster_2	cluster_105	0.9931350114416476	PASS
+sample_0705	B	B7	clinical	2014-01-01	2014	1	2014W01	4	not_real_data_test_only	C34-C51-C64-B	cluster_64	cluster_51	cluster_36	0.9948512585812356	PASS
+sample_0706	B		clinical	2014-01-01	2014	1	2014W01	388	not_real_data_test_only	C16-S76-S154-B	singleton_154	singleton_76	cluster_96	0.9959954233409613	PASS
+sample_0707	B	B1	clinical	2014-01-01	2014	1	2014W01	7	not_real_data_test_only	C29-S336-S416-B	singleton_416	singleton_336	singleton_223	0.9971395881006864	PASS
+sample_0708	B	B2	clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C55-C68-B	cluster_68	cluster_55	cluster_39	0.9948512585812356	PASS
+sample_0709	B	B3	clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-S283-S363-B	singleton_363	singleton_283	singleton_170	0.9959954233409613	PASS
+sample_0710	B	B4	food	2014-01-01	2014	1	2014W01	9	not_real_data_test_only	C26-C100-S47-B	singleton_47	cluster_100	cluster_66	0.998283752860412	PASS
+sample_0711	B	B5	food	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C5-C8-B	cluster_8	cluster_5	cluster_102	0.9942791762013728	PASS
+sample_0712	B	B6	food	2014-01-01	2014	1	2014W01	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9959954233409613	PASS
+sample_0713	B	B7	food	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C60-C73-B	cluster_73	cluster_60	cluster_44	0.9948512585812356	PASS
+sample_0714	B		food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C10-C14-B	cluster_14	cluster_10	cluster_6	0.998283752860412	PASS
+sample_0715	B	B1	food	2014-01-01	2014	1	2014W01	2	not_real_data_test_only	C30-C75-C92-B	cluster_92	cluster_75	cluster_80	0.9959954233409613	PASS
+sample_0716	B	B2	food	2014-01-01	2014	1	2014W01	2	not_real_data_test_only	C30-C25-C30-B	cluster_30	cluster_25	cluster_80	0.9959954233409613	PASS
+sample_0717	B	B3	food	2014-01-01	2014	1	2014W01	54	not_real_data_test_only	C23-S289-S369-B	singleton_369	singleton_289	singleton_176	0.9971395881006864	PASS
+sample_0718	B	B4	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C88-C26-B	cluster_26	cluster_88	cluster_87	0.9977116704805492	PASS
+sample_0719	C	B6	clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-S345-S425-C	singleton_425	singleton_345	singleton_232	0.9959954233409613	PASS
+sample_0720	C	B7	clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C27-C32-C	cluster_32	cluster_27	cluster_102	0.9954233409610984	PASS
+sample_0721	C		clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C42-C54-C	cluster_54	cluster_42	cluster_29	0.9959954233409613	PASS
+sample_0722	C	B1	clinical	2014-01-01	2014	1	2014W01	77	not_real_data_test_only	C15-S249-S329-C	singleton_329	singleton_249	singleton_135	0.990274599542334	PASS
+sample_0723	C	B2	clinical	2014-01-01	2014	1	2014W01	1	not_real_data_test_only	C35-C55-C68-C	cluster_68	cluster_55	cluster_39	0.9948512585812356	PASS
+sample_0724	C	B3	clinical	2014-01-01	2014	1	2014W01	219	not_real_data_test_only	C25-S201-S281-C	singleton_281	singleton_201	singleton_87	0.9948512585812356	PASS
+sample_0725	C	B4	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C88-C53-C	cluster_53	cluster_88	cluster_87	0.9971395881006864	PASS
+sample_0726	C	B5	food	2014-01-01	2014	1	2014W01	217	not_real_data_test_only	C28-S112-S192-C	singleton_192	singleton_112	singleton_4	0.9954233409610984	PASS
+sample_0727	C	B6	food	2014-01-01	2014	1	2014W01	9	not_real_data_test_only	C26-C67-C84-C	cluster_84	cluster_67	cluster_49	0.9977116704805492	PASS
+sample_0728	C	B7	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C88-S24-C	singleton_24	cluster_88	cluster_87	0.9965675057208238	PASS
+sample_0729	C		food	2014-01-01	2014	1	2014W01	2	not_real_data_test_only	C30-S27-S103-C	singleton_103	singleton_27	cluster_45	0.9959954233409613	PASS
+sample_0730	C	B1	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C80-C52-C	cluster_52	cluster_80	cluster_87	0.9965675057208238	PASS
+sample_0731	C	B2	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C88-C26-C	cluster_26	cluster_88	cluster_87	0.9971395881006864	PASS
+sample_0732	C	B3	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C88-C53-C	cluster_53	cluster_88	cluster_87	0.9965675057208238	PASS
+sample_0733	C	B4	food	2014-01-01	2014	1	2014W01	121	not_real_data_test_only	C31-C80-C52-C	cluster_52	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0734	A	A6	food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C10-C14-A	cluster_14	cluster_10	cluster_6	0.9971395881006864	PASS
+sample_0735	A	A7	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-S71-S149-A	singleton_149	singleton_71	cluster_102	0.9948512585812356	PASS
+sample_0736	A	A8	food	2013-01-01	2013	1	2013W01	204	not_real_data_test_only	S5-S352-S432-A	singleton_432	singleton_352	singleton_239	0.998283752860412	PASS
+sample_0737	A	A9	food	2013-01-01	2013	1	2013W01	2	not_real_data_test_only	C30-C25-C30-A	cluster_30	cluster_25	cluster_80	0.9959954233409613	PASS
+sample_0738	A		food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C5-C8-A	cluster_8	cluster_5	cluster_102	0.9948512585812356	PASS
+sample_0739	A	A1	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C30-C36-A	cluster_36	cluster_30	cluster_102	0.9954233409610984	PASS
+sample_0740	A	A2	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C49-C62-A	cluster_62	cluster_49	cluster_34	0.9954233409610984	PASS
+sample_0741	A	A3	food	2013-01-01	2013	1	2013W01	3	not_real_data_test_only	C32-S261-S341-A	singleton_341	singleton_261	singleton_148	0.9965675057208238	PASS
+sample_0742	A	A4	food	2013-01-01	2013	1	2013W01	na	not_real_data_test_only	C31-S85-S165-A	singleton_165	singleton_85	cluster_72	0.9977116704805492	PASS
+sample_0743	A	A5	food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C80-C51-A	cluster_51	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0744	B	B5	clinical	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C2-C5-B	cluster_5	cluster_2	cluster_105	0.9959954233409613	PASS
+sample_0745	B	B6	food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C80-C52-B	cluster_52	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0746	B	B7	food	2013-01-01	2013	1	2013W01	2	not_real_data_test_only	C30-C24-C29-B	cluster_29	cluster_24	cluster_18	0.9965675057208238	PASS
+sample_0747	B		food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C80-S2-B	singleton_2	cluster_80	cluster_87	0.9977116704805492	PASS
+sample_0748	B	B1	food	2013-01-01	2013	1	2013W01	2	not_real_data_test_only	C30-C75-C92-B	cluster_92	cluster_75	cluster_80	0.9959954233409613	PASS
+sample_0749	B	B2	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C30-C36-B	cluster_36	cluster_30	cluster_102	0.9954233409610984	PASS
+sample_0750	B	B3	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C30-C36-B	cluster_36	cluster_30	cluster_102	0.9948512585812356	PASS
+sample_0751	B	B4	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C60-C73-B	cluster_73	cluster_60	cluster_44	0.9942791762013728	PASS
+sample_0752	B	B5	food	2013-01-01	2013	1	2013W01	666	not_real_data_test_only	C17-S272-S352-B	singleton_352	singleton_272	singleton_159	0.9942791762013728	PASS
+sample_0753	B	B6	food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C80-S54-B	singleton_54	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0754	C	B5	clinical	2013-01-01	2013	1	2013W01	155	not_real_data_test_only	C33-S22-S98-C	singleton_98	singleton_22	cluster_93	0.9977116704805492	PASS
+sample_0755	C	B6	food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C80-C52-C	cluster_52	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0756	C	B7	food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C80-C52-C	cluster_52	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0757	C		food	2013-01-01	2013	1	2013W01	2	not_real_data_test_only	C30-C24-C29-C	cluster_29	cluster_24	cluster_18	0.9965675057208238	PASS
+sample_0758	C	B1	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C30-C36-C	cluster_36	cluster_30	cluster_102	0.9954233409610984	PASS
+sample_0759	C	B2	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-C5-C8-C	cluster_8	cluster_5	cluster_102	0.9948512585812356	PASS
+sample_0760	C	B3	food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C88-C53-C	cluster_53	cluster_88	cluster_87	0.9977116704805492	PASS
+sample_0761	C	B4	food	2013-01-01	2013	1	2013W01	7	not_real_data_test_only	C29-C70-C87-C	cluster_87	cluster_70	cluster_52	0.998283752860412	PASS
+sample_0762	C	B5	food	2013-01-01	2013	1	2013W01	1	not_real_data_test_only	C35-S126-S206-C	singleton_206	singleton_126	singleton_13	0.9948512585812356	PASS
+sample_0763	C	B6	food	2013-01-01	2013	1	2013W01	121	not_real_data_test_only	C31-C88-C53-C	cluster_53	cluster_88	cluster_87	0.9977116704805492	PASS
+sample_0764	A	A6	clinical	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-C76-C94-A	cluster_94	cluster_76	cluster_56	0.9942791762013728	PASS
+sample_0765	A	A7	clinical	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-C8-C12-A	cluster_12	cluster_8	cluster_4	0.9897025171624714	PASS
+sample_0766	A	A8	food	2012-01-01	2011	52	2011W52	403	not_real_data_test_only	C7-S301-S381-A	singleton_381	singleton_301	singleton_188	0.9897025171624714	PASS
+sample_0767	A	A9	food	2012-01-01	2011	52	2011W52	378	not_real_data_test_only	C12-C99-C105-A	cluster_105	cluster_99	cluster_95	0.9897025171624714	PASS
+sample_0768	A		food	2012-01-01	2011	52	2011W52	14	not_real_data_test_only	C1-S238-S318-A	singleton_318	singleton_238	singleton_124	0.9759725400457666	PASS
+sample_0769	A	A1	food	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-C60-C73-A	cluster_73	cluster_60	cluster_44	0.9942791762013728	PASS
+sample_0770	A	A2	food	2012-01-01	2011	52	2011W52	7	not_real_data_test_only	C29-C70-C87-A	cluster_87	cluster_70	cluster_52	0.9691075514874142	PASS
+sample_0771	A	A3	food	2012-01-01	2011	52	2011W52	3	not_real_data_test_only	C32-S142-S222-A	singleton_222	singleton_142	singleton_29	0.9959954233409613	PASS
+sample_0772	A	A4	food	2012-01-01	2011	52	2011W52	121	not_real_data_test_only	C31-C80-C52-A	cluster_52	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0773	A	A5	food	2012-01-01	2011	52	2011W52	388	not_real_data_test_only	C16-S287-S367-A	singleton_367	singleton_287	singleton_174	0.9965675057208238	PASS
+sample_0774	A	A6	food	2012-01-01	2011	52	2011W52	14	not_real_data_test_only	C1-C11-C15-A	cluster_15	cluster_11	cluster_7	0.9977116704805492	PASS
+sample_0775	A	A7	food	2012-01-01	2011	52	2011W52	9	not_real_data_test_only	C26-S25-S101-A	singleton_101	singleton_25	cluster_9	0.9977116704805492	PASS
+sample_0776	B	B7	clinical	2012-01-01	2011	52	2011W52	666	not_real_data_test_only	C17-S121-S201-B	singleton_201	singleton_121	cluster_109	0.9919908466819222	PASS
+sample_0777	B		clinical	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-C8-C12-B	cluster_12	cluster_8	cluster_4	0.9954233409610984	PASS
+sample_0778	B	B1	clinical	2012-01-01	2011	52	2011W52	388	not_real_data_test_only	C16-S193-S273-B	singleton_273	singleton_193	singleton_79	0.9965675057208238	PASS
+sample_0779	B	B2	food	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-C4-S10-B	singleton_10	cluster_4	cluster_3	0.9948512585812356	PASS
+sample_0780	B	B3	food	2012-01-01	2011	52	2011W52	14	not_real_data_test_only	C1-S258-S338-B	singleton_338	singleton_258	singleton_145	0.9725400457665904	PASS
+sample_0781	B	B4	food	2012-01-01	2011	52	2011W52	2	not_real_data_test_only	C30-S264-S344-B	singleton_344	singleton_264	singleton_151	0.9954233409610984	PASS
+sample_0782	B	B5	food	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-C49-C62-B	cluster_62	cluster_49	cluster_34	0.9959954233409613	PASS
+sample_0783	B	B6	food	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-C30-S60-B	singleton_60	cluster_30	cluster_102	0.9954233409610984	PASS
+sample_0784	B	B7	food	2012-01-01	2011	52	2011W52	121	not_real_data_test_only	C31-C9-C13-B	cluster_13	cluster_9	cluster_5	0.9977116704805492	PASS
+sample_0785	B		food	2012-01-01	2011	52	2011W52	121	not_real_data_test_only	C31-C9-C13-B	cluster_13	cluster_9	cluster_5	0.9977116704805492	PASS
+sample_0786	B	B1	food	2012-01-01	2011	52	2011W52	121	not_real_data_test_only	C31-C9-C13-B	cluster_13	cluster_9	cluster_5	0.9954233409610984	PASS
+sample_0787	B	B2	food	2012-01-01	2011	52	2011W52	9	not_real_data_test_only	C26-S24-S100-B	singleton_100	singleton_24	cluster_77	0.9977116704805492	PASS
+sample_0788	B	B3	food	2012-01-01	2011	52	2011W52	121	not_real_data_test_only	C31-C88-C53-B	cluster_53	cluster_88	cluster_87	0.9971395881006864	PASS
+sample_0789	C	B7	clinical	2012-01-01	2011	52	2011W52	8	not_real_data_test_only	C21-S216-S296-C	singleton_296	singleton_216	singleton_102	0.9965675057208238	PASS
+sample_0790	C		clinical	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-C8-C12-C	cluster_12	cluster_8	cluster_4	0.9959954233409613	PASS
+sample_0791	C	B1	clinical	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-S206-S286-C	singleton_286	singleton_206	singleton_92	0.9948512585812356	PASS
+sample_0792	C	B2	food	2012-01-01	2011	52	2011W52	121	not_real_data_test_only	C31-C10-C14-C	cluster_14	cluster_10	cluster_6	0.9959954233409613	PASS
+sample_0793	C	B3	food	2012-01-01	2011	52	2011W52	14	not_real_data_test_only	C1-S204-S284-C	singleton_284	singleton_204	singleton_90	0.97883295194508	PASS
+sample_0794	C	B4	food	2012-01-01	2011	52	2011W52	7	not_real_data_test_only	C29-S20-S96-C	singleton_96	singleton_20	cluster_52	0.9696796338672768	PASS
+sample_0795	C	B5	food	2012-01-01	2011	52	2011W52	1	not_real_data_test_only	C35-S17-S93-C	singleton_93	singleton_17	cluster_3	0.9885583524027459	PASS
+sample_0796	C	B6	food	2012-01-01	2011	52	2011W52	1398	not_real_data_test_only	C31-S213-S293-C	singleton_293	singleton_213	singleton_99	0.9977116704805492	PASS
+sample_0797	C	B7	food	2012-01-01	2011	52	2011W52	3	not_real_data_test_only	C32-S46-S122-C	singleton_122	singleton_46	cluster_82	0.9937070938215103	PASS
+sample_0798	C		food	2012-01-01	2011	52	2011W52	121	not_real_data_test_only	C31-C80-C52-C	cluster_52	cluster_80	cluster_87	0.9971395881006864	PASS
+sample_0799	C	B1	food	2012-01-01	2011	52	2011W52	2	not_real_data_test_only	C30-C24-C29-C	cluster_29	cluster_24	cluster_18	0.9965675057208238	PASS
+sample_0800	C	B2	food	2012-01-01	2011	52	2011W52	2	not_real_data_test_only	C30-S65-S143-C	singleton_143	singleton_65	cluster_33	0.9954233409610984	PASS
+sample_0801	C	B3	food	2012-01-01	2011	52	2011W52	121	not_real_data_test_only	C31-S160-S240-C	singleton_240	singleton_160	singleton_47	0.9937070938215103	PASS
+sample_0802	A	A8	clinical	2011-01-01	2010	52	2010W52	1	not_real_data_test_only	C35-S319-S399-A	singleton_399	singleton_319	singleton_206	0.9959954233409613	PASS
+sample_0803	A	A9	clinical	2011-01-01	2010	52	2010W52	8	not_real_data_test_only	C21-S55-S133-A	singleton_133	singleton_55	cluster_85	0.9954233409610984	PASS
+sample_0804	A		food	2011-01-01	2010	52	2010W52	121	not_real_data_test_only	C31-S162-S242-A	singleton_242	singleton_162	singleton_49	0.998283752860412	PASS
+sample_0805	A	A1	food	2011-01-01	2010	52	2010W52	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9959954233409613	PASS
+sample_0806	A	A2	food	2011-01-01	2010	52	2010W52	474	not_real_data_test_only	S14-S361-S441-A	singleton_441	singleton_361	singleton_248	0.9633867276887872	PASS
+sample_0807	A	A3	food	2011-01-01	2010	52	2010W52	121	not_real_data_test_only	C31-S169-S249-A	singleton_249	singleton_169	singleton_56	0.9954233409610984	PASS
+sample_0808	A	A4	food	2011-01-01	2010	52	2010W52	3	not_real_data_test_only	C32-C58-C71-A	cluster_71	cluster_58	cluster_42	0.9942791762013728	PASS
+sample_0809	A	A5	food	2011-01-01	2010	52	2010W52	2	not_real_data_test_only	C30-C75-C92-A	cluster_92	cluster_75	cluster_80	0.9959954233409613	PASS
+sample_0810	B	B4	clinical	2011-01-01	2010	52	2010W52	388	not_real_data_test_only	C16-S41-S117-B	singleton_117	singleton_41	cluster_81	0.9965675057208238	PASS
+sample_0811	B	B5	clinical	2011-01-01	2010	52	2010W52	8	not_real_data_test_only	C21-S54-S132-B	singleton_132	singleton_54	cluster_85	0.9954233409610984	PASS
+sample_0812	B	B6	food	2011-01-01	2010	52	2010W52	330	not_real_data_test_only	S6-S353-S433-B	singleton_433	singleton_353	singleton_240	0.9948512585812356	PASS
+sample_0813	B	B7	food	2011-01-01	2010	52	2010W52	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.990274599542334	PASS
+sample_0814	B		food	2011-01-01	2010	52	2010W52	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9954233409610984	PASS
+sample_0815	B	B1	food	2011-01-01	2010	52	2010W52	9	not_real_data_test_only	C26-C67-C84-B	cluster_84	cluster_67	cluster_49	0.9942791762013728	PASS
+sample_0816	B	B2	food	2011-01-01	2010	52	2010W52	121	not_real_data_test_only	C31-C80-C52-B	cluster_52	cluster_80	cluster_87	0.9977116704805492	PASS
+sample_0817	B	B3	food	2011-01-01	2010	52	2010W52	155	not_real_data_test_only	C33-S61-S139-B	singleton_139	singleton_61	cluster_93	0.9977116704805492	PASS
+sample_0818	C	B4	clinical	2011-01-01	2010	52	2010W52	2	not_real_data_test_only	C30-C98-S43-C	singleton_43	cluster_98	cluster_80	0.9948512585812356	PASS
+sample_0819	C	B5	food	2011-01-01	2010	52	2010W52	1	not_real_data_test_only	C35-S105-S185-C	singleton_185	singleton_105	cluster_102	0.9954233409610984	PASS
+sample_0820	C	B6	food	2011-01-01	2010	52	2010W52	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9965675057208238	PASS
+sample_0821	C	B7	food	2011-01-01	2010	52	2010W52	9	not_real_data_test_only	C26-S211-S291-C	singleton_291	singleton_211	singleton_97	0.9822654462242564	PASS
+sample_0822	C		food	2011-01-01	2010	52	2010W52	121	not_real_data_test_only	C31-S168-S248-C	singleton_248	singleton_168	singleton_55	0.998283752860412	PASS
+sample_0823	C	B1	food	2011-01-01	2010	52	2010W52	328	not_real_data_test_only	C35-S291-S371-C	singleton_371	singleton_291	singleton_178	0.9948512585812356	PASS
+sample_0824	C	B2	food	2011-01-01	2010	52	2010W52	1	not_real_data_test_only	C35-S253-S333-C	singleton_333	singleton_253	singleton_140	0.9948512585812356	PASS
+sample_0825	C	B3	food	2011-01-01	2010	52	2010W52	224	not_real_data_test_only	C22-S276-S356-C	singleton_356	singleton_276	singleton_163	0.9931350114416476	PASS
+sample_0826	A	A6	clinical	2010-01-01	2009	53	2009W53	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9937070938215103	PASS
+sample_0827	A	A7	food	2010-01-01	2009	53	2009W53	1	not_real_data_test_only	C35-C7-C10-A	cluster_10	cluster_7	cluster_102	0.9954233409610984	PASS
+sample_0828	A	A8	food	2010-01-01	2009	53	2009W53	59	not_real_data_test_only	C20-S234-S314-A	singleton_314	singleton_234	singleton_120	0.9530892448512586	PASS
+sample_0829	A	A9	food	2010-01-01	2009	53	2009W53	9	not_real_data_test_only	C26-S192-S272-A	singleton_272	singleton_192	singleton_78	0.9965675057208238	PASS
+sample_0830	A		food	2010-01-01	2009	53	2009W53	3	not_real_data_test_only	C32-S130-S210-A	singleton_210	singleton_130	singleton_17	0.9919908466819222	PASS
+sample_0831	A	A1	food	2010-01-01	2009	53	2009W53	9	not_real_data_test_only	C26-S306-S386-A	singleton_386	singleton_306	singleton_193	0.998283752860412	PASS
+sample_0832	A	A2	food	2010-01-01	2009	53	2009W53	736	not_real_data_test_only	C10-S60-S138-A	singleton_138	singleton_60	cluster_86	0.9977116704805492	PASS
+sample_0833	B	B4	clinical	2010-01-01	2009	53	2009W53	2	not_real_data_test_only	C30-C107-C106-B	cluster_106	cluster_107	cluster_91	0.9925629290617848	PASS
+sample_0834	B	B5	food	2010-01-01	2009	53	2009W53	2	not_real_data_test_only	C30-S339-S419-B	singleton_419	singleton_339	singleton_226	0.9954233409610984	PASS
+sample_0835	B	B6	food	2010-01-01	2009	53	2009W53	1	not_real_data_test_only	C35-C7-C10-B	cluster_10	cluster_7	cluster_102	0.9948512585812356	PASS
+sample_0836	B	B7	food	2010-01-01	2009	53	2009W53	2	not_real_data_test_only	C30-C85-S12-B	singleton_12	cluster_85	cluster_61	0.9959954233409613	PASS
+sample_0837	B		food	2010-01-01	2009	53	2009W53	9	not_real_data_test_only	C26-S225-S305-B	singleton_305	singleton_225	singleton_111	0.9971395881006864	PASS
+sample_0838	B	B1	food	2010-01-01	2009	53	2009W53	14	not_real_data_test_only	C1-C11-C15-B	cluster_15	cluster_11	cluster_7	0.998283752860412	PASS
+sample_0839	C	B4	clinical	2010-01-01	2009	53	2009W53	1	not_real_data_test_only	C35-S79-S157-C	singleton_157	singleton_79	cluster_105	0.9954233409610984	PASS
+sample_0840	C	B5	food	2010-01-01	2009	53	2009W53	2	not_real_data_test_only	C30-S296-S376-C	singleton_376	singleton_296	singleton_183	0.9931350114416476	PASS
+sample_0841	C	B6	food	2010-01-01	2009	53	2009W53	1	not_real_data_test_only	C35-C7-C10-C	cluster_10	cluster_7	cluster_102	0.9811212814645308	PASS
+sample_0842	C	B7	food	2010-01-01	2009	53	2009W53	2	not_real_data_test_only	C30-C72-C89-C	cluster_89	cluster_72	cluster_53	0.9965675057208238	PASS
+sample_0843	C		food	2010-01-01	2009	53	2009W53	9	not_real_data_test_only	C26-C41-C50-C	cluster_50	cluster_41	cluster_28	0.998283752860412	PASS
+sample_0844	C	B1	food	2010-01-01	2009	53	2009W53	3	not_real_data_test_only	C32-C58-C71-C	cluster_71	cluster_58	cluster_42	0.9959954233409613	PASS
+sample_0845	A	A3	clinical	2009-01-01	2009	1	2009W01	388	not_real_data_test_only	C16-C65-C82-A	cluster_82	cluster_65	cluster_47	0.9959954233409613	PASS
+sample_0846	A	A4	food	2009-01-01	2009	1	2009W01	3	not_real_data_test_only	C32-S45-S121-A	singleton_121	singleton_45	cluster_82	0.9937070938215103	PASS
+sample_0847	A	A5	food	2009-01-01	2009	1	2009W01	3	not_real_data_test_only	C32-S10-S86-A	singleton_86	singleton_10	cluster_73	0.9965675057208238	PASS
+sample_0848	A	A6	food	2009-01-01	2009	1	2009W01	3	not_real_data_test_only	C32-S93-S173-A	singleton_173	singleton_93	cluster_101	0.9954233409610984	PASS
+sample_0849	A	A7	food	2009-01-01	2009	1	2009W01	2	not_real_data_test_only	C30-C72-C89-A	cluster_89	cluster_72	cluster_53	0.9959954233409613	PASS
+sample_0850	A	A8	food	2009-01-01	2009	1	2009W01	54	not_real_data_test_only	C23-S290-S370-A	singleton_370	singleton_290	singleton_177	0.9942791762013728	PASS
+sample_0851	A	A9	food	2009-01-01	2009	1	2009W01	121	not_real_data_test_only	C31-C80-C52-A	cluster_52	cluster_80	cluster_87	0.9942791762013728	PASS
+sample_0852	B	B2	clinical	2009-01-01	2009	1	2009W01	388	not_real_data_test_only	C16-C65-C82-B	cluster_82	cluster_65	cluster_47	0.9959954233409613	PASS
+sample_0853	B	B3	food	2009-01-01	2009	1	2009W01	532	not_real_data_test_only	S15-S362-S442-B	singleton_442	singleton_362	singleton_249	0.9799771167048056	PASS
+sample_0854	B	B4	food	2009-01-01	2009	1	2009W01	121	not_real_data_test_only	C31-S156-S236-B	singleton_236	singleton_156	singleton_43	0.9948512585812356	PASS
+sample_0855	B	B5	food	2009-01-01	2009	1	2009W01	121	not_real_data_test_only	C31-S123-S203-B	singleton_203	singleton_123	singleton_10	0.9977116704805492	PASS
+sample_0856	B	B6	food	2009-01-01	2009	1	2009W01	121	not_real_data_test_only	C31-S9-S85-B	singleton_85	singleton_9	cluster_87	0.9959954233409613	PASS
+sample_0857	B	B7	food	2009-01-01	2009	1	2009W01	121	not_real_data_test_only	C31-S155-S235-B	singleton_235	singleton_155	singleton_42	0.9971395881006864	PASS
+sample_0858	B		food	2009-01-01	2009	1	2009W01	1	not_real_data_test_only	C35-S288-S368-B	singleton_368	singleton_288	singleton_175	0.9959954233409613	PASS
+sample_0859	C	B2	clinical	2009-01-01	2009	1	2009W01	388	not_real_data_test_only	C16-C65-C82-C	cluster_82	cluster_65	cluster_47	0.9948512585812356	PASS
+sample_0860	C	B3	food	2009-01-01	2009	1	2009W01	121	not_real_data_test_only	C31-S185-S265-C	singleton_265	singleton_185	singleton_71	0.9919908466819222	PASS
+sample_0861	C	B4	food	2009-01-01	2009	1	2009W01	3	not_real_data_test_only	C32-S136-S216-C	singleton_216	singleton_136	singleton_23	0.9959954233409613	PASS
+sample_0862	C	B5	food	2009-01-01	2009	1	2009W01	2	not_real_data_test_only	C30-C75-C92-C	cluster_92	cluster_75	cluster_80	0.9959954233409613	PASS
+sample_0863	C	B6	food	2009-01-01	2009	1	2009W01	3	not_real_data_test_only	C32-S236-S316-C	singleton_316	singleton_236	singleton_122	0.9959954233409613	PASS
+sample_0864	C	B7	food	2009-01-01	2009	1	2009W01	121	not_real_data_test_only	C31-C80-C52-C	cluster_52	cluster_80	cluster_87	0.9977116704805492	PASS
+sample_0865	C		food	2009-01-01	2009	1	2009W01	1	not_real_data_test_only	C35-S244-S324-C	singleton_324	singleton_244	singleton_130	0.9959954233409613	PASS

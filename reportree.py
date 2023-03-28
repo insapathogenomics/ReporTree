@@ -382,7 +382,7 @@ def info_samples_interest(samples, matrix, partitions, out):
 	partitions_mx = pandas.read_table(partitions)
 	singletons = []
 	do_not_exist = []
-	
+
 	with open(matrix, "r") as mx:
 		with open(out + "_SAMPLES_OF_INTEREST_partitions_summary.tsv", "w+") as outfile:
 			i = 0
@@ -398,7 +398,7 @@ def info_samples_interest(samples, matrix, partitions, out):
 						nomenclature = False
 				else:
 					if nomenclature:
-						samples_cluster = l[4].split(",")
+						samples_cluster = l[5].split(",")
 					else:
 						samples_cluster = l[3].split(",")
 					samples_observed = []
@@ -809,7 +809,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                 max_cluster += 1
                 new_cluster_name = "cluster_" + str(max_cluster)
                 conversion[cluster] = new_cluster_name
-    
+
     return conversion, changes
 
 def replace_cluster_names(conversion, mx):
@@ -846,10 +846,10 @@ def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 				out_partition = partition
 				for cluster in sorted(changes.keys()):
 					for old,old_l,modification,new,new_l,n_new_samples,new_samples in changes[cluster]:
-						print(str(out_partition) + "\t" + str(old) + "\t" + str(old_l) + "\t" + str(modification) + "\t" + str(new) + "\t" + new_l + "\t", n_new_samples + "\t" + new_samples, file = changes_output)
+						print(str(out_partition) + "\t" + str(old) + "\t" + str(old_l) + "\t" + str(modification) + "\t" + str(new) + "\t" + new_l + "\t" + n_new_samples + "\t" + new_samples, file = changes_output)
 		else:
 			if len(db_samples.keys()) == 1:
-				print_log("\tThe nomenclature column " + str(partition) + "was not found in the partitions table. Cluster names will be modified for all possible partitions!", log_name)
+				print_log("\tThe nomenclature column " + str(partition) + " was not found in the partitions table. Cluster names will be modified for all possible partitions!", log_name)
 				max_cluster, max_singleton = get_last_counters(mx_new[partition])
 				for new_partition in mx_original.columns[1:]:
 					conversion, changes = determine_new_cluster_names(old_samples, db_samples[partition], partition, mx_new_flt, new_partition, mx_original, max_cluster, max_singleton)
