@@ -17,7 +17,7 @@ from scipy.spatial.distance import squareform
 import string
 
 version = "1.2.0"
-last_updated = "2023-03-26"
+last_updated = "2023-03-28"
 
 # functions	----------
 
@@ -46,6 +46,8 @@ def filter_mx(matrix, mx, filters, matrix_type, log):
 	output: filtered pandas dataframe
 	"""
     
+	sample_column = mx.columns[0]
+	
 	if "date" in mx.columns and "iso_week" not in mx.columns:
 		index_no = mx.columns.get_loc("date")
 		mx["date"] = pandas.to_datetime(mx["date"], errors = "coerce")
@@ -421,8 +423,8 @@ def main():
 			
 		# getting distance matrix	----------
 		
-		print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 5000 alleles/positions)...")
-		print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 5000 alleles/positions)...", file = log)
+		print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 2000 alleles/positions)...")
+		print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 2000 alleles/positions)...", file = log)
 		
 		# convert ATCG to integers
 		alleles = conv_nucl(allele_mx, missing_code, missing_need)
@@ -430,7 +432,7 @@ def main():
 		
 		# divide a big dataframe into chunks
 		start_chunk = 0
-		chunk_size = 5000
+		chunk_size = 2000
 		end_chunk = start_chunk + chunk_size
 		df_counter = 0
 
