@@ -16,7 +16,7 @@ from datetime import date
 import pandas
 
 version = "2.0.0"
-last_updated = "2023-03-26"
+last_updated = "2023-03-28"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -255,7 +255,7 @@ def infer_partitions_from_list(analysis, partitions, metadata, thresholds, outpu
 								partitions2report_lst.append(info)
 							elif "." in threshold_info: # it is a percentage
 								for col in partitions_mx.columns:
-									if method_code in col and str(part) in col:
+									if str(part) == col:
 										partitions2report_lst.append(col)
 							else:
 								print_log("\tWe are sorry but we cannot solve your request " + str(part) + ", so, it will be ignored.", log)
@@ -308,7 +308,7 @@ def col_list(args):
 	
 	cols_output = []
 	methods_output = []
-	metadata_mx = pandas.read_table(args.metadata)
+	metadata_mx = pandas.read_table(args.metadata, dtype = str)
 	columns_names = [col.replace(" ", "_") for col in metadata_mx.columns]
 	metadata_mx.columns = columns_names
 	
@@ -433,7 +433,7 @@ def get_clusters_interest(samples, matrix, metadata, day, partitions):
 	output: list of clusters of interest """
 
 	partitions_mx = pandas.read_table(matrix)
-	metadata_mx = pandas.read_table(metadata)
+	metadata_mx = pandas.read_table(metadata, dtype = str)
 	nomenclature_code = "nomenclature_code_" + day
 	clusters_of_interest = {}
 	not_in_partitions = []
@@ -900,9 +900,10 @@ def nomenclature_code(metadata_mx,metadata_col,partitions,tag,codes,day,log):
 	
 	for code in list_codes:
 		if code in partitions_mx.columns:
-			metadata_mx = pandas.concat([metadata_mx, partitions_mx[code]], axis=1)
-			to_drop.append(code)
-			counter_partitions += 1
+			if code not in metadata_col:
+				metadata_mx = pandas.concat([metadata_mx, partitions_mx[code]], axis=1)
+				to_drop.append(code)
+				counter_partitions += 1
 		elif code in metadata_col:
 			counter_metadata += 1
 			if counter_metadata > 1:
@@ -920,7 +921,7 @@ def nomenclature_code(metadata_mx,metadata_col,partitions,tag,codes,day,log):
 	metadata_mx["nomenclature_code_" + str(day)].replace("-nan", "", regex=True, inplace=True)
 	metadata_mx["nomenclature_code_" + str(day)].replace("nan", "", regex=True, inplace=True)
 
-	for c in to_drop:
+	for c in set(to_drop):
 		metadata_mx.drop(c, axis=1, inplace=True)  
 	original_columns.append("nomenclature_code_" + str(day))
 	metadata_mx.columns = original_columns 
@@ -1707,11 +1708,11 @@ def main():
 				print_log("Checking cluster zoom-in requests...", log)
 				partitions4zoom, partitions4zoom_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.zoom, args.output, args.dist, day, log)
 				clusters_of_interest, not_in_partitions = get_clusters_interest(samples_of_interest, args.output + "_partitions.tsv", args.output + "_metadata_w_partitions.tsv", day, partitions4zoom_lst)
+				print(partitions4zoom_lst,clusters_of_interest)
 				if len(partitions4zoom_lst) == 0:
 					print_log("\tNone of the requested partitions for zoom-in is valid!... We are sorry but cluster zoom-in will be done! Please check that you have correctly indicated the list of partitions in the '--zoom-cluster-of-interest' argument.", log)
 				else:
 					for part in partitions4zoom_lst:
-						print(part)
 						if part in clusters_of_interest.keys():
 							for cluster in clusters_of_interest[part]:
 								tag_subset = str(part) + "_" + str(cluster)
@@ -1730,7 +1731,7 @@ def main():
 				print_log("Checking subtree requests...", log)
 				n4subtree = args.subtree.split(",")
 				hamming = args.output + "_dist_hamming.tsv"
-				metadata = pandas.read_table(args.metadata)
+				metadata = pandas.read_table(args.metadata, dtype = str)
 				sample_col = metadata.columns[0]
 				for n in n4subtree:
 					for sample in samples_of_interest:
