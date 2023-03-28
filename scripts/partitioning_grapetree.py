@@ -26,7 +26,7 @@ grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapet
 python = sys.executable
 
 version = "1.2.0"
-last_updated = "2023-03-26"
+last_updated = "2023-03-28"
 
 def main():
 	# defining parameters ----------
@@ -272,6 +272,8 @@ def main():
 		allele_mx = pandas.read_table(allele_filename, dtype = str)
 		allele_mx = allele_mx.replace("INF-","", regex=True) #implemented because of chewie-ns profiles
 		allele_mx = allele_mx.replace("\*","", regex=True) #implemented because of chewie-ns profiles
+		allele_mx.to_csv("temporary_clean_codes.tsv", index = False, header=True, sep ="\t")
+		allele_filename = "temporary_clean_codes.tsv"
 		if missing_need:
 			allele_mx_id = allele_mx[allele_mx.columns[0]]
 			if missing_code == "empty":
@@ -358,11 +360,11 @@ def main():
 			mx_allele = mx_allele.rename(columns={first_col: "#" + first_col})
 			mx_allele.to_csv(args.out + "_alleles_4_grapetree.tsv", index = False, header=True, sep ="\t")
 
-
+	
 	# getting distance matrix - hamming	----------
 
-	print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 5000 alleles/positions)...")
-	print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 5000 alleles/positions)...", file = log)
+	print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 2000 alleles/positions)...")
+	print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 2000 alleles/positions)...", file = log)
 							
 	# convert ATCG to integers
 	allele_mx = pandas.read_table(allele_filename, dtype = str)
@@ -386,7 +388,7 @@ def main():
 	# divide a big dataframe into chunks
 	df_size = len(alleles.columns) - 1 
 	start_chunk = 0
-	chunk_size = 5000
+	chunk_size = 2000
 	end_chunk = start_chunk + chunk_size
 	df_counter = 0
 
@@ -415,7 +417,7 @@ def main():
 
 	dist_df.index.names = ["dists"]	
 	dist_df.to_csv(args.out + "_dist_hamming.tsv", sep = "\t", index = True, header = True)					
-
+	
 
 	# running grapetree	----------
 
@@ -718,7 +720,9 @@ def main():
 				for percentage in pct_correspondence[threshold]:
 					print(str(percentage) + "\t" + str(threshold), file = out_pct)
 
-
+	if os.path.exists("temporary_clean_codes.tsv"):
+		os.system("rm temporary_clean_codes.tsv")
+		
 	matrix = pandas.DataFrame(data = typing, columns = order_partitions)
 	matrix.to_csv(args.out + "_partitions.tsv", index = False, header=True, sep ="\t")
 
