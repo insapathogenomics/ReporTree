@@ -16,7 +16,7 @@ from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from datetime import datetime, date
 
 version = "1.0.2"
-last_updated = "2023-03-26"
+last_updated = "2023-03-28"
 
 # functions	----------
 
