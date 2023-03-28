@@ -1,15 +1,15 @@
-sequence	single-3x1.0	MST-4x1.0	MST-0.01	MST-0.02	single-0.02	single-0.03
-sample1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
-sample3	cluster_2	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
-sample3_2	cluster_3	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
-sample4	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
-sample7	cluster_2	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
-sample3_3	cluster_3	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
-sample9_2	cluster_1	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
-sample9	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
-sample10	cluster_3	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
-sample11	cluster_1	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
-sample12	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
-sample13	cluster_3	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
-sample14	singleton_1	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
-extra	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
+sequence	single-3x1.0	MST-4x1.0	MST-0.01	MST-0.02	single-0.02	single-0.03	root_dist-10x1.0
+sample1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
+sample3	cluster_2	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_2
+sample3_2	cluster_3	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_3
+sample4	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
+sample7	cluster_2	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_2
+sample3_3	cluster_3	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_3
+sample9_2	cluster_1	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_1
+sample9	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
+sample10	cluster_3	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_3
+sample11	cluster_1	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_1
+sample12	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2
+sample13	cluster_3	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	cluster_3
+sample14	singleton_1	cluster_2	cluster_2	cluster_2	cluster_2	cluster_2	singleton_1
+extra	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1	cluster_1
