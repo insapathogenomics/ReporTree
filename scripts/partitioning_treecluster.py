@@ -18,7 +18,7 @@ import pandas
 import ete3 as ete
 
 version = "1.1.0"
-last_updated = "2022-12-06"
+last_updated = "2023-03-28"
 
 treecluster = "TreeCluster.py"
 
@@ -179,7 +179,7 @@ def get_cluster_composition(partitions):
 	
 # running the pipeline	----------
 
-if __name__ == "__main__":
+def main():
     
 	# argument options
     
@@ -195,9 +195,9 @@ if __name__ == "__main__":
 									
 									Note: Currently, for non-SNP-distance rooted trees, users have to specify a 
 									minimum unit to cut the tree (the default is 1, which is equivalent to 1 SNP in 
-									a SNP-scaled rooted	tree). NEWS COMING SOON!!
+									a SNP-scaled rooted tree). NEWS COMING SOON!!
 									
-									NOTE 2: Do not forget to cite TreeCluster authors.
+									NOTE 2: Do not forget to also cite TreeCluster authors.
 									
 									-------------------------------------------------------------------------------"""))
 	
@@ -278,9 +278,17 @@ if __name__ == "__main__":
 			print("\tTreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method, file = log)
 			
 			if args.support != float('-inf'):
-				os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method_run)
+				returned_value = os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method_run)
+				if str(returned_value) != "0":
+					print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!")
+					print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!", file = log)
+					sys.exit(1)
 			else:
-				os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -m " + method_run)
+				returned_value = os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -m " + method_run)
+				if str(returned_value) != "0":
+					print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!")
+					print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!", file = log)
+					sys.exit(1)
 				
 			partitions = get_partitions(cluster_file, partitions, method, threshold, str(min_dist))
 			os.system("rm " + cluster_file)
@@ -296,9 +304,17 @@ if __name__ == "__main__":
 				print("\tTreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method, file = log)
 				
 				if args.support != float('-inf'):
-					os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method)
+					returned_value = os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method)
+					if str(returned_value) != "0":
+						print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!")
+						print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!", file = log)
+						sys.exit(1)
 				else:
-					os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -m " + method)
+					returned_value = os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -m " + method)
+					if str(returned_value) != "0":
+						print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!")
+						print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!", file = log)
+						sys.exit(1)
 				partitions = get_partitions(cluster_file, partitions, method, str(i), str(min_dist))
 				os.system("rm " + cluster_file)
 				runs.append(info_run)
@@ -326,3 +342,6 @@ if __name__ == "__main__":
 	print("\npartitioning_treecluster.py is done!", file = log)
 	
 	log.close()
+
+if __name__ == "__main__":
+    main()
