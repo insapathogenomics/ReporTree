@@ -460,7 +460,8 @@ Also, ReporTree relies on the work of other developers. So, depending on the fun
 4. ComparingPartitions: https://journals.asm.org/doi/10.1128/jcm.02536-05?permanently=true (if you requested "stability_regions")
 5. Adjusted Wallace and cluster stability: https://www.biorxiv.org/content/10.1101/299347v1 (if you requested "stability_regions")
 6. Ete3: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4868116/pdf/msw046.pdf (if you provided a newick tree)     
-7. cgmlst-dists: https://github.com/tseemann/cgmlst-dists (if you requested a HC analysis and did not provide a distance matrix)
+7. cgmlst-dists: https://github.com/tseemann/cgmlst-dists
+8. snp-sites: https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000056 (if you provided a multi-sequence alignment)
 
 
 ## Funding
