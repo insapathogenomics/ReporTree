@@ -21,6 +21,9 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
+## 2023-03-29 WARNING!
+Installation is currently unstable. We are experiencing some package incompatibilities. 
+
 ## News!
 #### 2022.12.06 - ReporTree v1.1.0
 This new version of ReporTree has new features:
