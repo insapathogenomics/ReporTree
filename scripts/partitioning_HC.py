@@ -16,8 +16,8 @@ from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_
 from scipy.spatial.distance import squareform
 import string
 
-version = "1.2.0"
-last_updated = "2023-03-28"
+version = "1.2.1"
+last_updated = "2023-03-29"
 
 # functions	----------
 
@@ -618,7 +618,7 @@ def main():
 					max_thr = int(threshold.split("-")[1]) + 1
 					
 					if min_thr < max_dist and max_thr > max_dist:
-						max_thr = str(max_dist)
+						max_thr = int(max_dist) + 1
 					elif min_thr > max_dist:
 						print("\tThe requested partition, " + str(min_thr) +  ", is higher than the maximum distance. Clustering will not be computed.")
 						print("\tThe requested partition, " + str(min_thr) +  ", is higher than the maximum distance. Clustering will not be computed.", file = log)
