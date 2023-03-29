@@ -1,4 +1,4 @@
-name: reportree_development
+name: reportree
 channels:
   - etetoolkit
   - anaconda
