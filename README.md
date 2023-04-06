@@ -93,7 +93,7 @@ ReporTree cluster names follow a regular expression:
 
 To facilitate routine surveillance and cluster monitoring over time, the user can provide the 'partitions.tsv' from the previous run in the '--nomenclature-file' argument, and ReporTree will use this information to (re)name the clusters in the current run. In the following table we present a summary of ReporTree's behavior in this situation:
 
-<img width="1117" alt="Captura de ecrã 2023-04-06, às 12 47 10" src="https://user-images.githubusercontent.com/19263468/230367660-edb396db-fbca-4196-a38d-b72e0e07169a.png">
+<img width="1111" alt="Captura de ecrã 2023-04-06, às 14 42 41" src="https://user-images.githubusercontent.com/19263468/230396669-94077006-3593-4a78-bc6d-dd1fe1598092.png">
 
 
 Of note, to increase the flexibility of the nomenclature system, ReporTree also allows the users to change the regular expression for cluster nomenclature (i.e., starting with “cluster_” or “singleton_”) by other nomenclature of interest (e.g., other official codes for outbreaks, genogroups, etc.), which will be kept afterwards. If the cluster/singleton names do not follow ReporTree's regular expression, the rules mentioned in the above table will be applied, except for the particular situation in which the name a former singleton does not follow ReporTree's regular expression. In this case, if a sigleton named as 'mycode' integrates a cluster only with new samples, this new cluster will be named 'mycode'.
