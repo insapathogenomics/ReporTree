@@ -448,19 +448,19 @@ reportree.py -m metadata.tsv -a allele_matrix.tsv -out output --site-inclusion 0
 
 ## Examples
 
-### Outbreak detection - bacterial foodborne pathogen (e.g. _Listeria monocytogenes_) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#outbreak-detection---bacterial-foodborne-pathogen-eg-listeria-monocytogenes)
+### Outbreak detection - bacterial foodborne pathogen (e.g. _Listeria monocytogenes_) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#outbreak-detection---bacterial-foodborne-pathogen-eg-listeria-monocytogenes)
 
-ReporTree can facilitate the routine surveillance and outbreak investigation of bacterial pathogens, such as foodborne pathogens. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#outbreak-detection---bacterial-foodborne-pathogen-eg-listeria-monocytogenes), we provide a simple example of the usage of ReporTree to rapidly identify and characterize potential Listeriosis outbreaks. With a single command, ReporTree builds a MST from cgMLST data and **automatically extracts genetic clusters at three high resolution levels (<=4, <=7, <=14 allelic differences)**, and provides comprehensive reports about the sample collection (e.g. ST sequence count/frequency per year, etc).
-
-
-### Large-scale genetic clustering and linkage to antibiotic resistance data (e.g. _Neisseria gonorrhoeae_) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#large-scale-genetic-clustering-and-linkage-to-antibiotic-resistance-data-eg-neisseria-gonorrhoeae)
-
-ReporTree can enhance genomics surveillance and quickly identify/characterize genetic clusters from large datasets. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#large-scale-genetic-clustering-and-linkage-to-antibiotic-resistance-data-eg-neisseria-gonorrhoeae), with a single command line, we reproduce part of the extensive genomics analysis performed by [Pinto et al., 2021](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8208699/pdf/mgen-7-481.pdf) over 3,791 _N. gonorrhoeae_ genomes from isolates collected across Europe.
+ReporTree can facilitate the routine surveillance and outbreak investigation of bacterial pathogens, such as foodborne pathogens. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#outbreak-detection---bacterial-foodborne-pathogen-eg-listeria-monocytogenes), we provide a simple example of the usage of ReporTree to rapidly identify and characterize potential Listeriosis outbreaks. With a single command, ReporTree builds a MST from cgMLST data and **automatically extracts genetic clusters at three high resolution levels (<=4, <=7, <=14 allelic differences)**, and provides comprehensive reports about the sample collection (e.g. ST sequence count/frequency per year, etc).
 
 
- ### Routine surveillance - viral pathogen (e.g. SARS-CoV-2) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#routine-surveillance---viral-pathogen-eg-sars-cov-2)
+### Large-scale genetic clustering and linkage to antibiotic resistance data (e.g. _Neisseria gonorrhoeae_) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#large-scale-genetic-clustering-and-linkage-to-antibiotic-resistance-data-eg-neisseria-gonorrhoeae)
 
-ReporTree is currently applied to generate weekly reports about SARS-CoV-2 variant circulation in Portugal. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/4.-Examples#routine-surveillance---viral-pathogen-eg-sars-cov-2), we give some examples on how to rapidly generate key surveillance metrics taking as input metadata tables (tsv format) and rooted divergence (SNP) trees (newick format) provided for download in regular Nextstrain (auspice) builds, such as those maintained by the National Institute of Health Dr. Ricardo Jorge, Portugal (INSA) at https://insaflu.insa.pt/covid19/.
+ReporTree can enhance genomics surveillance and quickly identify/characterize genetic clusters from large datasets. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#large-scale-genetic-clustering-and-linkage-to-antibiotic-resistance-data-eg-neisseria-gonorrhoeae), with a single command line, we reproduce part of the extensive genomics analysis performed by [Pinto et al., 2021](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8208699/pdf/mgen-7-481.pdf) over 3,791 _N. gonorrhoeae_ genomes from isolates collected across Europe.
+
+
+ ### Routine surveillance - viral pathogen (e.g. SARS-CoV-2) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#routine-surveillance---viral-pathogen-eg-sars-cov-2)
+
+ReporTree is currently applied to generate weekly reports about SARS-CoV-2 variant circulation in Portugal. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#routine-surveillance---viral-pathogen-eg-sars-cov-2), we give some examples on how to rapidly generate key surveillance metrics taking as input metadata tables (tsv format) and rooted divergence (SNP) trees (newick format) provided for download in regular Nextstrain (auspice) builds, such as those maintained by the National Institute of Health Dr. Ricardo Jorge, Portugal (INSA) at https://insaflu.insa.pt/covid19/.
 
 
 ## Citation
