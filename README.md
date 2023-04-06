@@ -21,26 +21,16 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
-## 2023-03-29 WARNING! SOLVED!
-Installation was unstable during the day, due to some package incompatibilities. We think this issue is solved now. If you find any problems with the installation please let us know. 
-
 ## News!
-#### 2022.12.06 - ReporTree v1.1.0
-This new version of ReporTree has new features:
-- _New argument: '--pct_threshold'_    
-Specific for analyses using GrapeTree. With this argument you can specify the threshold for cluster definition as the proportion of allelic/SNP differences in the final allelic schema size or number of informative positions. This option is particularly useful for dynamic wgMLST analyses, i.e., analyses in which ReporTree is requested to automatically use a sub-schema of the initial wgMLST schema comprising the loci called in all the isolates under analysis. By maximizing the shared genome, this dynamic approach might allow increasing the resolution power.
-- _New argument: '--pct-HC-threshold'_     
-Similar to the previous one, but specific for analyses using Hierarchical Clustering.
-- _New argument: '--root'_     
-Specific for analyses using TreeCluster (i.e. tree as input). With this argument you can specify the name of a sample that should be used as outgroup to root your tree or root the tree at midpoint.
+#### 2023.04.06
 
-#### 2022.10.14 - release docker image insapathogenomics/reportree:1.0.1
-This new docker image fixes a bug in the installation of snp-sites, which was affecting the alignment processing.   
+ReporTree has two new important features:
 
-#### 2022.09.21 - ReporTree v1.0.0
-This is the first release of ReporTree. For those who have already been using this tool, we warn you that ReporTree has suffered a major update in the last few days and we highlight the:     
-- _Change in the behavior of the '-thr' argument_  
-Until now, this was a threshold with an "exclusive" behavior, i.e., when specifying '-thr 7', samples at a distance < 7 would correspond to the same cluster. In the new version, the behavior of the this argument has been harmonized for all clustering options of ReporTree pipeline, and now this threshold presents an "inclusive" behavior in all of them, i.e. samples at a distance **<= 7** correspond to the same cluster.
+- _"Cluster nomenclature system” (new arguments: ‘--nomenclature-file’ and ‘--nomenclature-code-levels’)_  
+An important aspect for routine surveillance is the ability to monitor clusters over time. So, we implemented a "cluster nomenclature system" that maintains cluster names in subsequent ReporTree runs, and provides a sample nomenclature code that summarizes the clustering of each sample at the hierarchical levels indicated by the user.
+
+- _New arguments: '--zoom-cluster-of-interest' and '--subtree-of-interest'_  
+Thinking about species for which we apply a wgMLST/alignment-based approach approach (i.e. where the core and, consequently, sample distance is influenced by the dataset), we have implemented an automated dynamic approach that allows performing an additional run considering only the samples that belong to the same cluster as the sample(s) of interest at a given threshold (‘--zoom-cluster-of-interest’ argument). This will possibly increase the core, providing a higher resolution and confidence in the clustering results. Moreover, we also open the possibility to do this high-resolution analysis for the N closest samples to the sample of interest (‘--subtree-of-interest’ argument).
 
 
 ## Implementation
@@ -93,6 +83,20 @@ _TIP: Users can interactively visualize and explore the ReporTree derived cluste
 - stableRegions.tsv - partition ranges for which Adjusted Wallace coefficient is higher than the cut-off defined by the user (useful to study cluster stability and infer possible nomenclature) 
 - Newick file with the dendrogram resulting of the hierarchical clustering analysis or with the minimum spanning tree of GrapeTree
 - .zip - compressed folders with the output files of a high resolution analysis of the clusters with samples of interest and of the N closest samples to the samples of interest 
+
+
+## Nomenclature
+
+ReporTree cluster names follow a regular expression:
+- cluster_N - for each genetic cluster (i.e. >= 2 samples) found at each threshold of the current analysis (e.g. cluster_1)
+- singleton_N - for each sample that does not belong to a cluster at a given threshold of the current analysis (e.g. singleton_1)
+
+To facilitate routine surveillance and cluster monitoring over time, the user can provide the 'partitions.tsv' from the previous run in the '--nomenclature-file' argument, and ReporTree will use this information to (re)name the clusters in the current run. In the following table we present a summary of ReporTree's behavior in this situation:
+
+<img width="1111" alt="Captura de ecrã 2023-04-06, às 14 42 41" src="https://user-images.githubusercontent.com/19263468/230396669-94077006-3593-4a78-bc6d-dd1fe1598092.png">
+
+
+Of note, to increase the flexibility of the nomenclature system, ReporTree also allows the users to change the regular expression for cluster nomenclature (i.e., starting with “cluster_” or “singleton_”) by other nomenclature of interest (e.g., other official codes for outbreaks, genogroups, etc.), which will be kept afterwards. If the cluster/singleton names do not follow ReporTree's regular expression, the rules mentioned in the above table will be applied, except for the particular situation in which the name a former singleton does not follow ReporTree's regular expression. In this case, if a sigleton named as 'mycode' integrates a cluster only with new samples, this new cluster will be named 'mycode'.
 
 
 ## Installation and dependencies
