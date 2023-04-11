@@ -123,7 +123,7 @@ conda env create --name reportree --file=reportree_env.yml
 ```
 
 
-Run pytest that your installation was well succeeded
+Run pytest to check that your installation was well succeeded
 ```bash
 pytest
 ```
