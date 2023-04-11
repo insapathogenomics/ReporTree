@@ -122,6 +122,10 @@ cd ..
 conda env create --name reportree --file=reportree_env.yml
 ```
 
+Activate conda environment
+```bash
+conda activate reportree
+```
 
 Run pytest to check that your installation was well succeeded
 ```bash
