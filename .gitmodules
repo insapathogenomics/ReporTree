@@ -1,0 +1,9 @@
+[submodule "scripts/GrapeTree"]
+	path = scripts/GrapeTree
+	url = https://github.com/insapathogenomics/GrapeTree
+[submodule "scripts/ComparingPartitions"]
+	path = scripts/ComparingPartitions
+	url = https://github.com/insapathogenomics/ComparingPartitions
+[submodule "scripts/vcf2mst"]
+	path = scripts/vcf2mst
+	url = https://github.com/genpat-it/vcf2mst.git
