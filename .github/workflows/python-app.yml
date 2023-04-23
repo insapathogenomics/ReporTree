@@ -31,5 +31,5 @@ jobs:
         auto-activate-base: false
     - name: Test with pytest
       run: |
-        mamba activate reportree && pytest
+        conda activate reportree && pytest
         
