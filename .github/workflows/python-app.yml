@@ -25,9 +25,14 @@ jobs:
     - name: Set up Conda
       uses: conda-incubator/setup-miniconda@v2
       with:
+        mamba-version: "*"
         activate-environment: reportree
         environment-file: reportree_env.yml
         auto-activate-base: false
+    - name: check solution
+      run: |
+        mamba env export    
     - name: Test with pytest
       run: |
-        conda activate reportree && pytest
+        pytest
+        
