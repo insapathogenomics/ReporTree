@@ -20,8 +20,8 @@ jobs:
     steps:
     - name: Checkout main module
       uses: actions/checkout@v3
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master    
+      with:
+        submodules: 'true' 
     - name: Set up Conda
       uses: conda-incubator/setup-miniconda@v2
       with:
