@@ -16,6 +16,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        shell: bash -l {0}
 
     steps:
     - name: Checkout main module
@@ -31,5 +35,5 @@ jobs:
         auto-activate-base: false
     - name: Test with pytest
       run: |
-        conda activate reportree && pytest
+        pytest
         
