@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.0.0"
-last_updated = "2023-03-29"
+version = "2.0.1"
+last_updated = "2023-05-05"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -78,6 +78,9 @@ def run_treecluster(args):
 		extra_treecluster += " --root-dist-by-node "
 	if args.support != "-inf":
 		extra = " --support " + str(args.support)
+		extra_treecluster += extra
+	if args.subset == True:
+		extra = " -m " + args.metadata + " -f \"" + args.filter_column + "\""
 		extra_treecluster += extra
 	cmd = python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " -d " + str(args.dist) + " --method-threshold \
 	" + args.method_threshold + " --root " + args.root + " " + extra_treecluster
@@ -1100,7 +1103,7 @@ def main():
 						genetic clusters will always be obtained with treecluster. If you provide a distance matrix, genetic clusters will always be obtained with HC. If you provide any other \
 						input, it is MANDATORY to specify this argument.")
 	group1.add_argument("--subset", dest="subset", required=False, action="store_true", help="[OPTIONAL] Obtain genetic clusters using only the samples that correspond to the filters specified in the \
-						'--filter' argument (only valid for analysis == grapetree or HC)")
+						'--filter' argument.")
 	group1.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="[OPTIONAL] Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
 						-thr 5,8,10-30, the minimum spanning tree will be cut at 50,80,100,110,120,...,300. If -d 10 and --method-threshold avg_clade-2, the avg_clade threshold will be set \
 						at 20). This argument is particularly useful for non-SNP-scaled trees. Currently, the default is 1, which is equivalent to 1 allele distance or 1 SNP distance. [1.0]")
