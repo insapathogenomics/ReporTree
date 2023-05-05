@@ -15,10 +15,11 @@ import sys
 import argparse
 import textwrap
 import pandas
+from datetime import date
 import ete3 as ete
 
-version = "1.1.0"
-last_updated = "2023-03-28"
+version = "1.2.0"
+last_updated = "2023-05-05"
 
 treecluster = "TreeCluster.py"
 
@@ -175,7 +176,109 @@ def get_cluster_composition(partitions):
 	summary_df = pandas.DataFrame(data = summary, columns = order_columns)
 	
 	return summary_df		
+
+def filter_partitions_table(partitions, mx, filters, log):
+	""" filter the allele or pairwise distance matrix
+	input: matrix
+	output: filtered pandas dataframe
+	"""
+    
+	sample_column = mx.columns[0]
 	
+	if "date" in mx.columns and "iso_week" not in mx.columns:
+		index_no = mx.columns.get_loc("date")
+		mx["date"] = pandas.to_datetime(mx["date"], errors = "coerce")
+		year = mx["date"].dt.isocalendar().year
+		week = mx["date"].dt.isocalendar().week
+		mx["iso_year"] = year.astype(str)
+		mx["iso_week_nr"] = week.astype(str)
+		mx["iso_week"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--")
+		isoyear = mx.pop("iso_year")
+		isoweek = mx.pop("iso_week_nr")
+		isodate = mx.pop("iso_week")
+		mx.insert(index_no + 1, "iso_year", isoyear)
+		mx.insert(index_no + 2, "iso_week_nr", isoweek)
+		mx.insert(index_no + 3, "iso_week", isodate)
+				
+	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
+	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)
+			
+	f = []
+	if ";" in filters:
+		for flt in filters.split(";"):
+			f.append(flt)
+	else:
+		f.append(filters)
+
+	for spec in f:
+		col = spec.split(" ")[0]
+		val = spec.split(" ")[1]
+		cond = " ".join(spec.split(" ")[2:])
+					
+		if "," in cond:
+			lst = cond.split(",")
+			if val == "==":
+				mx = mx[mx[col].isin(lst)]
+			elif val == "!=":
+				mx = mx[mx[col].isin(lst) == False]
+		else:
+			if col == "date":
+				mx["date"] = mx["date"].astype("datetime64[ns]")
+				if val == "==":
+					mx = mx[mx["date"] == cond]  
+				elif val == "!=":
+					mx = mx[mx["date"] != cond] 
+				elif val == ">":
+					mx = mx[mx["date"] > cond] 
+				elif val == ">=":
+					mx = mx[mx["date"] >= cond] 
+				elif val == "<=":
+					mx = mx[mx["date"] <= cond] 
+				elif val == "<":
+					mx = mx[mx["date"] < cond]
+			elif col == "iso_week":
+				if "date" in mx.columns:
+					year = cond.split("W")[0]
+					week = cond.split("W")[1]
+					cond = pandas.to_datetime(date.fromisocalendar(int(year), int(week), 1))
+					mx["date"] = mx["date"].astype("datetime64[ns]")
+					if val == "==":
+						mx = mx[mx["date"] == cond]  
+					elif val == "!=":
+						mx = mx[mx["date"] != cond] 
+					elif val == ">":
+						mx = mx[mx["date"] > cond] 
+					elif val == ">=":
+						mx = mx[mx["date"] >= cond] 
+					elif val == "<=":
+						mx = mx[mx["date"] <= cond] 
+					elif val == "<":
+						mx = mx[mx["date"] < cond]	
+				else:
+					print("\tCannot apply the 'iso_week' filter because column 'date' was not found in the metadata!")				
+			else:
+				if val == "==":
+					mx = mx[mx[col] == cond]
+				elif val == "!=":
+					mx = mx[mx[col] != cond]
+				else:
+					mx[col] = pandas.to_numeric(mx[col], errors='coerce')
+					if val == ">":
+						mx = mx[mx[col] > float(cond)]
+					elif val == ">=":
+						mx = mx[mx[col] >= float(cond)]
+					elif val == "<":
+						mx = mx[mx[col] < float(cond)]
+					elif val == "<=":
+						mx = mx[mx[col] >= float(cond)]
+					mx[col] = mx[col].astype(int)
+					mx[col] = mx[col].astype(str)
+
+	samples = mx[sample_column].tolist()
+	
+	df = partitions[partitions[partitions.columns[0]].isin(samples)]
+	
+	return df	
 	
 # running the pipeline	----------
 
@@ -218,6 +321,13 @@ def main():
 						correspond to 1 SNP difference. Currently, the default is 1, which is equivalent to 1 SNP distance. NEWS COMING SOON!![1.0]")
 	group0.add_argument("-r", "--root", dest="root", required=False, default="no", help="Set root of the input tree. Specify the leaf name to use as output. Alternatively, write \
 						'midpoint', if you want to apply midpoint rooting method.")
+	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to generate the cluster composition file according \
+		     			to the '--filter' argument")
+	group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples of the tree that must \
+						be used to report cluster composition. This must be specified within quotation marks in the following format 'column< >operation< >condition' (e.g. 'country == Portugal'). When \
+						more than one condition is specified for a given column, they must be separated with commas (e.g 'country == Portugal,Spain,France'). When filters include more than one \
+						column, they must be separated with semicolon (e.g. 'country == Portugal,Spain,France;date > 2018-01-01;date < 2022-01-01'). White spaces are important in this argument, \
+						so, do not leave spaces before and after commas/semicolons.")
 	
 	
 	args = parser.parse_args()
@@ -333,11 +443,12 @@ def main():
 	
 	
 	# output cluster composition
-	
+	if args.metadata != "" and args.filter_column != "":
+		mx = pandas.read_table(args.metadata)
+		partitions = filter_partitions_table(partitions, mx, args.filter_column, log)
 	cluster_composition = get_cluster_composition(partitions)
 	cluster_composition.to_csv(args.output + "_clusterComposition.tsv", index = False, header=True, sep ="\t")
 	
-
 	print("\npartitioning_treecluster.py is done!")
 	print("\npartitioning_treecluster.py is done!", file = log)
 	
