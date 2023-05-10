@@ -113,14 +113,9 @@ Of note, to increase the flexibility of the nomenclature system, ReporTree also 
 - [vcf2mst](https://github.com/genpat-it/vcf2mst)
 - [snp-sites](https://github.com/sanger-pathogens/snp-sites)
 
-### Installation with conda:
+### Installation with conda
 ```bash
 git clone https://github.com/insapathogenomics/ReporTree
-cd ReporTree/scripts/
-git clone https://github.com/insapathogenomics/GrapeTree
-git clone https://github.com/insapathogenomics/ComparingPartitions
-git clone https://github.com/genpat-it/vcf2mst.git
-cd ..
 conda env create --name reportree --file=reportree_env.yml
 ```
 
@@ -138,10 +133,6 @@ Run ReporTree:
 ```bash
 python reportree.py -h
 ```
-
-
-_Note: Although you are installing GrapeTree in the conda enviroment, it is necessary to have the github repository with the modified version in the scripts/ directory._     
-
 
 ### Installation with Docker
 ```bash
