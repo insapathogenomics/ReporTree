@@ -93,7 +93,11 @@ ReporTree cluster names follow a regular expression:
 - cluster_N - for each genetic cluster (i.e. >= 2 samples) found at each threshold of the current analysis (e.g. cluster_1)
 - singleton_N - for each sample that does not belong to a cluster at a given threshold of the current analysis (e.g. singleton_1)
 
-To facilitate routine surveillance and cluster monitoring over time, the user can provide the 'partitions.tsv' from the previous run in the '--nomenclature-file' argument, and ReporTree will use this information to (re)name the clusters in the current run. In the following table we present a summary of ReporTree's behavior in this situation:
+To facilitate routine surveillance and cluster monitoring over time, the user can provide the 'partitions.tsv' from the previous run in the '--nomenclature-file' argument, and ReporTree will use this information to (re)name the clusters in the current run. Below, we show a summary of the behavior of the “Cluster Nomenclature System” in some of the most common situations in a routine surveillance scenario:
+
+![Nomenclature_2](https://github.com/insapathogenomics/ReporTree/assets/19263468/eea36fe7-113e-47cb-9eba-912e0d36f57a)
+
+_Details about these and other situations are presented in the following table:_
 
 <img width="1111" alt="Captura de ecrã 2023-04-06, às 14 42 41" src="https://user-images.githubusercontent.com/19263468/230396669-94077006-3593-4a78-bc6d-dd1fe1598092.png">
 
