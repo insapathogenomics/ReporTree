@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.0.1"
-last_updated = "2023-05-05"
+version = "2.0.2"
+last_updated = "2023-05-12"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -602,7 +602,7 @@ def get_last_counters(clusters):
             else:
                 n = info
             if n.isdigit():
-                cluster_val.append(info)
+                cluster_val.append(n)
         elif "singleton_" in observation:
             info = observation.split("singleton_")[1]
             n = info
