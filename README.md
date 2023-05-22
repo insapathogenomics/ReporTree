@@ -24,16 +24,9 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
 ## News!
-#### 2023.04.06
+#### 2023.05.22 - ReporTree v2.0.2 (version of the manuscript)
 
-ReporTree has two new important features:
-
-- _"Cluster nomenclature system” (new arguments: ‘--nomenclature-file’ and ‘--nomenclature-code-levels’)_  
-An important aspect for routine surveillance is the ability to monitor clusters over time. So, we implemented a "cluster nomenclature system" that maintains cluster names in subsequent ReporTree runs, and provides a sample nomenclature code that summarizes the clustering of each sample at the hierarchical levels indicated by the user.
-
-- _New arguments: '--zoom-cluster-of-interest' and '--subtree-of-interest'_  
-Thinking about species for which we apply a wgMLST/alignment-based approach approach (i.e. where the core and, consequently, sample distance is influenced by the dataset), we have implemented an automated dynamic approach that allows performing an additional run considering only the samples that belong to the same cluster as the sample(s) of interest at a given threshold (‘--zoom-cluster-of-interest’ argument). This will possibly increase the core, providing a higher resolution and confidence in the clustering results. Moreover, we also open the possibility to do this high-resolution analysis for the N closest samples to the sample of interest (‘--subtree-of-interest’ argument).
-
+ReporTree v2 is officially released. This version comprises an updated version of the tool that corresponds to the version at the time of publication. We highlight the following updates:
 
 ## Implementation
 
