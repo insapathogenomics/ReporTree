@@ -459,8 +459,8 @@ ReporTree is currently applied to generate weekly reports about SARS-CoV-2 varia
 
 ## Citation
 
-If you run ReporTree, please cite our preprint publication:    
-[Mixão V, Pinto M, Sobral D, Di Pasquale A, Gomes JP, Borges V (2022) ReporTree: a surveillance-oriented tool to strengthen the linkage between pathogen genetic clusters and epidemiological data. _Research Square_. doi: 10.21203/rs.3.rs-1404655/v2](https://www.researchsquare.com/article/rs-1404655/v2)
+If you run ReporTree, please cite the publication:    
+[Mixão V, Pinto M, Sobral D, Di Pasquale A, Gomes JP, Borges V (2023) ReporTree: a surveillance-oriented tool to strengthen the linkage between pathogen genetic clusters and epidemiological data. _Genome Medicine_. doi: 10.1186/s13073-023-01196-1](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-023-01196-1)
 
 Also, ReporTree relies on the work of other developers. So, depending on the functionalities you use, there are other tools that you must cite:
 1. Grapetree: http://www.genome.org/cgi/doi/10.1101/gr.232397.117 (if you requested a grapetree analysis)
