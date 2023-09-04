@@ -16,8 +16,8 @@ from datetime import date
 import datetime as datetime
 from Bio import SeqIO, AlignIO, Align, Alphabet
 
-version = "1.1.0"
-last_updated = "2023-03-28"
+version = "1.2.0"
+last_updated = "2023-06-01"
 
 # functions	----------
 
@@ -33,13 +33,17 @@ def get_ref_coords(alignment, reference, sequence_corr, tag, pos_list):
 	j = 0 # del count
 	k = 0 # align
 	
-	corr = {} #corr[sample] = list(positions)
-	corr["alignment_position"] = list(range(1, len(alignment[0].seq) + 1))
-		
+	corr_df = pandas.DataFrame()
+	#corr = {} #corr[sample] = list(positions)
+	corr_df["alignment_position"] = list(range(1, len(alignment[0].seq) + 1))
+	i = 0
 	for record in alignment:
+		i += 1
 		if record.id == reference:
 			seq = record.seq
-			corr["REFERENCE_" + record.id] = []
+			name = "REFERENCE_" + record.id
+			corr_info = []
+			#corr["REFERENCE_" + record.id] = []
 			coords_2_report["REFERENCE_" + record.id] = {}
 	
 			for nucl in seq:
@@ -48,16 +52,20 @@ def get_ref_coords(alignment, reference, sequence_corr, tag, pos_list):
 					j += 1
 					code = str(i) + "." + str(j)
 					coords[k] = code
-					corr["REFERENCE_" + record.id].append(code)
+					#corr["REFERENCE_" + record.id].append(code)
+					corr_info.append(code)
 				else:
 					i += 1
 					j = 0
 					coords[k] = i
-					corr["REFERENCE_" + record.id].append(str(i)  + " (" + nucl + ")")
+					#corr["REFERENCE_" + record.id].append(str(i)  + " (" + nucl + ")")
+					corr_info.append(str(i)  + " (" + nucl + ")")
 					coords_2_report["REFERENCE_" + record.id][i] = k
 		else:
+			name = record.id
+			corr_info = []
 			if sequence_corr == "all":
-				corr[record.id] = []
+				#corr[record.id] = []
 				coords_2_report[record.id] = {}
 				seq = record.seq
 				counter = 0
@@ -68,15 +76,17 @@ def get_ref_coords(alignment, reference, sequence_corr, tag, pos_list):
 					if nucl == "-":
 						gap_counter += 1
 						code = str(counter) + "." + str(gap_counter)
-						corr[record.id].append(code)
+						#corr[record.id].append(code)
+						corr_info.append(code)
 					else:
 						counter += 1
-						corr[record.id].append(str(counter) + " (" + nucl + ")")
+						#corr[record.id].append(str(counter) + " (" + nucl + ")")
+						corr_info.append(str(i)  + " (" + nucl + ")")
 						coords_2_report[record.id][counter] = counter_align
 						gap_counter = 0					
 			elif "," in sequence_corr:
 				if record.id in sequence_corr.split(","):
-					corr[record.id] = []
+					#corr[record.id] = []
 					coords_2_report[record.id] = {}
 					seq = record.seq
 					counter = 0
@@ -87,14 +97,19 @@ def get_ref_coords(alignment, reference, sequence_corr, tag, pos_list):
 						if nucl == "-":
 							gap_counter += 1
 							code = str(counter) + "." + str(gap_counter)
-							corr[record.id].append(code)
+							#corr[record.id].append(code)
+							corr_info.append(code)
 						else:
 							counter += 1
-							corr[record.id].append(str(counter) + " (" + nucl + ")")
+							#corr[record.id].append(str(counter) + " (" + nucl + ")")
+							corr_info.append(str(i)  + " (" + nucl + ")")
 							coords_2_report[record.id][counter] = counter_align
-							gap_counter = 0		
-		
-	corr_df = pandas.DataFrame(data = corr)
+							gap_counter = 0
+		corr_df[name] = corr_info
+		print(i)
+		print(corr_df)		
+
+	#corr_df = pandas.DataFrame(data = corr)
 
 	if sequence_corr != "none":
 		if pos_list != "none":
@@ -328,8 +343,6 @@ def clean_position(mx, atcg, gaps, all_gaps, missing_code, log):
 	output: alignment no gaps or conserved positions
 	"""
 	
-	align_len = len(mx.columns) - 1
-
 	mx_id = mx[mx.columns[0]]
 	mx = mx.apply(lambda x: x.astype(str).str.upper())
     
@@ -453,7 +466,7 @@ def pos_int(mx, outfile):
 
 # running the pipeline	----------
 
-def main():
+if __name__ == "__main__":
     
 	# argument options
     
@@ -549,7 +562,6 @@ def main():
 		
 		
 	# read alignment
-	print(datetime.datetime.now())
 	print("Loading the alignment...")
 	print("Loading the alignment...", file = log)
 
@@ -560,7 +572,6 @@ def main():
 	print("\tLoaded " + str(len(alignment)) + " samples.", file = log)
 	print("\tInitial alignment length: " + str(align_len))
 	print("\tInitial alignment length: " + str(align_len), file = log)
-	print(datetime.datetime.now())
 
 	# getting coordinate correspondence
 	if args.reference != "none" and args.use_ref:
@@ -607,7 +618,6 @@ def main():
 	# run snp-sites to make the alignment shorter (only if '--use-reference-coords' and '--use-alignment-coords' are not set
 
 	if float(args.ATCG_content) == 0.0 and float(args.N_content) == 1.0: # do not care about samples N content and keep only sites with ATCG
-		print(datetime.datetime.now())
 		if args.remove_ref:
 			print("Removing reference sequence: " + str(args.reference))
 			print("Removing reference sequence: " + str(args.reference), file = log)
@@ -633,7 +643,6 @@ def main():
 		os.system("rm tmp_flt.fasta tmp_flt.vcf")
 		print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)))
 		print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)), file = log)
-		print(datetime.datetime.now())
 
 		# alignment matrix
 		
@@ -645,7 +654,6 @@ def main():
 		else:
 			mx = core2mx(alignment, "tmp.vcf", "", log)
 			os.system("rm tmp.vcf")
-		print(datetime.datetime.now())
 
 	else: # run snp-sites with option -c is not viable
 		if args.remove_ref:
@@ -674,7 +682,6 @@ def main():
 			os.system("rm tmp_flt.fasta tmp_flt.vcf")
 			print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)))
 			print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)), file = log)
-			print(datetime.datetime.now())
 
 			# alignment matrix
 			
@@ -686,7 +693,6 @@ def main():
 			else:
 				mx = core2mx(alignment, "tmp.vcf", "", log)
 				os.system("rm tmp.vcf")
-			print(datetime.datetime.now())
 
 		else:
 			# alignment matrix
@@ -696,7 +702,6 @@ def main():
 				mx = core2mx(alignment, "", coords, log)
 			else:
 				mx = core2mx(alignment, "", "", log)
-			print(datetime.datetime.now())
 
 		# additional cleaning
 
@@ -704,7 +709,6 @@ def main():
 		print("Clean the alignment (1st round)...", file = log)
 		mx = clean_mx(mx, args.keep_gaps, args.keep_all_gaps, args.missing_code, log)
 		run_2nd_clean = False
-		print(datetime.datetime.now())
 
 		# assess number of ATCG's per sample
 
@@ -720,7 +724,7 @@ def main():
 				sys.exit(1)
 			if final_samples < initial_samples:
 				run_2nd_clean = True
-		print(datetime.datetime.now())
+
 		if float(args.N_content) > 0.0 or run_2nd_clean:
 			print("Clean the alignment (2nd round)...")
 			print("Clean the alignment (2nd round)...", file = log)
@@ -733,7 +737,6 @@ def main():
 				print("Cannot proceed because " + str(len(mx.columns)-1) + " sites were kept in the alignment!")
 				print("Cannot proceed because " + str(len(mx.columns)-1) + " sites were kept in the alignment!", file = log)
 				sys.exit(1)	
-		print(datetime.datetime.now())
 	
 	# outputs
 
@@ -744,17 +747,14 @@ def main():
 	if args.pos_int:
 		pos_int(mx, args.out + "_positions_of_interest.tsv")
 
-	end = datetime.datetime.now()
-	elapsed = end - start
+end = datetime.datetime.now()
+elapsed = end - start
 
-	print("\nalignment_processing.py is done!")
-	print("\nalignment_processing.py is done!", file = log)
-	print("\nEnd:", end)
-	print("\nEnd:", end, file = log)
-	print("Time elapsed:", elapsed)
-	print("Time elapsed:", elapsed, file = log)
+print("\nalignment_processing.py is done!")
+print("\nalignment_processing.py is done!", file = log)
+print("\nEnd:", end)
+print("\nEnd:", end, file = log)
+print("Time elapsed:", elapsed)
+print("Time elapsed:", elapsed, file = log)
 
-	log.close()
-
-if __name__ == "__main__":
-    main()
+log.close()
