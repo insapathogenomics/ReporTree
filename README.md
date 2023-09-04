@@ -24,6 +24,10 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
 ## News!
+#### 2023.09.04 - ReporTree v2.0.3
+
+ReporTree v2.0.3 fixes a the behavior of the "samples of interest" when a tsv file is provided and increases the efficiency of the alignment coordinates correspondence.
+
 #### 2023.05.22 - ReporTree v2.0.2 (version of the manuscript)
 
 ReporTree v2 is officially released. This version comprises an updated version of the tool that corresponds to the version at the time of publication. We highlight the following updates:
@@ -133,12 +137,12 @@ python reportree.py -h
 
 ### Installation with Docker
 ```bash
-docker pull insapathogenomics/reportree:latest
+docker pull insapathogenomics/reportree:v2.0.3
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:latest reportree.py -h
+docker run insapathogenomics/reportree:v2.0.3 reportree.py -h
 ```
 
 ## Usage
