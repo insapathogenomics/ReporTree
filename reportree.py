@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.0.2"
-last_updated = "2023-05-12"
+version = "2.0.3"
+last_updated = "2023-09-04"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -374,7 +374,12 @@ def info_samples_interest(samples, matrix, partitions, out):
 			for line in infile:
 				l = line.split("\n")[0]
 				if "," in l:
-					samples_of_interest = l.split(",")
+					info = l.split(",")
+					for s in info:
+						samples_of_interest.append(s)
+				elif "\t" in l:
+					info = l.split("\t")[0]
+					samples_of_interest.append(info)
 				else:
 					samples_of_interest.append(l)
 	else:
