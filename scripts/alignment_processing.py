@@ -16,8 +16,8 @@ from datetime import date
 import datetime as datetime
 from Bio import SeqIO, AlignIO, Align, Alphabet
 
-version = "1.2.0"
-last_updated = "2023-06-01"
+version = "1.3.0"
+last_updated = "2023-09-04"
 
 # functions	----------
 
@@ -81,7 +81,7 @@ def get_ref_coords(alignment, reference, sequence_corr, tag, pos_list):
 					else:
 						counter += 1
 						#corr[record.id].append(str(counter) + " (" + nucl + ")")
-						corr_info.append(str(i)  + " (" + nucl + ")")
+						corr_info.append(str(counter)  + " (" + nucl + ")")
 						coords_2_report[record.id][counter] = counter_align
 						gap_counter = 0					
 			elif "," in sequence_corr:
@@ -102,12 +102,10 @@ def get_ref_coords(alignment, reference, sequence_corr, tag, pos_list):
 						else:
 							counter += 1
 							#corr[record.id].append(str(counter) + " (" + nucl + ")")
-							corr_info.append(str(i)  + " (" + nucl + ")")
+							corr_info.append(str(counter)  + " (" + nucl + ")")
 							coords_2_report[record.id][counter] = counter_align
 							gap_counter = 0
-		corr_df[name] = corr_info
-		print(i)
-		print(corr_df)		
+		corr_df[name] = corr_info	
 
 	#corr_df = pandas.DataFrame(data = corr)
 
