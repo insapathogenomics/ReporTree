@@ -1,6 +1,6 @@
 # ReporTree
 
-![Test Pass:](https://github.com/dsobral/ReporTree/actions/workflows/python-app.yml/badge.svg)
+![Test Pass:](https://github.com/insapathogenomics/ReporTree/actions/workflows/python-app.yml/badge.svg)
 
 <p align="center">
   <img width="300" height="180" src=https://user-images.githubusercontent.com/19263468/189874644-00ff1b8b-1d1d-4d69-80df-0bd5893a9df2.png>
