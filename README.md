@@ -117,6 +117,11 @@ Of note, to increase the flexibility of the nomenclature system, ReporTree also 
 ### Installation with conda
 ```bash
 git clone https://github.com/insapathogenomics/ReporTree
+cd ReporTree/scripts
+git clone https://github.com/insapathogenomics/GrapeTree.git
+git clone https://github.com/insapathogenomics/ComparingPartitions.git
+git clone https://github.com/insapathogenomics/vcf2mst.git
+cd ..
 conda env create --name reportree --file=reportree_env.yml
 ```
 
