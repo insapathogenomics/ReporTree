@@ -83,6 +83,14 @@ _TIP: Users can interactively visualize and explore the ReporTree derived cluste
 - Newick file with the dendrogram resulting of the hierarchical clustering analysis or with the minimum spanning tree of GrapeTree
 - .zip - compressed folders with the output files of a high resolution analysis of the clusters with samples of interest and of the N closest samples to the samples of interest 
 
+The following figure presents the different input/output workflow possibilities provided by ReporTree:
+
+<p align="center">
+<img width="700" alt="Figure1_v3" src="https://github.com/insapathogenomics/ReporTree/assets/19263468/9047702b-5ad9-41d5-9a9e-a00e1d3add79">
+</p>
+
+_Note: This is the [Figure 1](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-023-01196-1/figures/1) of [ReporTree publication](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-023-01196-1). For details please check the respective caption._
+
 
 ## Nomenclature
 
