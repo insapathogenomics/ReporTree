@@ -118,7 +118,7 @@ Of note, to increase the flexibility of the nomenclature system, ReporTree also 
 - [Biopython](https://biopython.org)
 - [Pandas](https://pandas.pydata.org)
 - [Ete3](http://etetoolkit.org)
-- [cgmlst-dists](https://github.com/tseemann/cgmlst-dists)
+- [cgmlst-dists](https://github.com/genpat-it/cgmlst-dists)
 - [vcf2mst](https://github.com/genpat-it/vcf2mst)
 - [snp-sites](https://github.com/sanger-pathogens/snp-sites)
 
@@ -129,7 +129,10 @@ cd ReporTree/scripts
 git clone https://github.com/insapathogenomics/GrapeTree.git
 git clone https://github.com/insapathogenomics/ComparingPartitions.git
 git clone https://github.com/insapathogenomics/vcf2mst.git
-cd ..
+git clone https://github.com/genpat-it/cgmlst-dists
+cd cgmlst-dists
+make
+cd ../..
 conda env create --name reportree --file=reportree_env.yml
 ```
 
@@ -486,7 +489,7 @@ Also, ReporTree relies on the work of other developers. So, depending on the fun
 4. ComparingPartitions: https://journals.asm.org/doi/10.1128/jcm.02536-05?permanently=true (if you requested "stability_regions")
 5. Adjusted Wallace and cluster stability: https://www.biorxiv.org/content/10.1101/299347v1 (if you requested "stability_regions")
 6. Ete3: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4868116/pdf/msw046.pdf (if you provided a newick tree)     
-7. cgmlst-dists: https://github.com/tseemann/cgmlst-dists
+7. cgmlst-dists: https://github.com/tseemann/cgmlst-dists for original code and https://github.com/genpat-it/cgmlst-dists for improvements regarding memory efficiency 
 8. snp-sites: https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000056 (if you provided a multi-sequence alignment)
 
 
