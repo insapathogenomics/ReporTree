@@ -16,8 +16,11 @@ from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, maxdists, to_
 from scipy.spatial.distance import squareform
 import string
 
-version = "1.2.1"
-last_updated = "2023-03-29"
+partitioning_HC_script = os.path.realpath(__file__)
+cgmlst_dists = partitioning_HC_script.rsplit("/", 1)[0] + "/cgmlst-dists/cgmlst-dists"
+
+version = "1.3.0"
+last_updated = "2023-10-02"
 
 # functions	----------
 
@@ -443,7 +446,7 @@ def main():
 			tmp_df.to_csv("temporary_profile.tsv", index = True, header = True, sep ="\t")
 			
 			# run cgmlst-dists
-			returned_value = os.system("cgmlst-dists temporary_profile.tsv >  tmp_dist_hamming.tsv")
+			returned_value = os.system(cgmlst_dists + " temporary_profile.tsv >  tmp_dist_hamming.tsv")
 			if str(returned_value) != "0":
 				print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!")
 				print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!", file = log)
