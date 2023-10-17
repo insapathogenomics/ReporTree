@@ -5,9 +5,10 @@ channels:
   - bioconda
   - conda-forge
   - defaults
+  - insapathogenomics
 dependencies:
   - biopython=1.77
-  - cgmlst-dists=0.4.0
+  - cgmlst-dists_genpat-it=0.4.0
   - ete3
   - grapetree=2.1
   - numba=0.55.1
