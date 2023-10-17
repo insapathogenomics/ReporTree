@@ -19,8 +19,10 @@ import string
 partitioning_HC_script = os.path.realpath(__file__)
 cgmlst_dists = partitioning_HC_script.rsplit("/", 1)[0] + "/cgmlst-dists/cgmlst-dists"
 
-version = "1.3.0"
-last_updated = "2023-10-02"
+sys.setrecursionlimit(10000) # please increase this number, if you are getting the error "RecursionError: maximum recursion depth exceeded while calling a Python object" 
+
+version = "1.4.0"
+last_updated = "2023-10-17"
 
 # functions	----------
 
