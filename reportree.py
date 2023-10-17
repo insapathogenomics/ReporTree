@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.1.0"
-last_updated = "2023-10-02"
+version = "2.1.1"
+last_updated = "2023-10-17"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
