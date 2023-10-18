@@ -25,8 +25,8 @@ partitioning_grapetree_script = os.path.realpath(__file__)
 grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapetree.py"
 python = sys.executable
 
-version = "1.3.1"
-last_updated = "2023-10-17"
+version = "1.3.2"
+last_updated = "2023-10-18"
 
 def main():
 	# defining parameters ----------
@@ -399,7 +399,7 @@ def main():
 		tmp_df.to_csv("temporary_profile.tsv", index = True, header = True, sep ="\t")
 
 		# run cgmlst-dists
-		returned_value = os.system("cgmlst_dists temporary_profile.tsv >  tmp_dist_hamming.tsv")
+		returned_value = os.system("cgmlst-dists temporary_profile.tsv >  tmp_dist_hamming.tsv")
 		if str(returned_value) != "0":
 			print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!")
 			print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!", file = log)
