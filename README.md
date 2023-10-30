@@ -471,7 +471,7 @@ ReporTree can enhance genomics surveillance and quickly identify/characterize ge
 
  ### Routine surveillance - viral pathogen (e.g. SARS-CoV-2) - [click here](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#routine-surveillance---viral-pathogen-eg-sars-cov-2)
 
-ReporTree is currently applied to generate weekly reports about SARS-CoV-2 variant circulation in Portugal. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#routine-surveillance---viral-pathogen-eg-sars-cov-2), we give some examples on how to rapidly generate key surveillance metrics taking as input metadata tables (tsv format) and rooted divergence (SNP) trees (newick format) provided for download in regular Nextstrain (auspice) builds, such as those maintained by the National Institute of Health Dr. Ricardo Jorge, Portugal (INSA) at https://insaflu.insa.pt/covid19/.
+ReporTree is currently applied to generate periodic reports about SARS-CoV-2 variant circulation in Portugal. In [ReporTree wiki](https://github.com/insapathogenomics/ReporTree/wiki/5.-Examples#routine-surveillance---viral-pathogen-eg-sars-cov-2), we give some examples on how to rapidly generate key surveillance metrics taking as input metadata tables (tsv format) and rooted divergence (SNP) trees (newick format) provided for download in regular Nextstrain (auspice) builds, such as those maintained by the National Institute of Health Dr. Ricardo Jorge, Portugal (INSA) at https://insaflu.insa.pt/covid19/.
 
 
 ## Citation
