@@ -20,8 +20,8 @@ partitioning_HC_script = os.path.realpath(__file__)
 
 sys.setrecursionlimit(10000) # please increase this number, if you are getting the error "RecursionError: maximum recursion depth exceeded while calling a Python object" 
 
-version = "1.4.2"
-last_updated = "2023-10-18"
+version = "1.4.3"
+last_updated = "2023-11-17"
 
 # functions	----------
 
@@ -444,17 +444,17 @@ def main():
 			main_df = alleles.set_index(alleles.columns[0], drop = True)
 			tmp_df = main_df.iloc[: , start_chunk:end_chunk]
 			df_counter += 1
-			tmp_df.to_csv("temporary_profile.tsv", index = True, header = True, sep ="\t")
+			tmp_df.to_csv(args.out + "_temporary_profile.tsv", index = True, header = True, sep ="\t")
 			
 			# run cgmlst-dists
-			returned_value = os.system("cgmlst-dists temporary_profile.tsv >  tmp_dist_hamming.tsv")
+			returned_value = os.system("cgmlst-dists " + args.out + "_temporary_profile.tsv > " + args.out + "_tmp_dist_hamming.tsv")
 			if str(returned_value) != "0":
 				print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!")
 				print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!", file = log)
 				sys.exit(1)
-			os.system("rm temporary_profile.tsv")
-			sub_dist_df = pandas.read_table("tmp_dist_hamming.tsv")
-			os.system("rm tmp_dist_hamming.tsv")
+			os.system("rm " + args.out + "_temporary_profile.tsv")
+			sub_dist_df = pandas.read_table(args.out + "_tmp_dist_hamming.tsv")
+			os.system("rm " + args.out + "_tmp_dist_hamming.tsv")
 			sub_dist_df.set_index(sub_dist_df.columns[0], inplace = True, drop = True)
 			if df_counter == 1:
 				dist_df = sub_dist_df

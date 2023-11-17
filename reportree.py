@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.1.2"
-last_updated = "2023-10-18"
+version = "2.1.3"
+last_updated = "2023-11-17"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -288,7 +288,7 @@ def all_partitions_available(method_threshold, include_node):
 	
 	return methods
 			
-def filter_partitions_table(method, table):
+def filter_partitions_table(method, table, output):
 	""" only keep the partitions table of the method in analysis """
 	
 	mx = pandas.read_table(table)
@@ -300,8 +300,8 @@ def filter_partitions_table(method, table):
 	
 	final_df = mx.filter(items=suitable_columns)
 	
-	with open("tmp.tsv", "w") as method_file:
-		final_df.to_csv("tmp.tsv", index = False, header=True, sep ="\t")
+	with open(output + "_tmp.tsv", "w") as method_file:
+		final_df.to_csv(output + "_tmp.tsv", index = False, header=True, sep ="\t")
 		
 def col_list(args):
 	""" output the list of columns 
@@ -1454,10 +1454,10 @@ def main():
 			if len(all_partitions_available(args.method_threshold, args.root_dist_by_node)) >= 1 and args.dist == 1.0: # at least all partitions for 1 method
 				print_log("\t'stability_regions' option specified. Will also run comparing_partitions_v2.py to determine the partitions that must be included in the report...", log)
 				for method in all_partitions_available(args.method_threshold, args.root_dist_by_node):
-					filter_partitions_table(method, args.output + "_partitions.tsv")
+					filter_partitions_table(method, args.output + "_partitions.tsv", args.output)
 					log.close()
 					real_partitions = args.partitions
-					args.partitions = "tmp.tsv"
+					args.partitions = args.output + "_tmp.tsv"
 					real_output = args.output
 					args.output = args.output + "_" + method
 					returned_value = run_stability(args, log_name, partition_status)
@@ -1465,7 +1465,7 @@ def main():
 						sys.exit("\n\nReporTree exited before expected while running comparing_partitions_v2.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
 					args.partitions = real_partitions
 					args.output = real_output
-					os.system("rm tmp.tsv")
+					os.system("rm " + args.output + "_tmp.tsv")
 					log = open(log_name, "a+")
 			else:
 				if len(all_partitions_available(args.method_threshold, args.root_dist_by_node)) >= 1 and args.dist != 1.0:
