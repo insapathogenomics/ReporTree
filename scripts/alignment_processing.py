@@ -16,8 +16,8 @@ from datetime import date
 import datetime as datetime
 from Bio import SeqIO, AlignIO, Align, Alphabet
 
-version = "1.3.0"
-last_updated = "2023-09-04"
+version = "1.3.1"
+last_updated = "2023-11-17"
 
 # functions	----------
 
@@ -600,9 +600,9 @@ if __name__ == "__main__":
 			print("\nCannot proceed because " + str(len(alignment)) + " samples were kept in the matrix!")
 			print("\nCannot proceed because " + str(len(alignment)) + " samples were kept in the matrix!", file = log)
 			sys.exit(1)
-		SeqIO.write(alignment, "tmp.fasta", "fasta")
-		alignment = AlignIO.read("tmp.fasta", "fasta")
-		os.system("rm tmp.fasta")
+		SeqIO.write(alignment, args.out + "_tmp.fasta", "fasta")
+		alignment = AlignIO.read(args.out + "_tmp.fasta", "fasta")
+		os.system("rm " + args.out + "_tmp.fasta")
 	elif args.metadata != "" and args.filter_column == "":
 		print("Metadata file was provided but no filter was found... I am confused :-(")
 		print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
@@ -622,23 +622,23 @@ if __name__ == "__main__":
 			alignment = rm_ref(alignment, args.reference)
 		print("Trimming the alignment with SNP-sites:")
 		print("Trimming the alignment with SNP-sites:", file = log)
-		print("\tsnp-sites -c tmp.fasta > tmp_flt.fasta")
-		print("\tsnp-sites -c tmp.fasta > tmp_flt.fasta", file = log)
-		SeqIO.write(alignment, "tmp.fasta", "fasta")
-		returned_value = os.system("snp-sites -c tmp.fasta > tmp_flt.fasta")
+		print("\tsnp-sites -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta")
+		print("\tsnp-sites -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta", file = log)
+		SeqIO.write(alignment, args.out + "_tmp.fasta", "fasta")
+		returned_value = os.system("snp-sites -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta")
 		if str(returned_value) != "0":
 			print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!")
 			print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!", file = log)
 			sys.exit(1)
-		returned_value = os.system("snp-sites -v -c tmp.fasta > tmp_flt.vcf")
+		returned_value = os.system("snp-sites -v -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.vcf")
 		if str(returned_value) != "0":
 			print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!")
 			print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!", file = log)
 			sys.exit(1)
-		os.system("rm tmp.fasta")
-		alignment = AlignIO.read("tmp_flt.fasta", "fasta")
-		os.system("grep -v '##' tmp_flt.vcf >  tmp.vcf")
-		os.system("rm tmp_flt.fasta tmp_flt.vcf")
+		os.system("rm " + args.out + "_tmp.fasta")
+		alignment = AlignIO.read(args.out + "_tmp_flt.fasta", "fasta")
+		os.system("grep -v '##' " + args.out + "_tmp_flt.vcf > " + args.out + "_tmp.vcf")
+		os.system("rm " + args.out + "_tmp_flt.fasta " + args.out + "_tmp_flt.vcf")
 		print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)))
 		print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)), file = log)
 
@@ -647,11 +647,11 @@ if __name__ == "__main__":
 		print("Getting the alignment matrix...")
 		print("Getting the alignment matrix...", file = log)
 		if args.use_ref:
-			mx = core2mx(alignment, "tmp.vcf", coords, log)
-			os.system("rm tmp.vcf")
+			mx = core2mx(alignment, args.out + "_tmp.vcf", coords, log)
+			os.system("rm " + args.out + "_tmp.vcf")
 		else:
-			mx = core2mx(alignment, "tmp.vcf", "", log)
-			os.system("rm tmp.vcf")
+			mx = core2mx(alignment, args.out + "_tmp.vcf", "", log)
+			os.system("rm " + args.out + "_tmp.vcf")
 
 	else: # run snp-sites with option -c is not viable
 		if args.remove_ref:
@@ -661,23 +661,23 @@ if __name__ == "__main__":
 		if not args.keep_all_gaps:
 			print("Trimming the alignment with SNP-sites:")
 			print("Trimming the alignment with SNP-sites:", file = log)
-			print("\tsnp-sites tmp.fasta > tmp_flt.fasta")
-			print("\tsnp-sites tmp.fasta > tmp_flt.fasta", file = log)
-			SeqIO.write(alignment, "tmp.fasta", "fasta")
-			returned_value = os.system("snp-sites tmp.fasta > tmp_flt.fasta")
+			print("\tsnp-sites " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta")
+			print("\tsnp-sites " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta", file = log)
+			SeqIO.write(alignment, args.out + "_tmp.fasta", "fasta")
+			returned_value = os.system("snp-sites " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta")
 			if str(returned_value) != "0":
 				print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!")
 				print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!", file = log)
 				sys.exit(1)
-			returned_value = os.system("snp-sites -v tmp.fasta > tmp_flt.vcf")
+			returned_value = os.system("snp-sites -v " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.vcf")
 			if str(returned_value) != "0":
 				print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!")
 				print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!", file = log)
 				sys.exit(1)
-			os.system("rm tmp.fasta")
-			alignment = AlignIO.read("tmp_flt.fasta", "fasta")
-			os.system("grep -v '##' tmp_flt.vcf >  tmp.vcf")
-			os.system("rm tmp_flt.fasta tmp_flt.vcf")
+			os.system("rm " + args.out + "_tmp.fasta")
+			alignment = AlignIO.read(args.out + "_tmp_flt.fasta", "fasta")
+			os.system("grep -v '##' " + args.out + "_tmp_flt.vcf > " + args.out + "_tmp.vcf")
+			os.system("rm " + args.out + "_tmp_flt.fasta " + args.out + "_tmp_flt.vcf")
 			print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)))
 			print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)), file = log)
 
@@ -686,11 +686,11 @@ if __name__ == "__main__":
 			print("Getting the alignment matrix...")
 			print("Getting the alignment matrix...", file = log)
 			if args.use_ref:
-				mx = core2mx(alignment, "tmp.vcf", coords, log)
-				os.system("rm tmp.vcf")
+				mx = core2mx(alignment, args.out + "_tmp.vcf", coords, log)
+				os.system("rm " + args.out + "_tmp.vcf")
 			else:
-				mx = core2mx(alignment, "tmp.vcf", "", log)
-				os.system("rm tmp.vcf")
+				mx = core2mx(alignment, args.out + "_tmp.vcf", "", log)
+				os.system("rm " + args.out + "_tmp.vcf")
 
 		else:
 			# alignment matrix
