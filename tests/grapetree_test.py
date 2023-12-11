@@ -33,7 +33,7 @@ def test_grapetree():
 
 	assert(os.path.exists(os.path.join("tests","TEST2","TEST2_metadata_w_partitions.tsv")))
 	metadata_w_partitions = pd.read_csv(os.path.join("tests","TEST2","TEST2_metadata_w_partitions.tsv"), sep='\t', header=None)
-	assert(metadata_w_partitions.iloc[3,7] == "C1-X_Y_Z") 
+	assert(metadata_w_partitions.iloc[3,9] == "C1-X_Y_Z") 
 
 	assert(os.path.exists(os.path.join("tests","TEST2","TEST2_nomenclature_changes.tsv")))
 	current_date = "%s" % (datetime.date.today())

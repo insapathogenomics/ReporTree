@@ -55,10 +55,10 @@ def test_alignment():
     
 	assert(os.path.exists(os.path.join("tests","TEST1","TEST1_metadata_w_partitions.tsv")))
 	metadata_w_partitions = pd.read_csv(os.path.join("tests","TEST1","TEST1_metadata_w_partitions.tsv"), sep='\t', header=None)
-	assert(metadata_w_partitions.iloc[0,7] == "nomenclature_code_" + "%s" % (datetime.date.today()))
-	assert(metadata_w_partitions.iloc[0,8] == "MST-21x1.0") 
-	assert(metadata_w_partitions.iloc[0,11] == "QUAL_called")
-	assert(metadata_w_partitions.iloc[12,7] == "C2-C2-C2.1")        
+	assert(metadata_w_partitions.iloc[0,9] == "nomenclature_code_" + "%s" % (datetime.date.today()))
+	assert(metadata_w_partitions.iloc[0,10] == "MST-21x1.0") 
+	assert(metadata_w_partitions.iloc[0,13] == "QUAL_called")
+	assert(metadata_w_partitions.iloc[12,9] == "C2-C2-C2.1")        
     
 	assert(os.path.exists(os.path.join("tests","TEST1","TEST1_metrics.tsv")))
     

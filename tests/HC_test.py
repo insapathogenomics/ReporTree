@@ -27,7 +27,7 @@ def test_HC():
 	assert(os.path.exists(os.path.join("tests","TEST3","TEST3_loci_report.tsv")))
 	assert(os.path.exists(os.path.join("tests","TEST3","TEST3_metadata_w_partitions.tsv"))) 
 	metadata_w_partitions = pd.read_csv(os.path.join("tests","TEST3","TEST3_metadata_w_partitions.tsv"), sep='\t', header=None)
-	assert(metadata_w_partitions.iloc[3,7] == "C1-X_Y_Z") 
+	assert(metadata_w_partitions.iloc[3,9] == "C1-X_Y_Z") 
 	assert(os.path.exists(os.path.join("tests","TEST3","TEST3_nomenclature_changes.tsv")))
 	current_date = "%s" % (datetime.date.today())
 	assert(os.path.exists(os.path.join("tests","TEST3","TEST3_nomenclature_code_"+current_date+"_summary.tsv")))
