@@ -13,10 +13,10 @@ import argparse
 import textwrap
 import pandas
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
-from datetime import datetime, date
+import datetime
 
-version = "1.0.2"
-last_updated = "2023-03-28"
+version = "1.1.0"
+last_updated = "2023-12-11"
 
 # functions	----------
 
@@ -42,22 +42,35 @@ def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2rep
 	possible_subset = False
 
 	# checking for 'date' column
-	if "date" in mx_metadata.columns and "iso_week_nr" not in mx_metadata.columns and "iso_year" not in mx_metadata.columns and "iso_week" not in mx_metadata.columns:
+	if "date" in mx_metadata.columns:
 		index_no = mx_metadata.columns.get_loc("date")
+		mx_metadata["date_original"] = mx_metadata["date"]
+		date_original = mx_metadata.pop("date_original")
+		mx_metadata.insert(index_no, "date_original", date_original)
+		index_no = mx_metadata.columns.get_loc("date")
+		if "year" in mx_metadata.columns:
+			mx_metadata["year_original"] = mx_metadata["year"]
+			year_original = mx_metadata.pop("year_original")
+			mx_metadata.insert(index_no, "year_original", year_original)
+			index_no = mx_metadata.columns.get_loc("date")
 		mx_metadata["date"] = pandas.to_datetime(mx_metadata["date"], errors = "coerce")
-		year = mx_metadata["date"].dt.isocalendar().year
-		week = mx_metadata["date"].dt.isocalendar().week
-		mx_metadata["iso_year"] = year.astype(str)
-		mx_metadata["iso_week_nr"] = week.astype(str)
-		mx_metadata["iso_week"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--").apply(lambda x: x.zfill(2))
-		isoyear = mx_metadata.pop("iso_year")
-		isoweek = mx_metadata.pop("iso_week_nr")
-		isodate = mx_metadata.pop("iso_week")
-		mx_metadata.insert(index_no + 1, "iso_year", isoyear)
-		mx_metadata.insert(index_no + 2, "iso_week_nr", isoweek)
-		mx_metadata.insert(index_no + 3, "iso_week", isodate)
+		mx_metadata["year"] = mx_metadata["date"].dt.year
+		year = mx_metadata.pop("year")
+		mx_metadata.insert(index_no + 1, "year", year)
+		index_no = mx_metadata.columns.get_loc("date")
+		if "iso_week_nr" not in mx_metadata.columns and "iso_year" not in mx_metadata.columns and "iso_week" not in mx_metadata.columns:
+			isoyear = mx_metadata["date"].dt.isocalendar().year
+			isoweek = mx_metadata["date"].dt.isocalendar().week
+			mx_metadata["iso_year"] = isoyear.astype(str)
+			mx_metadata["iso_week_nr"] = isoweek.astype(str)
+			mx_metadata["iso_week"] = isoyear.astype(str).replace("<NA>", "-") + "W" + isoweek.astype(str).replace("<NA>", "--").apply(lambda x: x.zfill(2))
+			isoyear = mx_metadata.pop("iso_year")
+			isoweek = mx_metadata.pop("iso_week_nr")
+			isodate = mx_metadata.pop("iso_week")
+			mx_metadata.insert(index_no + 2, "iso_year", isoyear)
+			mx_metadata.insert(index_no + 3, "iso_week_nr", isoweek)
+			mx_metadata.insert(index_no + 4, "iso_week", isodate)
 
-		
 	# check for duplicated samples in metadata
 	metadata_samples = mx_metadata[mx_metadata.columns[0]].values.tolist()
 	
@@ -642,8 +655,11 @@ def main():
 									YYYY-MM-DD. If you only provide YYYY, it will assume YYYY-01-01!!
 									
 									Note 3: If a 'date' column is provided in the metadata, this script will 
-									determine and provide in the new metadata table the columns iso_year, 
-									iso_week_nr and iso_week for each sequence (e.g. iso_year = 2021, 
+									copy it to the "date_original" column (which remains intact) and create a new
+									"date" column with the date formated as YYYY-MM-DD. A new "year" column will
+									also be created, corresponding to the exact year of the sample (not ISO). 
+									Moreover, it will determine and provide in the new metadata table the columns 
+									iso_year, iso_week_nr and iso_week for each sequence (e.g. iso_year = 2021, 
 									iso_week_nr = 52, iso_week = 2021W52)!!
 									
 									Note 4: While for nominal or categorical variables this script can provide in 

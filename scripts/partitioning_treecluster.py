@@ -18,8 +18,8 @@ import pandas
 from datetime import date
 import ete3 as ete
 
-version = "1.2.0"
-last_updated = "2023-05-05"
+version = "1.3.0"
+last_updated = "2023-12-11"
 
 treecluster = "TreeCluster.py"
 
@@ -185,20 +185,34 @@ def filter_partitions_table(partitions, mx, filters, log):
     
 	sample_column = mx.columns[0]
 	
-	if "date" in mx.columns and "iso_week" not in mx.columns:
+	if "date" in mx.columns:
 		index_no = mx.columns.get_loc("date")
+		mx["date_original"] = mx["date"]
+		date_original = mx.pop("date_original")
+		mx.insert(index_no, "date_original", date_original)
+		index_no = mx.columns.get_loc("date")
+		if "year" in mx.columns:
+			mx["year_original"] = mx["year"]
+			year_original = mx.pop("year_original")
+			mx.insert(index_no, "year_original", year_original)
+			index_no = mx.columns.get_loc("date")
 		mx["date"] = pandas.to_datetime(mx["date"], errors = "coerce")
-		year = mx["date"].dt.isocalendar().year
-		week = mx["date"].dt.isocalendar().week
-		mx["iso_year"] = year.astype(str)
-		mx["iso_week_nr"] = week.astype(str)
-		mx["iso_week"] = year.astype(str).replace("<NA>", "-") + "W" + week.astype(str).replace("<NA>", "--")
-		isoyear = mx.pop("iso_year")
-		isoweek = mx.pop("iso_week_nr")
-		isodate = mx.pop("iso_week")
-		mx.insert(index_no + 1, "iso_year", isoyear)
-		mx.insert(index_no + 2, "iso_week_nr", isoweek)
-		mx.insert(index_no + 3, "iso_week", isodate)
+		mx["year"] = mx["date"].dt.year
+		year = mx.pop("year")
+		mx.insert(index_no + 1, "year", year)
+		index_no = mx.columns.get_loc("date")
+		if "iso_week_nr" not in mx.columns and "iso_year" not in mx.columns and "iso_week" not in mx.columns:
+			isoyear = mx["date"].dt.isocalendar().year
+			isoweek = mx["date"].dt.isocalendar().week
+			mx["iso_year"] = isoyear.astype(str)
+			mx["iso_week_nr"] = isoweek.astype(str)
+			mx["iso_week"] = isoyear.astype(str).replace("<NA>", "-") + "W" + isoweek.astype(str).replace("<NA>", "--").apply(lambda x: x.zfill(2))
+			isoyear = mx.pop("iso_year")
+			isoweek = mx.pop("iso_week_nr")
+			isodate = mx.pop("iso_week")
+			mx.insert(index_no + 2, "iso_year", isoyear)
+			mx.insert(index_no + 3, "iso_week_nr", isoweek)
+			mx.insert(index_no + 4, "iso_week", isodate)
 				
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")))
 	print("\tFiltering metadata for the following parameters: " + " & ".join(filters.split(";")), file = log)

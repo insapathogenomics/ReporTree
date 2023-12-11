@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.1.3"
-last_updated = "2023-11-17"
+version = "2.2.0"
+last_updated = "2023-12-11"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -26,8 +26,7 @@ python = sys.executable
 # command line functions	----------
 
 def run_stability(args, log_name, partitions_status):
-	""" run compari
-	ng_partitions_v2.py """
+	""" run comparing_partitions_v2.py """
 	
 	extra_stability = ""
 	if args.keep_redundants:
@@ -127,7 +126,7 @@ def run_vcf2mst(args, intype):
 	return returned_value
 
 def run_partitioning_grapetree(args, input_align, profile):
-	""" run partitioning_grapetree.pyt """
+	""" run partitioning_grapetree.py """
 
 	extras_grapetree = ""
 	if args.matrix4grapetree == True:
@@ -189,7 +188,7 @@ def print_log(message, log):
 	print(message)
 	print(message, file = log)
 	
-def infer_partitions_from_list(analysis, partitions, metadata, thresholds, output, distance, day, log):
+def infer_partitions_from_list(analysis, partitions, metadata, thresholds, output, distance, log):
 	""" infer which partition names should be provided for a given analysis from a list of input thresholds 
 	input: list of thresholds provided in the command lines
 	output: list of partition names """
@@ -1048,9 +1047,12 @@ def main():
 									If you only provide YYYY, it will assume YYYY-01-01!!
 									
 									Note 3: If a 'date' column is provided in the metadata, this script will 
-									determine and provide in the new metadata table the columns iso_year, 
-									iso_week_nr and iso_week for each sample (e.g. iso_year = 2021, iso_week_nr = 52, 
-									iso_week = 2021W52)!!
+									copy it to the "date_original" column (which remains intact) and create a new
+									"date" column with the date formated as YYYY-MM-DD. A new "year" column will
+									also be created, corresponding to the exact year of the sample (not ISO). 
+									Moreover, it will determine and provide in the new metadata table the columns 
+									iso_year, iso_week_nr and iso_week for each sequence (e.g. iso_year = 2021, 
+									iso_week_nr = 52, iso_week = 2021W52)!!
 									
 									Note 4: While for nominal or categorical variables this script can provide in 
 									the summary report the number of observations or the frequency of each 
@@ -1377,7 +1379,7 @@ def main():
 					sys.exit("\n\nReporTree exited before expected while running comparing_partitions_v2.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
 				log = open(log_name, "a+")
 				
-			partitions2report_final, partitions2report_lst = infer_partitions_from_list("other", args.partitions, metadata_col, args.partitions2report, args.output, args.dist, day, log)
+			partitions2report_final, partitions2report_lst = infer_partitions_from_list("other", args.partitions, metadata_col, args.partitions2report, args.output, args.dist, log)
 			
 			if len(partitions2report_final) == 0:
 				print_log("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...", log)
@@ -1387,7 +1389,7 @@ def main():
 
 			if args.code_levels != "" and args.metadata != "none":
 				print_log("\nGenerating nomenclature code...", log)
-				code_levels, code_levels_lst = infer_partitions_from_list("other", args.partitions, metadata_col, args.code_levels, args.output, args.dist, day, log)
+				code_levels, code_levels_lst = infer_partitions_from_list("other", args.partitions, metadata_col, args.code_levels, args.output, args.dist, log)
 				nomenclature_code(metadata_mx,metadata_col,args.partitions,args.output,code_levels_lst,day,log)
 				args.metadata = args.output + "_metadata_w_partitions.tsv"
 
@@ -1475,7 +1477,7 @@ def main():
 					print_log("\t'stability_regions' option specified but no method was run for all possible partitions.", log)
 					sys.exit(1)
 			
-		partitions2report_final, partitions2report_lst = infer_partitions_from_list("treecluster", args.output + "_partitions.tsv", metadata_col, args.partitions2report, args.output, args.dist, day, log)
+		partitions2report_final, partitions2report_lst = infer_partitions_from_list("treecluster", args.output + "_partitions.tsv", metadata_col, args.partitions2report, args.output, args.dist, log)
 		
 		if len(partitions2report_final) == 0:
 			print_log("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...", log)
@@ -1667,7 +1669,7 @@ def main():
 					sys.exit(1)
 			log = open(log_name, "a+")
 			
-		partitions2report_final, partitions2report_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.partitions2report, args.output, args.dist, day, log)
+		partitions2report_final, partitions2report_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.partitions2report, args.output, args.dist, log)
 		
 		if len(partitions2report_final) == 0:
 			print_log("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...", log)
@@ -1676,7 +1678,7 @@ def main():
 		# get nomenclature code
 		if args.code_levels != "" and args.metadata != "":
 			print_log("\nGenerating nomenclature code...", log)
-			code_levels, code_levels_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.code_levels, args.output, args.dist, day, log)
+			code_levels, code_levels_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.code_levels, args.output, args.dist, log)
 			nomenclature_code(metadata_mx,metadata_col,args.output + "_partitions.tsv",args.output,code_levels_lst,day,log)
 			args.metadata = args.output + "_metadata_w_partitions.tsv"
 
@@ -1714,7 +1716,7 @@ def main():
 
 			if args.zoom != "no":
 				print_log("Checking cluster zoom-in requests...", log)
-				partitions4zoom, partitions4zoom_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.zoom, args.output, args.dist, day, log)
+				partitions4zoom, partitions4zoom_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.zoom, args.output, args.dist, log)
 				clusters_of_interest, not_in_partitions = get_clusters_interest(samples_of_interest, args.output + "_partitions.tsv", args.output + "_metadata_w_partitions.tsv", day, partitions4zoom_lst)
 				print(partitions4zoom_lst,clusters_of_interest)
 				if len(partitions4zoom_lst) == 0:
