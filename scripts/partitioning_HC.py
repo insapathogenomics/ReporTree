@@ -20,8 +20,8 @@ partitioning_HC_script = os.path.realpath(__file__)
 
 sys.setrecursionlimit(10000) # please increase this number, if you are getting the error "RecursionError: maximum recursion depth exceeded while calling a Python object" 
 
-version = "1.5.0"
-last_updated = "2023-12-11"
+version = "1.6.0"
+last_updated = "2024-03-19"
 
 # functions	----------
 
@@ -156,10 +156,8 @@ def filter_mx(matrix, mx, filters, matrix_type, log):
 					mx[col] = mx[col].astype(str)
 
 	samples = mx[sample_column].tolist()
-	
 	if matrix_type == "dist":
-		pairwise_dist_mx = pairwise_dist_mx.set_index(pairwise_dist_mx.columns[0], drop = True)
-		
+		pairwise_dist_mx = matrix.set_index(matrix.columns[0], drop = True)
 		columns_interest = []
 		
 		for sample in pairwise_dist_mx.columns:

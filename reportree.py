@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.2.0"
-last_updated = "2023-12-11"
+version = "2.3.0"
+last_updated = "2024-03-19"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -729,7 +729,9 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                                 if old == all_clusters and new != new_cluster_name:
                                     changes[all_clusters].append(change_info)
         elif len(new_samples) > 0: # cluster has new samples
-            for sample_list in db_samples.keys():
+            db_samples_lst = list(db_samples.keys())
+            db_samples_lst.sort()
+            for sample_list in db_samples_lst:
                 old_samples = sample_list.split(",")
                 old_cluster = str(db_samples[sample_list])
                 cluster_intersection = set(cluster_samples) & set(old_samples)
@@ -746,7 +748,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                                 new_cluster_name = old_cluster
                                 change_info = old_cluster,str(len(old_samples)),"kept (increase)",new_cluster_name,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
                             conversion[cluster] = new_cluster_name
-                        else: # it was already a cluster than increased
+                        else: # it was already a cluster that increased
                             conversion[cluster] = old_cluster
                             change_info = old_cluster,str(len(old_samples)),"kept (increase)",old_cluster,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
                         if old_cluster not in changes.keys():
@@ -780,7 +782,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                         else:
                             changes_all_clusters = changes[all_clusters][:]
                             for change in changes_all_clusters:
-                                old,old_l,modification,new,new_l,n_new_samples,new_samples = change
+                                old,old_l,modification,new,new_l,n_new_samples,new_samples_name = change
                                 if old == all_clusters and new == new_cluster_name:
                                     if modification == "new (merge_increase)":
                                         changes[all_clusters].remove(change)
@@ -804,7 +806,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                             changes[all_clusters].append(change_info)
                         else:
                             for change in changes[all_clusters]:
-                                old,old_l,modification,new,new_l,n_new_samples,new_samples = change
+                                old,old_l,modification,new,new_l,n_new_samples,new_samples_name = change
                                 if old == all_clusters and new != new_cluster_name:
                                     changes[all_clusters].append(change_info)
         if cluster not in conversion.keys():
