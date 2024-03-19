@@ -131,8 +131,9 @@ cd ..
 conda env create --name reportree --file=reportree_env.yml
 ```
 
-_If you are using Mac OS X, please use reportree_env_osx.yml to create the conda environment_
+_Note: If you are using Mac OS X, please use reportree_env_osx.yml to create the conda environment!_
 
+  
 Activate conda environment
 ```bash
 conda activate reportree
