@@ -24,13 +24,11 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
 ## News!
-#### 2023.09.04 - ReporTree v2.0.3
+#### 2024.03.19 - ReporTree v2.3.0
+A new version is released with two important fixes:
+1. The behavior when filtering a distance matrix based on metadata
+2. The cluster nomenclature report when multiple clusters are merged and increase with new sample 
 
-ReporTree v2.0.3 fixes a the behavior of the "samples of interest" when a tsv file is provided and increases the efficiency of the alignment coordinates correspondence.
-
-#### 2023.05.22 - ReporTree v2.0.2 (version of the manuscript)
-
-ReporTree v2 is officially released. This version comprises an updated version of the tool that corresponds to the version at the time of publication. We highlight the following updates:
 
 ## Implementation
 
@@ -133,6 +131,8 @@ cd ..
 conda env create --name reportree --file=reportree_env.yml
 ```
 
+_If you are using Mac OS X, please use reportree_env_osx.yml to create the conda environment_
+
 Activate conda environment
 ```bash
 conda activate reportree
@@ -150,12 +150,12 @@ python reportree.py -h
 
 ### Installation with Docker
 ```bash
-docker pull insapathogenomics/reportree:v2.0.3
+docker pull insapathogenomics/reportree:v2.3.0
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:v2.0.3 reportree.py -h
+docker run insapathogenomics/reportree:v2.3.0 reportree.py -h
 ```
 
 ## Usage
