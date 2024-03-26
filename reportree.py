@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.3.0"
-last_updated = "2024-03-19"
+version = "2.4.0"
+last_updated = "2024-03-26"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -434,6 +434,26 @@ def info_samples_interest(samples, matrix, partitions, out):
 
 	return samples_of_interest, singletons, do_not_exist
 
+def interest2metadata(tag, samples_of_interest):
+	""" update metadata_w_partitions with information about samples of interest from the current run 
+	input: list of samples and metadata table
+	output: metadata table """
+	
+	mx = pandas.read_table(tag + "_metadata_w_partitions.tsv")
+	print(mx)
+	samples = mx[mx.columns[0]].values.tolist()
+	category = []
+	for s in samples:
+		if s in samples_of_interest:
+			category.append("sample of interest")
+		else:
+			category.append("")
+	mx.insert(1, "category", category, True)
+	print(mx)
+	mx.to_csv(tag + "_metadata_w_partitions.tsv", index = False, header=True, sep = "\t")
+	metadata = tag + "_metadata_w_partitions.tsv"
+	return metadata
+	
 def get_clusters_interest(samples, matrix, metadata, day, partitions):
 	""" get clusters of interest 
 	input: list of samples and partitions table
@@ -1246,6 +1266,8 @@ def main():
 	group8.add_argument("--subtree-of-interest", dest="subtree", required=False, default="no", help="[OPTIONAL and only available for --analysis grapetree or HC] Repeat the analysis using the n \
 		     			closest samples of each sample of interest. This argument takes as input a comma-separated list of n's, corresponding to the number of closest samples you want to include for \
 		     			the samples of interest. This argument requires that a metadata table was provided with '-m'. Default: no subtree.")
+	group8.add_argument("--unzip", dest="unzip", required=False, action="store_true", help="[OPTIONAL and only available for --analysis grapetree or HC] Provide the outputs of '--zoom-cluster-of-interest' and \
+						'--subtree-of-interest' in unzipped format.")
 	group8.add_argument("--frequency-matrix", dest="frequency_matrix", required=False, default="no", help="[OPTIONAL] Metadata column names for which a frequency matrix will be generated. This \
 						must be specified within quotation marks in the following format 'variable1,variable2'. Variable1 is the variable for which frequencies will be calculated (e.g. for \
 						'lineage,iso_week' the matrix reports the percentage of samples that correspond to each lineage per iso_week). If you want more than one matrix you can separate the \
@@ -1711,6 +1733,9 @@ def main():
 
 			print_log("Filtering partitions_summary.tsv according to samples of interest...", log)
 			samples_of_interest, singletons, do_not_exist = info_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output + "_partitions.tsv", args.output)
+			
+			# UPDATE METADATA	----------
+			metadata = interest2metadata(args.output, samples_of_interest)
 
 			# ZOOM-IN	----------
 
@@ -1720,7 +1745,6 @@ def main():
 				print_log("Checking cluster zoom-in requests...", log)
 				partitions4zoom, partitions4zoom_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.zoom, args.output, args.dist, log)
 				clusters_of_interest, not_in_partitions = get_clusters_interest(samples_of_interest, args.output + "_partitions.tsv", args.output + "_metadata_w_partitions.tsv", day, partitions4zoom_lst)
-				print(partitions4zoom_lst,clusters_of_interest)
 				if len(partitions4zoom_lst) == 0:
 					print_log("\tNone of the requested partitions for zoom-in is valid!... We are sorry but cluster zoom-in will be done! Please check that you have correctly indicated the list of partitions in the '--zoom-cluster-of-interest' argument.", log)
 				else:
@@ -1762,10 +1786,12 @@ def main():
 			
 			# SUBSET	----------
 
+			zooms_file = open(args.output + "_zooms.txt", "w+")
 			for type_analysis,tag_subset,filter_subset in new_subset_filters:
 				out_folder = args.output
 				if not os.path.exists(out_folder + "_" + tag_subset):
 					os.system("mkdir " + out_folder + "_" + tag_subset)
+				print(out_folder + "_" + tag_subset, file = zooms_file)
 				input_align = False
 				real_output =  args.output
 				real_metadata = args.metadata
@@ -1827,17 +1853,19 @@ def main():
 				args.subset = real_subset
 				subset_log = open(subset_log_name, "a+")
 				print_log("\n------------------------------------------------------------\n", subset_log)
-				returned_value = os.system("zip -r " + out_folder + "_" + tag_subset + ".zip " + out_folder + "_" + tag_subset + "/")
-				if str(returned_value) != "0":
-					print_log("ReporTree failed to compress your cluster of interest or tree of interest directory: " + args.output + "_" + tag_subset + "/", subset_log)
-				else:
-					os.system("rm -rf " + out_folder + "_" + tag_subset + "/")
+				if not args.unzip:
+					returned_value = os.system("zip -r " + out_folder + "_" + tag_subset + ".zip " + out_folder + "_" + tag_subset + "/")
+					if str(returned_value) != "0":
+						print_log("ReporTree failed to compress your cluster of interest or tree of interest directory: " + args.output + "_" + tag_subset + "/", subset_log)
+					else:
+						os.system("rm -rf " + out_folder + "_" + tag_subset + "/")
 				subset_end = datetime.datetime.now()
 				subset_elapsed = subset_end - subset_start
 				print("ReporTree is done! If you found any issue please contact us!!\n", file = subset_log)
 				print_log("\nSubset end: " + str(subset_end), subset_log)
 				print_log("\nSubset time elapsed: " + str(subset_elapsed), subset_log)
 				subset_log.close()
+			zooms_file.close()
 
 			
 	## only metadata	--------------------
