@@ -440,7 +440,6 @@ def interest2metadata(tag, samples_of_interest):
 	output: metadata table """
 	
 	mx = pandas.read_table(tag + "_metadata_w_partitions.tsv")
-	print(mx)
 	samples = mx[mx.columns[0]].values.tolist()
 	category = []
 	for s in samples:
@@ -449,9 +448,9 @@ def interest2metadata(tag, samples_of_interest):
 		else:
 			category.append("")
 	mx.insert(1, "category", category, True)
-	print(mx)
 	mx.to_csv(tag + "_metadata_w_partitions.tsv", index = False, header=True, sep = "\t")
 	metadata = tag + "_metadata_w_partitions.tsv"
+	
 	return metadata
 	
 def get_clusters_interest(samples, matrix, metadata, day, partitions):
@@ -1791,7 +1790,11 @@ def main():
 				out_folder = args.output
 				if not os.path.exists(out_folder + "_" + tag_subset):
 					os.system("mkdir " + out_folder + "_" + tag_subset)
-				print(out_folder + "_" + tag_subset, file = zooms_file)
+				if "/" in out_folder:
+					zooms_prefix = out_folder.split("/")[-1]
+				else:
+					zooms_prefix = out_folder
+				print(zooms_prefix + "_" + tag_subset, file = zooms_file)
 				input_align = False
 				real_output =  args.output
 				real_metadata = args.metadata
