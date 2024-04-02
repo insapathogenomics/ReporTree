@@ -24,10 +24,11 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
 ## News!
-#### 2024.03.19 - ReporTree v2.3.0
-A new version is released with two important fixes:
-1. The behavior when filtering a distance matrix based on metadata
-2. The cluster nomenclature report when multiple clusters are merged and increase with new sample 
+#### 2024.04.02 - ReporTree v2.4.1
+We release a new version of ReporTree that is compatible with [SPREAD](https://github.com/genpat-it/spread), an extended version of GrapeTree. With this new version of ReporTree:
+1. A new column named "category" is added to the _metadata_w_patitions.tsv_ in order to tag the samples of interest
+2. A new optional argument ('--unzip') can be povided in order to output the results of '--zoom-cluster-of-interest' and '--subtree-of-interest' in unzipped format
+3. Whenever '--zoom-cluster-of-interest' or '--subtree-of-interest' arguments are used, a file *zooms.txt* is provided for automated visualization of the zoom-in trees/subtrees with SPREAD
 
 
 ## Implementation
@@ -67,7 +68,7 @@ In the following table we summarize the different options that ReporTree provide
 
 - metadata_w_partitions.tsv - initial metadata information with additional columns comprising information on the genetic clusters at different partitions and nomenclature code
 
-_TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) or the dendrogram resulting from hierarchical clustering at [auspice.us](https://auspice.us) or the MST resulting from GrapeTree at [GrapeTree](https://github.com/achtman-lab/GrapeTree) or [GrapeTree-GIS](https://github.com/genpat-it/grapetree-gis). With these tools your dataset is visualised from the client-side in the browser._
+_TIP: Users can interactively visualize and explore the ReporTree derived clusters by uploading this metadata_w_partitions.tsv table together with either the original newick tree (e.g. rooted SNP-scaled tree) or the dendrogram resulting from hierarchical clustering at [auspice.us](https://auspice.us) or the MST resulting from GrapeTree at [GrapeTree](https://github.com/achtman-lab/GrapeTree) or [SPREAD](https://github.com/genpat-it/spread). With these tools your dataset is visualised from the client-side in the browser._
 
 - partitions_summary.tsv - summary report with the statistics/trends (e.g. timespan, location range, cluster/group size and composition, age distribution etc.) for the derived genetic clusters present in partitions.tsv (note: singletons are not reported in this file but indicated in metadata_w_partitions.tsv)
 - SAMPLES_OF_INTEREST_partitions_summary.tsv - similar to partitions_summary.tsv but exclusively for the samples of interest     
@@ -79,7 +80,8 @@ _TIP: Users can interactively visualize and explore the ReporTree derived cluste
 - metrics.tsv - metrics resulting from the cluster congruence analysis, with indication of the Adjusted Wallace and the Ajusted Rand coefficients for each comparison of subsequent partitions, and the Simpson's Index of Diversity for each partition.
 - stableRegions.tsv - partition ranges for which Adjusted Wallace coefficient is higher than the cut-off defined by the user (useful to study cluster stability and infer possible nomenclature) 
 - Newick file with the dendrogram resulting of the hierarchical clustering analysis or with the minimum spanning tree of GrapeTree
-- .zip - compressed folders with the output files of a high resolution analysis of the clusters with samples of interest and of the N closest samples to the samples of interest 
+- .zip - compressed folders with the output files of a high resolution analysis of the clusters with samples of interest and of the N closest samples to the samples of interest
+- zooms.txt - list of output folders containing the outputs of '--zoom-cluster-of-interest' and/or '--subtree-of-interest'. This file is required for visualization of the zoom-in trees/subtrees with SPREAD.
 
 The following figure presents the different input/output workflow possibilities provided by ReporTree:
 
@@ -151,12 +153,12 @@ python reportree.py -h
 
 ### Installation with Docker
 ```bash
-docker pull insapathogenomics/reportree:v2.3.0
+docker pull insapathogenomics/reportree:v2.4.1
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:v2.3.0 reportree.py -h
+docker run insapathogenomics/reportree:v2.4.1 reportree.py -h
 ```
 
 ## Usage
@@ -218,7 +220,7 @@ Cleaning missing data:
                         with > 95% of alleles/positions, i.e. <= 5% missing data). Applied after '--site-inclusion' argument! [default: 0.0]
   --sample-ATCG-content ATCG_CONTENT
                         [OPTIONAL - only works for alignment] Minimum proportion (0 to 1) of ATCG in informative sites of the alignment per sample (e.g. '--sample-ATCG-content 1.0' will only keep
-                        samples without N's or any non-ATCG code in informative sites) [default: 0 - keep all samples]
+                        samples without Ns or any non-ATCG code in informative sites) [default: 0 - keep all samples]
 
 Alignment processing:
   Alignment processing
@@ -337,6 +339,7 @@ ReporTree metadata report:
                         [OPTIONAL and only available for --analysis grapetree or HC] Repeat the analysis using the n closest samples of each sample of interest. This argument takes as input a comma-
                         separated list of n's, corresponding to the number of closest samples you want to include for the samples of interest. This argument requires that a metadata table was provided
                         with '-m'. Default: no subtree.
+  --unzip               [OPTIONAL and only available for --analysis grapetree or HC] Provide the outputs of '--zoom-cluster-of-interest' and '--subtree-of-interest' in unzipped format.
   --frequency-matrix FREQUENCY_MATRIX
                         [OPTIONAL] Metadata column names for which a frequency matrix will be generated. This must be specified within quotation marks in the following format 'variable1,variable2'.
                         Variable1 is the variable for which frequencies will be calculated (e.g. for 'lineage,iso_week' the matrix reports the percentage of samples that correspond to each lineage per
