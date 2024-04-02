@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.4.0"
-last_updated = "2024-03-26"
+version = "2.4.1"
+last_updated = "2024-04-02"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -447,7 +447,19 @@ def interest2metadata(tag, samples_of_interest):
 			category.append("sample of interest")
 		else:
 			category.append("")
-	mx.insert(1, "category", category, True)
+	if "category" in mx.columns:
+		index_no = mx.columns.get_loc("category")
+		mx["category_original"] = mx["category"]
+		category_original = mx.pop("category_original")
+		mx.insert(index_no, "category_original", category_original)
+		mx = mx.drop(["category"], axis=1)
+	
+	i = 0
+	for col in mx.columns:
+		if "single-" in col or "MST-" in col:
+			break
+		i += 1			
+	mx.insert(i, "category", category, True)
 	mx.to_csv(tag + "_metadata_w_partitions.tsv", index = False, header=True, sep = "\t")
 	metadata = tag + "_metadata_w_partitions.tsv"
 	
