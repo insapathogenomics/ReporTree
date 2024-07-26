@@ -25,8 +25,32 @@ partitioning_grapetree_script = os.path.realpath(__file__)
 grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapetree.py"
 python = sys.executable
 
-version = "1.4.0"
-last_updated = "2023-12-11"
+version = "1.5.0"
+last_updated = "2024-07-12"
+
+# additional functions	----------
+
+def get_loci2use(loci,allele_profile):
+	""" get the list of loci to include """
+	
+	mx = allele_profile
+	loci2include = []
+	with open(loci) as inloci:
+		lines = inloci.readlines()
+		for line in lines:
+			l =line.split("\n")[0]
+			if l not in loci2include:
+				if l in mx.columns:
+					loci2include.append(l)
+				else:
+					sys.exit("Locus " + str(l) + " is not present in the provided allele matrix. Please revise your list before we proceed!!")
+			else:
+				sys.exit("Locus " + str(l) + " is duplicated in the loci list. Please revise your list before we proceed!!")
+	
+	return loci2include
+
+
+# running the pipeline	----------
 
 def main():
 	# defining parameters ----------
@@ -66,6 +90,8 @@ def main():
 
 	group0 = parser.add_argument_group("Partitioning with GrapeTree", "Specifications to get and cut minimum spanning trees")
 	group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=True, type=str, help="[MANDATORY] Input profile matrix (can either be an allele matrix or a SNP matrix)")
+	group0.add_argument("-l", "--loci", dest="loci", required=False, type=str, default = "none", help="[OPTIONAL] List of loci (e.g. cgMLST) that must be used for the clustering analysis. If \
+					 	'--site-inclusion' argument > 0, this list of loci will be complemented with additional loci that fulfill the requirements specified in this argument.")
 	group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
 	group0.add_argument("--site-inclusion", dest="samples_called", required=False, default = 0.0, help="[OPTIONAL: Useful to remove informative sites/loci with excess of missing data] Minimum \
 						proportion of samples per site/loci without missing data (e.g. '--site-inclusion 1.0' will only keep loci/positions without missing data, i.e. a core alignment; \
@@ -302,30 +328,54 @@ def main():
 
 
 	# cleaning allele matrix (columns)
-
-	if float(args.samples_called) > 0.0:
-		print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...")
-		print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "% of the samples...", file = log)
-		
-		mx_allele = pandas.read_table(allele_filename, dtype = str)
-
-		pos_t0 = len(mx_allele.columns[1:])
-		for col in mx_allele.columns[1:]:
-			values = mx_allele[col].values.tolist()
-			if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
-				mx_allele = mx_allele.drop(columns=col)
-			elif (len(values)-values.count(0))/len(values) < float(args.samples_called):
-				mx_allele = mx_allele.drop(columns=col)
+	mx_allele = pandas.read_table(allele_filename, dtype = str)
+	pos_t0 = len(mx_allele.columns[1:])
+	if args.loci != "none":
+		loci2include = get_loci2use(args.loci,mx_allele)
+		if float(args.samples_called) == 0.0:
+			print("Keeping the sites/loci present in the loci list.")
+			print("Keeping the sites/loci present in the loci list.", file = log)
+			for col in mx_allele.columns[1:]:
+				if col not in loci2include:
+					mx_allele = mx_allele.drop(columns=col)
+		else:
+			print("Keeping the sites/loci present in the loci list and those with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...")
+			print("Keeping the sites/loci present in the loci list and those with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...", file = log)
+			for col in mx_allele.columns[1:]:
+				if col not in loci2include:
+					values = mx_allele[col].values.tolist()
+					if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
+						mx_allele = mx_allele.drop(columns=col)
+					elif (len(values)-values.count(0))/len(values) < float(args.samples_called):
+						mx_allele = mx_allele.drop(columns=col)
 		pos_t1 = len(mx_allele.columns[1:])
 		print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
 		print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
-		if pos_t1 <= 1:
-			print("\nCannot proceed because " + str(pos_t1) + " positions/alleles were kept in the matrix!")
-			print("\nCannot proceed because " + str(pos_t1) + " positions/alleles were kept in the matrix!", file = log)
-			sys.exit()
-		mx_allele.to_csv(args.out + "_clean_missing_matrix.tsv", index = False, header=True, sep ="\t")
-		allele_filename = args.out + "_clean_missing_matrix.tsv"
-		total_size = len(mx_allele.columns) - 1
+	else:
+		pos_t1 = len(mx_allele.columns[1:])
+		if float(args.samples_called) > 0.0:
+			print("Keeping the sites/loci with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...")
+			print("Keeping the sites/loci with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...", file = log)
+			for col in mx_allele.columns[1:]:
+				values = mx_allele[col].values.tolist()
+				if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
+					mx_allele = mx_allele.drop(columns=col)
+				elif (len(values)-values.count(0))/len(values) < float(args.samples_called):
+					mx_allele = mx_allele.drop(columns=col)	
+			pos_t1 = len(mx_allele.columns[1:])
+			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
+			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
+		
+	if pos_t1 <= 1:
+		print("\nCannot proceed because " + str(pos_t1) + " positions/alleles were kept in the matrix!")
+		print("\nCannot proceed because " + str(pos_t1) + " positions/alleles were kept in the matrix!", file = log)
+		sys.exit()
+	with open(args.out + "_loci_used.txt", "w+") as loci_out:
+		for locus in mx_allele.columns[1:]:
+			print(locus, file = loci_out)
+	mx_allele.to_csv(args.out + "_clean_missing_matrix.tsv", index = False, header=True, sep ="\t")
+	allele_filename = args.out + "_clean_missing_matrix.tsv"
+	total_size = len(mx_allele.columns) - 1
 			
 
 	# cleaning allele matrix (rows)	----------
