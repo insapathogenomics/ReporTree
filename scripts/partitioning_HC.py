@@ -20,8 +20,8 @@ partitioning_HC_script = os.path.realpath(__file__)
 
 sys.setrecursionlimit(10000) # please increase this number, if you are getting the error "RecursionError: maximum recursion depth exceeded while calling a Python object" 
 
-version = "1.6.0"
-last_updated = "2024-03-19"
+version = "1.7.0"
+last_updated = "2024-07-12"
 
 # functions	----------
 
@@ -259,7 +259,25 @@ def get_newick(node, parent_dist, leaf_names, newick='') -> str:
         
         return newick
         
-        
+def get_loci2use(loci,allele_profile):
+	""" get the list of loci to include """
+	
+	mx = allele_profile
+	loci2include = []
+	with open(loci) as inloci:
+		lines = inloci.readlines()
+		for line in lines:
+			l =line.split("\n")[0]
+			if l not in loci2include:
+				if l in mx.columns:
+					loci2include.append(l)
+				else:
+					sys.exit("Locus " + str(l) + " is not present in the provided allele matrix. Please revise your list before we proceed!!")
+			else:
+				sys.exit("Locus " + str(l) + " is duplicated in the loci list. Please revise your list before we proceed!!")
+	
+	return loci2include
+    
 # running the pipeline	----------
 
 def main():
@@ -287,6 +305,8 @@ def main():
 	group0 = parser.add_argument_group("Partitioning with Hierarchical Clustering", "Specifications to get partitions with HC methods")
 	group0.add_argument("-d_mx", "--distance_matrix", dest="distance_matrix", required=False, type=str, help="[OPTIONAL] Input pairwise distance matrix")
 	group0.add_argument("-a", "--allele-profile", dest="allele_profile", required=False, type=str, help="[OPTIONAL] Input allele profile matrix (can either be an allele matrix or a SNP matrix)")
+	group0.add_argument("-l", "--loci", dest="loci", required=False, type=str, default = "none", help="[OPTIONAL] List of loci (e.g. cgMLST) that must be used for the clustering analysis. If \
+					 	'--site-inclusion' argument > 0, this list of loci will be complemented with additional loci that fulfill the requirements specified in this argument.")
 	group0.add_argument("-o", "--output", dest="out", required=True, type=str, help="[MANDATORY] Tag for output file name")
 	group0.add_argument("--HC-threshold", dest="method_threshold", required=False, default="single", 
 						help="[OPTIONAL] List of HC methods and thresholds to include in the analysis (comma-separated). To get clustering at all possible thresholds for a given method, just write \
@@ -358,8 +378,8 @@ def main():
 		# filtering allele matrix	----------
 		
 		if args.metadata != "" and args.filter_column != "":
-			print("Filtering the distance matrix...")
-			print("Filtering the distance matrix...", file = log)
+			print("Filtering the allele matrix...")
+			print("Filtering the allele matrix...", file = log)
 			
 			filters = args.filter_column
 			mx = pandas.read_table(args.metadata, dtype = str)
@@ -381,27 +401,47 @@ def main():
 	
 	
 		# cleaning allele matrix (columns)	----------
-		
-		if float(args.samples_called) > 0.0:
-			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...")
-			print("Keeping only sites/loci with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...", file = log)
-			
-			pos_t0 = len(allele_mx.columns[1:])
-			for col in allele_mx.columns[1:]:
-				values = allele_mx[col].values.tolist()
-				if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
-					allele_mx = allele_mx.drop(columns=col)
+		pos_t0 = len(allele_mx.columns[1:])
+		if args.loci != "none":
+			loci2include = get_loci2use(args.loci,allele_mx)
+			if float(args.samples_called) == 0.0:	
+				print("Keeping the sites/loci present in the loci list.")
+				print("Keeping the sites/loci present in the loci list.", file = log)			
+				for col in allele_mx.columns[1:]:
+					if col not in loci2include:
+						allele_mx = allele_mx.drop(columns=col)
+			else:
+				print("Keeping the sites/loci present in the loci list and those with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...")
+				print("Keeping the sites/loci present in the loci list and those with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...", file = log)
+				for col in allele_mx.columns[1:]:
+					if col not in loci2include:
+						values = allele_mx[col].values.tolist()
+						if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
+							allele_mx = allele_mx.drop(columns=col)
 			pos_t1 = len(allele_mx.columns[1:])
-			final_samples = len(allele_mx[allele_mx.columns[0]].values.tolist())
 			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
 			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
-
-			if final_samples <= 1:
-				print("\nCannot proceed because " + str(final_samples) + " samples were kept in the matrix!")
-				print("\nCannot proceed because " + str(final_samples) + " samples were kept in the matrix!", file = log)
-				sys.exit()
-			allele_mx.to_csv(args.out + "_clean_missing_matrix.tsv", index = False, header=True, sep ="\t")
-		
+		else:
+			pos_t1 = len(allele_mx.columns[1:])
+			if float(args.samples_called) > 0.0:
+				print("Keeping the sites/loci with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...")
+				print("Keeping the sites/loci with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...", file = log)
+				for col in allele_mx.columns[1:]:
+					values = allele_mx[col].values.tolist()
+					if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
+						allele_mx = allele_mx.drop(columns=col)
+				pos_t1 = len(allele_mx.columns[1:])
+				print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
+				print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
+			
+		if pos_t1 <= 1:
+			print("\nCannot proceed because " + str(pos_t1) + " sites/loci were kept in the matrix!")
+			print("\nCannot proceed because " + str(pos_t1) + " sites/loci were kept in the matrix!", file = log)
+			sys.exit()
+		with open(args.out + "_loci_used.txt", "w+") as loci_out:
+			for locus in allele_mx.columns[1:]:
+				print(locus, file = loci_out)
+		allele_mx.to_csv(args.out + "_clean_missing_matrix.tsv", index = False, header=True, sep ="\t")
 		
 		# cleaning allele matrix (rows)	----------
 

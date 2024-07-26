@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.4.1"
-last_updated = "2024-04-02"
+version = "2.5.0"
+last_updated = "2024-07-26"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -125,7 +125,7 @@ def run_vcf2mst(args, intype):
 
 	return returned_value
 
-def run_partitioning_grapetree(args, input_align, profile):
+def run_partitioning_grapetree(args, input_align, profile, zoom, future_zoom):
 	""" run partitioning_grapetree.py """
 
 	extras_grapetree = ""
@@ -141,18 +141,38 @@ def run_partitioning_grapetree(args, input_align, profile):
 		site_inclusion = "0"
 		loci_called = "0"
 		missing_code = "0"
+		loci_lst = "none"
 	else:
-		site_inclusion = str(args.N_content)
-		loci_called = str(args.loci_called)
+		if args.loci != "none":
+			loci_lst = str(args.loci)
+			if zoom:
+				loci_called = "0"
+				site_inclusion = str(args.N_content)
+				if site_inclusion == "0" or site_inclusion == "0.0":
+					loci_lst = "none"
+			else:
+				if future_zoom:
+					site_inclusion = "0"
+				else:
+					site_inclusion = str(args.N_content)
+				loci_called = str(args.loci_called)			
+		else:
+			if zoom:
+				loci_called = "0"
+			else:
+				loci_called = str(args.loci_called)
+			site_inclusion = str(args.N_content)
+			loci_lst = "none"
 		missing_code = str(args.missing_code)
+
 	cmd = python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 	" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --site-inclusion " + site_inclusion + " \
-	-pct_thr " + str(args.pct_threshold) + " --loci-called " + loci_called + " --missing-code " + missing_code + " " + extras_grapetree
+	-pct_thr " + str(args.pct_threshold) + " --loci-called " + loci_called + " --missing-code " + missing_code + " -l " + loci_lst + extras_grapetree
 	returned_value = os.system(cmd)
 
 	return returned_value
 
-def run_partitioning_HC(args, input_align, distance_matrix_input, profile):
+def run_partitioning_HC(args, input_align, distance_matrix_input, profile, zoom, future_zoom):
 	""" run partitioning_HC.py """
 	
 	extras_hc = ""
@@ -165,14 +185,34 @@ def run_partitioning_HC(args, input_align, distance_matrix_input, profile):
 			site_inclusion = "0"
 			loci_called = "0"
 			missing_code = "0"
+			loci_lst = "none"
 		else:
-			site_inclusion = str(args.N_content)
-			loci_called = str(args.loci_called)
+			if args.loci != "none":
+				loci_lst = str(args.loci)
+				if zoom:
+					loci_called = "0"
+					site_inclusion = str(args.N_content)
+					if site_inclusion == "0" or site_inclusion == "0.0":
+						loci_lst = "none"
+				else:
+					if future_zoom:
+						site_inclusion = "0"
+					else:
+						site_inclusion = str(args.N_content)
+					loci_called = str(args.loci_called)						
+			else:
+				if zoom:
+					loci_called = "0"
+				else:
+					loci_called = str(args.loci_called)
+				site_inclusion = str(args.N_content)
+				loci_lst = "none"
 			missing_code = str(args.missing_code)
 		cmd = python + " " + reportree_path + "/scripts/partitioning_HC.py -a " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 		-d " + str(args.dist) + " --site-inclusion " + site_inclusion + " --loci-called " + loci_called + " --missing-code " + missing_code + " --pct-HC-threshold \
-		" + str(args.pct_HCmethod_threshold) + " " + extras_hc
+		" + str(args.pct_HCmethod_threshold) + " -l " + loci_lst + extras_hc
 	else:
+		loci_lst = "none"
 		cmd = python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 		-d " + str(args.dist) + " --pct-HC-threshold " + str(args.pct_HCmethod_threshold) + " " + extras_hc
 	returned_value = os.system(cmd)
@@ -1035,7 +1075,6 @@ def rename_clusters_subsets(analysis,partitions,tag):
 	mx.replace(new_name, regex=True, inplace=True)
 	mx.to_csv(partitions, index = False, header=True, sep = "\t")
 
-
 # running the pipeline	----------
 
 def main():
@@ -1130,6 +1169,10 @@ def main():
 	group0.add_argument("-var", "--variants", dest="variants", default="", required=False, type=str, help="Input table (tsv format) with sample name in the first column and a \
 						comma-separated list of variants in the second column with the following regular expression: '\w(\d+)\w' ")
 	group0.add_argument("-out", "--output", dest="output", required=False, default="ReporTree", type=str, help="[OPTIONAL] Tag for output file name (default = ReporTree)")
+	group0.add_argument("-l", "--loci", dest="loci", required=False, type=str, default = "none", help="[OPTIONAL] List of loci (e.g. cgMLST) that will be used for the clustering analysis. \
+					 	If '--zoom-cluster-of-interest' or the '--subtree-of-interest' are set, in the zoom-in/subtree analysis, this list will be extended with additional loci (e.g., accessory \
+					 	loci in the wgMLST schema) that pass the criteria defined in the '--site-inclusion' argument. If --loci is set, the --site-inclusion argument will be ignored during the \
+					 	first clustering, i.e. it will only be applied at the zoom-in/subtree step.")
 	group0.add_argument("--list", dest="list_col_summary", required=False, action="store_true", help="[OPTIONAL] If after your command line you specify this option, ReporTree will list all the \
 						possible columns that you can use as input in '--columns_summary_report'. To obtain information about the partition name for other arguments('--frequency-matrix' and/or \
 		     			'--count-matrix'), please also indicate the type of analysis. NOTE!! The objective of this argument is to help you with the input of some other arguments. So, it will not \
@@ -1273,10 +1316,12 @@ def main():
 	group8.add_argument("--zoom-cluster-of-interest", dest="zoom", required=False, default="no", help="[OPTIONAL and only available for --analysis grapetree or HC] Repeat the analysis using only the \
 		     			samples that belong to each cluster of the samples of interest at a given distance threshold. This argument takes as input a comma-separated list of partitions for which you \
 		     			want the zoom-in. Partition thresholds can be indicated in this argument following the same rules as the arguments '-thr' and '-pct_thr' for GrapeTree or '--HC-threshold' and \
-		     			'--pct-HC-threshold' for HC. This argument requires that a metadata table was provided with '-m'. Default: no zoom-in.")
+		     			'--pct-HC-threshold' for HC. This argument requires that a metadata table was provided with '-m'. The argument '--loci-called' is not applied in the zoom-in analysis, i.e. \
+					 	all samples of the cluster are included. Default: no zoom-in.")
 	group8.add_argument("--subtree-of-interest", dest="subtree", required=False, default="no", help="[OPTIONAL and only available for --analysis grapetree or HC] Repeat the analysis using the n \
 		     			closest samples of each sample of interest. This argument takes as input a comma-separated list of n's, corresponding to the number of closest samples you want to include for \
-		     			the samples of interest. This argument requires that a metadata table was provided with '-m'. Default: no subtree.")
+		     			the samples of interest. This argument requires that a metadata table was provided with '-m'. The argument '--loci-called' is not applied in the subtree analysis, i.e. \
+					 	all samples of the cluster are included. Default: no subtree.")
 	group8.add_argument("--unzip", dest="unzip", required=False, action="store_true", help="[OPTIONAL and only available for --analysis grapetree or HC] Provide the outputs of '--zoom-cluster-of-interest' and \
 						'--subtree-of-interest' in unzipped format.")
 	group8.add_argument("--frequency-matrix", dest="frequency_matrix", required=False, default="no", help="[OPTIONAL] Metadata column names for which a frequency matrix will be generated. This \
@@ -1352,8 +1397,11 @@ def main():
 	day = str(datetime.datetime.today().strftime("%Y-%m-%d"))
 
 	if args.metadata == "none":
-		print_log("\nWARNING!! You did not provide a metadata file... metadata_report.py will not be run! Provide such a file if you want to take the most profit of ReporTree :-)", log)
-		metadata_col = []
+		if args.zoom != "no" or args.subtree != "no":
+			sys.exit("\nYou have asked for '--zoom-cluster-of-interest' and/or '--subtree-of-interest'... I also need a metadata table :-)\n")
+		else:
+			print_log("\nWARNING!! You did not provide a metadata file... metadata_report.py will not be run! Provide such a file if you want to take the most profit of ReporTree :-)", log)
+			metadata_col = []
 	else:
 		metadata_mx = pandas.read_table(args.metadata)
 		metadata_col = [col.replace(" ", "_") for col in metadata_mx.columns]
@@ -1362,6 +1410,11 @@ def main():
 	if args.code_levels != "":
 		args = solve_nomenclature_code_in_args(args,day)
 	
+	# solve incompatible input
+	if args.loci != "none" and args.N_content != 0.0:
+		if args.zoom == "no" and args.subtree == "no":
+			sys.exit("\nThe arguments '--loci' and '--site-inclusion' were specified without '--zoom-cluster-of-interest' or '--subtree-of-interest'... I am confused :-(\n")
+
     # reportree workflow	----------
     
     ## partitions table provided	--------------------
@@ -1541,6 +1594,8 @@ def main():
 		
 	elif args.allele_profile != "" or args.alignment != "" or args.vcf != "" or args.variants != "" or args.distance_matrix != "":
 		distance_matrix_input = False
+		zoom = False
+		future_zoom = False
 		if args.allele_profile != "": # ALLELE ---> DIRECT INPUT
 			if args.alignment != "": 
 				print_log("\nProfiles and sequence alignment files specified... I am confused :-(\n", log)
@@ -1561,6 +1616,8 @@ def main():
 			else: # can continue using the allele profile
 				analysis = args.analysis
 				profile = args.allele_profile
+				if args.zoom != "no" or args.subtree != "no": 
+					future_zoom = True
 				print_log("\nProfiles file provided -> will run partitioning_" + analysis + ".py:\n", log)
 		
 		elif args.alignment != "": # ALIGNMENT ---> PROCESS INPUT
@@ -1578,6 +1635,8 @@ def main():
 			
 			else: # can continue using the alignment
 				analysis = args.analysis
+				if args.zoom != "no" or args.subtree != "no":
+					future_zoom = True
 				print_log("\nAlignment file provided -> will run alignment_processing.py and partitioning_" + analysis + ".py:\n", log)
 				
 				# processing alignment
@@ -1651,7 +1710,7 @@ def main():
 		
 		if analysis == "grapetree": # grapetree
 			log.close()
-			returned_value = run_partitioning_grapetree(args, input_align, profile)
+			returned_value = run_partitioning_grapetree(args, input_align, profile, zoom, future_zoom)
 			cmds.append("grapetree")
 			if str(returned_value) != "0":
 				sys.exit("\n\nReporTree exited before expected while running partitioning_grapetree.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
@@ -1662,7 +1721,7 @@ def main():
 		
 		elif analysis == "HC": # hc	
 			log.close()
-			returned_value = run_partitioning_HC(args, input_align, distance_matrix_input, profile)
+			returned_value = run_partitioning_HC(args, input_align, distance_matrix_input, profile, zoom, future_zoom)
 			cmds.append("HC")
 			if str(returned_value) != "0":
 				sys.exit("\n\nReporTree exited before expected while running partitioning_HC.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
@@ -1798,6 +1857,7 @@ def main():
 			# SUBSET	----------
 
 			zooms_file = open(args.output + "_zooms.txt", "w+")
+			zoom = True
 			for type_analysis,tag_subset,filter_subset in new_subset_filters:
 				out_folder = args.output
 				if not os.path.exists(out_folder + "_" + tag_subset):
@@ -1812,6 +1872,8 @@ def main():
 				real_metadata = args.metadata
 				real_filter = args.filter_column
 				real_subset = args.subset
+				real_loci = args.loci
+				args.loci = args.output + "_loci_used.txt"
 				args.metadata = metadata4subset(args.output + "_metadata_w_partitions.tsv", args.output + "_partitions.tsv", tag_subset, filter_subset)
 				args.output = out_folder + "_" + tag_subset + "/" + tag_subset
 				args.filter_column = filter_subset
@@ -1838,7 +1900,7 @@ def main():
 				if "grapetree" in cmds:
 					if not cancel:
 						args.threshold = "max"
-						returned_value = run_partitioning_grapetree(args, input_align, profile)
+						returned_value = run_partitioning_grapetree(args, input_align, profile, zoom, future_zoom)
 						if str(returned_value) != "0":
 							print_log(tag_subset + ": ReporTree cannot proceed after partitioning_grapetree.py :-( Possibly you went out of samples or positions/alleles in the matrix. Alternatively, this subset does not have diversity for partitions inference.", log)
 							cancel = True
@@ -1849,7 +1911,7 @@ def main():
 							distance_matrix_input = True
 							profile = args.distance_matrix
 						args.HCmethod_threshold = get_method_threshold(args.HCmethod_threshold)
-						returned_value = run_partitioning_HC(args, input_align, distance_matrix_input, profile)
+						returned_value = run_partitioning_HC(args, input_align, distance_matrix_input, profile, zoom, future_zoom)
 						if str(returned_value) != "0":
 							print_log(tag_subset + ": ReporTree cannot proceed after partitioning_HC.py :-( Possibly you went out of samples or positions/alleles in the matrix. Alternatively, this subset does not have diversity for partitions inference.", log)
 							cancel = True
@@ -1866,6 +1928,7 @@ def main():
 				args.metadata = real_metadata
 				args.filter_column = real_filter
 				args.subset = real_subset
+				args.loci = real_loci
 				subset_log = open(subset_log_name, "a+")
 				print_log("\n------------------------------------------------------------\n", subset_log)
 				if not args.unzip:
