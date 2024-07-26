@@ -1170,8 +1170,9 @@ def main():
 						comma-separated list of variants in the second column with the following regular expression: '\w(\d+)\w' ")
 	group0.add_argument("-out", "--output", dest="output", required=False, default="ReporTree", type=str, help="[OPTIONAL] Tag for output file name (default = ReporTree)")
 	group0.add_argument("-l", "--loci", dest="loci", required=False, type=str, default = "none", help="[OPTIONAL] List of loci (e.g. cgMLST) that will be used for the clustering analysis. \
-					 	If '--zoom-cluster-of-interest' or the '--subtree-of-interest' are set, in the zoom-in analysis, this list will be complemented with additional loci that pass the \
-					 	criteria defined in the '--site-inclusion' argument.")
+					 	If '--zoom-cluster-of-interest' or the '--subtree-of-interest' are set, in the zoom-in/subtree analysis, this list will be extended with additional loci (e.g., accessory \
+					 	loci in the wgMLST schema) that pass the criteria defined in the '--site-inclusion' argument. If --loci is set, the --site-inclusion argument will be ignored during the \
+					 	first clustering, i.e. it will only be applied at the zoom-in/subtree step.")
 	group0.add_argument("--list", dest="list_col_summary", required=False, action="store_true", help="[OPTIONAL] If after your command line you specify this option, ReporTree will list all the \
 						possible columns that you can use as input in '--columns_summary_report'. To obtain information about the partition name for other arguments('--frequency-matrix' and/or \
 		     			'--count-matrix'), please also indicate the type of analysis. NOTE!! The objective of this argument is to help you with the input of some other arguments. So, it will not \
@@ -1315,10 +1316,12 @@ def main():
 	group8.add_argument("--zoom-cluster-of-interest", dest="zoom", required=False, default="no", help="[OPTIONAL and only available for --analysis grapetree or HC] Repeat the analysis using only the \
 		     			samples that belong to each cluster of the samples of interest at a given distance threshold. This argument takes as input a comma-separated list of partitions for which you \
 		     			want the zoom-in. Partition thresholds can be indicated in this argument following the same rules as the arguments '-thr' and '-pct_thr' for GrapeTree or '--HC-threshold' and \
-		     			'--pct-HC-threshold' for HC. This argument requires that a metadata table was provided with '-m'. Default: no zoom-in.")
+		     			'--pct-HC-threshold' for HC. This argument requires that a metadata table was provided with '-m'. The argument '--loci-called' is not applied in the zoom-in analysis, i.e. \
+					 	all samples of the cluster are included. Default: no zoom-in.")
 	group8.add_argument("--subtree-of-interest", dest="subtree", required=False, default="no", help="[OPTIONAL and only available for --analysis grapetree or HC] Repeat the analysis using the n \
 		     			closest samples of each sample of interest. This argument takes as input a comma-separated list of n's, corresponding to the number of closest samples you want to include for \
-		     			the samples of interest. This argument requires that a metadata table was provided with '-m'. Default: no subtree.")
+		     			the samples of interest. This argument requires that a metadata table was provided with '-m'. The argument '--loci-called' is not applied in the subtree analysis, i.e. \
+					 	all samples of the cluster are included. Default: no subtree.")
 	group8.add_argument("--unzip", dest="unzip", required=False, action="store_true", help="[OPTIONAL and only available for --analysis grapetree or HC] Provide the outputs of '--zoom-cluster-of-interest' and \
 						'--subtree-of-interest' in unzipped format.")
 	group8.add_argument("--frequency-matrix", dest="frequency_matrix", required=False, default="no", help="[OPTIONAL] Metadata column names for which a frequency matrix will be generated. This \
