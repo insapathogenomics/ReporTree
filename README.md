@@ -168,12 +168,12 @@ python reportree.py -h
 
 ### Installation with Docker
 ```bash
-docker pull insapathogenomics/reportree:v2.5.0
+docker pull insapathogenomics/reportree:v2.5.1
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:v2.5.0 reportree.py -h
+docker run insapathogenomics/reportree:v2.5.1 reportree.py -h
 ```
 
 ## Usage
