@@ -15,7 +15,7 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.5.0"
+version = "2.5.1"
 last_updated = "2024-07-26"
 
 reportree_script = os.path.realpath(__file__)
