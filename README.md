@@ -31,8 +31,8 @@ We release a new version of ReporTree that brings important new features:
 3. A **new behavior of '--loci-called'** when performing cluster zoom-in/subtree. Until v2.4.1, the '--loci-called' was applied in cluster zoom-in/subtree. This was sometimes leading to the exclusion of some samples of the cluster of interest in the zoom-in/subtree because they did not have enough loci called. To avoid this situation, **from v2.5.0 on**, the '--loci-called' is only applied in the initial analysis. In the zoom-in/subtree analyses '--loci-called' is not taken into consideration and all samples that passed the filter in the initial analysis are used.
 
 _**Notes:**_
-- _For details on the behavior of cluster zoom-in/subtree options, please check the section [Cluster zoom-in and subtree of interest](https://github.com/vmixao/ReporTree/edit/main/README.md#cluster-zoom-in-and-subtree-of-interest)_
-- _We now provide the lists of cgMLST loci of S. enterica, E. coli and C. jejuni INNUENDO schemas in the [useful_loci_lists](https://github.com/vmixao/ReporTree/tree/main/useful_loci_lists) directory._
+- _For details on the behavior of cluster zoom-in/subtree options, please check the section [Cluster zoom-in and subtree of interest](https://github.com/insapathogenomics/ReporTree#cluster-zoom-in-and-subtree-of-interest)_
+- _We now provide the lists of cgMLST loci of S. enterica, E. coli and C. jejuni INNUENDO schemas in the [useful_loci_lists](https://github.com/insapathogenomics/ReporTree/tree/main/useful_loci_lists) directory._
 
 #### 2024.04.02 - ReporTree v2.4.1
 We release a new version of ReporTree that is compatible with [SPREAD](https://github.com/genpat-it/spread), an extended version of GrapeTree. With this new version of ReporTree:
