@@ -20,8 +20,8 @@ partitioning_HC_script = os.path.realpath(__file__)
 
 sys.setrecursionlimit(10000) # please increase this number, if you are getting the error "RecursionError: maximum recursion depth exceeded while calling a Python object" 
 
-version = "1.7.0"
-last_updated = "2024-07-12"
+version = "1.8.0"
+last_updated = "2024-09-09"
 
 # functions	----------
 
@@ -39,7 +39,10 @@ def conv_nucl(alleles, missing_code, missing_need):
 		count_string += 1
 	if missing_need:
 		str2int[missing_code] = "0"
+	
+	alleles = alleles.set_index(alleles.columns[0], drop = True)
 	alleles = alleles.replace(str2int)
+	alleles.reset_index(inplace=True)
 
 	return alleles
 	
@@ -476,7 +479,7 @@ def main():
 			allele_mx = allele_mx[allele_mx[allele_mx.columns[0]].isin(pass_samples)]
 			allele_mx.to_csv(args.out + "_flt_samples_matrix.tsv", index = False, header=True, sep ="\t")
 			
-			
+		
 		# getting distance matrix	----------
 		
 		print("Getting the pairwise distance matrix with cgmlst-dists (if your profile matrix is too big, this will be done in chunks of 2000 alleles/positions)...")
