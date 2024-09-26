@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.5.2"
-last_updated = "2024-09-09"
+version = "2.5.3"
+last_updated = "2024-09-26"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -566,16 +566,13 @@ def loci_called2metadata(metadata_original, out, thr, analysis):
 	complete_metadata = pandas.DataFrame(data = c)
 	complete_metadata.to_csv(metadata_original, index = False, header=True, sep = "\t")
 
-def get_closest_samples(sample, n, hamming):
+def get_closest_samples(sample, n, hamming, samples_in_partitions):
 	""" get the list of n closest samples for subtree 
 	input: sample, n and hamming matrix 
 	output: list of samples """
 
-	d_mx = pandas.read_table(hamming)
-	if sample not in d_mx[d_mx.columns[0]].values.tolist():
-		code = "not_in_hamming"
-		closest_samples = ""
-	else:
+	if sample in samples_in_partitions:
+		d_mx = pandas.read_table(hamming, usecols=["dists", sample])
 		d_mx.sort_values(by=[sample], inplace = True)
 		distances = d_mx[sample].values.tolist()
 		samples = d_mx[d_mx.columns[0]].values.tolist()
@@ -591,6 +588,9 @@ def get_closest_samples(sample, n, hamming):
 		else:
 			closest_samples = samples
 			code = "all_samples"
+	else:
+		code = "not_in_hamming"
+		closest_samples = ""
 
 	return closest_samples, code
 
@@ -1714,6 +1714,8 @@ def main():
 			cmds.append("grapetree")
 			if str(returned_value) != "0":
 				sys.exit("\n\nReporTree exited before expected while running partitioning_grapetree.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
+			partitions_dataframe = pandas.read_table(args.output + "_partitions.tsv")
+			samples_in_partitions = partitions_dataframe[partitions_dataframe.columns[0]].values.tolist()
 			log = open(log_name, "a+")
 		
 		
@@ -1725,6 +1727,8 @@ def main():
 			cmds.append("HC")
 			if str(returned_value) != "0":
 				sys.exit("\n\nReporTree exited before expected while running partitioning_HC.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
+			partitions_dataframe = pandas.read_table(args.output + "_partitions.tsv")
+			samples_in_partitions = partitions_dataframe[partitions_dataframe.columns[0]].values.tolist()
 			log = open(log_name, "a+")
 		
 		else:
@@ -1791,6 +1795,7 @@ def main():
 				loci_called2metadata(metadata, args.output, args.loci_called, "loci")
 			elif os.path.exists(args.output + "_pos_report.tsv"):
 				loci_called2metadata(metadata, args.output, args.ATCG_content, "pos")
+			print("END INITIAL ANALYSIS")
 
 		# if nomenclature changed, add this info in partitions summary
 		if "nomenclature" in cmds and "metadata_report" in cmds:
@@ -1799,12 +1804,14 @@ def main():
 		# samples of interest
 		s_of_interest = args.sample_of_interest
 		if s_of_interest != "all" and  args.metadata != "none":
+			print("START SAMPLES INTEREST ANALYSIS")
 			print_log("\n\n\n\n****************************** PROCESSING SAMPLES OF INTEREST ******************************\n\n", log)
 
 			print_log("Filtering partitions_summary.tsv according to samples of interest...", log)
 			samples_of_interest, singletons, do_not_exist = info_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output + "_partitions.tsv", args.output)
 			
 			# UPDATE METADATA	----------
+			print("ADD CATEGORY")
 			metadata = interest2metadata(args.output, samples_of_interest)
 
 			# ZOOM-IN	----------
@@ -1841,7 +1848,7 @@ def main():
 				sample_col = metadata.columns[0]
 				for n in n4subtree:
 					for sample in samples_of_interest:
-						closest_samples, code = get_closest_samples(sample, n, hamming)
+						closest_samples, code = get_closest_samples(sample, n, hamming, samples_in_partitions)
 						if code == "all_samples":
 							print_log("\tSubtree of interest requested for n = " + str(n) + " will not be done because this includes all samples in the dataset!", log)
 							break
