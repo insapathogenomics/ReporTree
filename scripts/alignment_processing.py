@@ -16,8 +16,8 @@ from datetime import date
 import datetime as datetime
 from Bio import SeqIO, AlignIO, Align, Alphabet
 
-version = "1.4.0"
-last_updated = "2023-12-11"
+version = "1.5.0"
+last_updated = "2024-09-26"
 
 # functions	----------
 
@@ -38,7 +38,6 @@ def get_ref_coords(alignment, reference, sequence_corr, tag, pos_list):
 	corr_df["alignment_position"] = list(range(1, len(alignment[0].seq) + 1))
 	i = 0
 	for record in alignment:
-		i += 1
 		if record.id == reference:
 			seq = record.seq
 			name = "REFERENCE_" + record.id
@@ -528,8 +527,8 @@ if __name__ == "__main__":
 	group0.add_argument("--use-alignment-coords", dest="use_align", required=False, action="store_true", help="Set only if you want that column names in the final matrix represent the initial \
 						alignment coordinates. Note: Depending on the alignment size, this argument can make alignment processing very slow!")	
 	group0.add_argument("--use-reference-coords", dest="use_ref", required=False, action="store_true", help="Set only if you want that column names in the final matrix represent the reference \
-						coordinates (reference name must be provided with the argument '--reference') Note: Depending on the alignment size, this argument can make alignment processing very \
-						slow!")	
+						coordinates (reference name must be provided with the argument '--reference'). If this argument is set, '--get-position-correspondence' will be automatically set to 'all'. \
+					 	Note: Depending on the alignment size, this argument can make alignment processing very slow!")	
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to apply sample subset.")
 	group0.add_argument("-f", "--filter", dest="filter_column", required=False, default="", help="[OPTIONAL] Filter for metadata columns to select the samples of the alignment that must \
 						be included in the matrix. This must be specified within quotation marks in the following format 'column< >operation< >condition' (e.g. 'country == Portugal'). When \
@@ -589,7 +588,10 @@ if __name__ == "__main__":
 	if args.reference != "none" and args.use_ref:
 		print("\tDetermining reference coordinates and sequence correspondence...")
 		print("\tDetermining reference coordinates and sequence correspondence...", file = log)
-		coords, corr_df = get_ref_coords(alignment, args.reference, args.pos_corr, args.out, args.pos_list)
+		pos_corr = args.pos_corr
+		if args.pos_corr == "none":
+			pos_corr = "all"
+		coords, corr_df = get_ref_coords(alignment, args.reference, pos_corr, args.out, args.pos_list)
 		if args.only_pos_corr:
 			print("You have set '--ONLY-POS-CORRESPONDENCE'. So, alignment_processing.py will exit here!")
 			print("You have set '--ONLY-POS-CORRESPONDENCE'. So, alignment_processing.py will exit here!", file = log)
