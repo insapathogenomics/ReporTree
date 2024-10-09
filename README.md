@@ -24,6 +24,12 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
 ## News!
+#### 2024.10.09 - ReporTree v2.5.3
+We release a new version of ReporTree that brings important fixes: 
+1. Improves the efficiency of the "--zoom-cluster-of-interest" and the "--subtree-of-interest" when loading the distance matrix
+2. Fixes a problem in the nucleotide counter of the reference sequence when _alignment_processing.py_ is used
+3. Fixes the need to specify "--get-position-correspondence" when requesting "--use-reference-coords" in the _alignment_processing.py_
+
 #### 2024.07.26 - ReporTree v2.5.0
 We release a new version of ReporTree that brings important new features: 
 1. A **new argument '--loci'**, which allows the user to provide a list of loci of interest (e.g. cgMLST). If this list is provided, the main clustering analysis will be performed only for these loci, even if the allele matrix has additional ones (e.g. wgMLST schema). 
