@@ -31,12 +31,13 @@ jobs:
       with:
         submodules: 'true' 
     - name: Set up Conda
-      uses: conda-incubator/setup-miniconda@v2
+      uses: mamba-org/setup-micromamba@v1
       with:
-        mamba-version: "*"
-        activate-environment: reportree
+        micromamba-version: '1.5.6-0'
         environment-file: reportree_env.yml
-        auto-activate-base: false
+        init-shell: >-
+          bash
+        cache-environment: true
     - name: Test with pytest
       run: |
         pytest
