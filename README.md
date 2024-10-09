@@ -180,13 +180,20 @@ python reportree.py -h
 ```
 
 ### Installation with Docker
+
+- You can either install the latest version with:
 ```bash
-docker pull insapathogenomics/reportree:v2.5.2
+docker pull insapathogenomics/reportree:latest
+```
+
+- Or install a specific version by specifying the release you want (e.g. for v2.5.3):
+```bash
+docker pull insapathogenomics/reportree:v2.5.3
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:v2.5.2 reportree.py -h
+docker run insapathogenomics/reportree:v2.5.3 reportree.py -h
 ```
 
 ## Usage
