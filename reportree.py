@@ -15,8 +15,8 @@ import datetime as datetime
 from datetime import date
 import pandas
 
-version = "2.5.3"
-last_updated = "2024-09-26"
+version = "2.5.4"
+last_updated = "2024-12-03"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -901,6 +901,25 @@ def replace_cluster_names(conversion, mx):
       
     return mx
 
+def replace_cluster_composition(tag, conversion_db):
+	""" Replace the cluster names in the clusterComposition file
+    input: dictionary with conversion names and output tag """
+
+	new_info =[]
+	with open(tag + "_clusterComposition.tsv") as composition_file:
+		lines = composition_file.readlines()
+		for line in lines:
+			l = line.split("\n")[0]
+			line_info = l.split("\t")
+			if line_info[0] in conversion_db.keys():
+				if line_info[1] in conversion_db[line_info[0]].keys():
+					line_info[1] = conversion_db[line_info[0]][line_info[1]]
+			info = "\t".join(line_info)
+			new_info.append(info)
+	with open(tag + "_clusterComposition.tsv", "w+") as final_composition_file:
+		for info in new_info:
+			print(info, file = final_composition_file)
+
 def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 	""" use a previous nomenclature to replace cluster names in the partitions file 
 	input: current partitions and nomenclature partitions in tsv
@@ -912,7 +931,7 @@ def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 
 	db_samples = get_new_db(mx_new)
     
-	conversion = {} # conversion[partition][cluster in partitions] = cluster nomenclature
+	conversion_db = {} # conversion[partition][cluster in partitions] = cluster nomenclature
 	changes_output = open(tag + "_nomenclature_changes.tsv", "w+")
 	
 	print("partition\told_cluster\told_cluster_length\tnomenclature_change\tcluster" + "_" + str(day) + "\tcluster_" + str(day) + "_length\tn_increase\tsamples_increase", file = changes_output)
@@ -922,6 +941,7 @@ def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 			max_cluster, max_singleton = get_last_counters(mx_new[partition])
 			conversion, changes = determine_new_cluster_names(old_samples, db_samples[partition], partition, mx_new_flt, partition, mx_original, max_cluster, max_singleton)
 			mx_original[partition] = replace_cluster_names(conversion, mx_original[partition])
+			conversion_db[partition] = conversion
 			if len(changes.keys()) > 0:
 				out_partition = partition
 				for cluster in sorted(changes.keys()):
@@ -934,6 +954,7 @@ def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 				for new_partition in mx_original.columns[1:]:
 					conversion, changes = determine_new_cluster_names(old_samples, db_samples[partition], partition, mx_new_flt, new_partition, mx_original, max_cluster, max_singleton)
 					mx_original[new_partition] = replace_cluster_names(conversion, mx_original[new_partition])
+					conversion_db[new_partition] = conversion
 					if len(changes.keys()) > 0:
 						out_partition = new_partition
 						for cluster in sorted(changes.keys()):
@@ -945,6 +966,7 @@ def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 
 	mx_original.to_csv(tag + "_partitions.tsv", index = False, header=True, sep ="\t")
 	changes_output.close()
+	replace_cluster_composition(tag, conversion_db)	
 
 	return mx_original
 
@@ -1795,7 +1817,6 @@ def main():
 				loci_called2metadata(metadata, args.output, args.loci_called, "loci")
 			elif os.path.exists(args.output + "_pos_report.tsv"):
 				loci_called2metadata(metadata, args.output, args.ATCG_content, "pos")
-			print("END INITIAL ANALYSIS")
 
 		# if nomenclature changed, add this info in partitions summary
 		if "nomenclature" in cmds and "metadata_report" in cmds:
