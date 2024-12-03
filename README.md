@@ -24,6 +24,9 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
 ## News!
+#### 2024.12.03 - ReporTree v2.5.4
+We release a new version of ReporTree that fixes the cluster and singleton names in the _clusterCompostition.tsv_ file when a previous nomenclature is provided. Noteworthy, this issue only affected the _clusterComposition.tsv_ file. All the others were correct and, therefore, this update does not bring major novelties.
+
 #### 2024.10.09 - ReporTree v2.5.3
 We release a new version of ReporTree that brings important fixes: 
 1. Improves the efficiency of the "--zoom-cluster-of-interest" and the "--subtree-of-interest" when loading the distance matrix
@@ -186,14 +189,14 @@ python reportree.py -h
 docker pull insapathogenomics/reportree:latest
 ```
 
-- Or install a specific version by specifying the release you want (e.g. for v2.5.3):
+- Or install a specific version by specifying the release you want (e.g. for v2.5.4):
 ```bash
-docker pull insapathogenomics/reportree:v2.5.3
+docker pull insapathogenomics/reportree:v2.5.4
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:v2.5.3 reportree.py -h
+docker run insapathogenomics/reportree:v2.5.4 reportree.py -h
 ```
 
 ## Usage
