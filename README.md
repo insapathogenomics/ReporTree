@@ -74,13 +74,26 @@ Distance matrix which will be used to obtain genetic clusters
 **OR**  
 Partitions table (i.e. matrix with genetic clusters) in .tsv format (columns should not have blank spaces)       
 
-_**Nomenclature only:** If you want to maintain cluster names between ReporTree runs, you should also provide the partitions table of the previous run._
+#### Are you using chewBBACA to obtain your allele matrix?
+[chewBBACA](https://github.com/B-UMMI/chewBBACA) is a software suite not only for the creation and evaluation of cg/wgMLST schemas and results but also for allele calling. ChewBBACA _AlleleCall_ module provides as output an allele matrix (_results_alleles.tsv_ file) in which:
+- for each locus called, it indicates the corresponding allele number
+- for each locus not called (i.e. missing in a sample), it indicates a [code that informs about the reason why the locus was not called](https://chewbbaca.readthedocs.io/en/latest/user/modules/AlleleCall.html#outputs)
 
-In the following table we summarize the different options that ReporTree provides to determine genetic clusters, as well as the different types of file that each of them can take as input:
+To use this allele matrix as input to ReporTree or to any other clustering method, you should replace the above-mentioned codes by _0_, so the software understands that this corresponds to missing data and not to a different allele. A way to replace these codes in your allele matrix is to run:
+
+```
+chewBBACA.py ExtractCgMLST -i results_alleles.tsv -o output_folder --t 0
+```
+_Note: It is important that you include --t 0 in your command so chewBBACA keeps all loci in your matrix._
+
+
+#### Do you want to maintain cluster names between subsequent ReporTree runs?
+To maintain cluster names between subsequent ReporTree runs you should also provide the partitions table of the previous run. In the following table we summarize the different options that ReporTree provides to determine genetic clusters, as well as the different types of file that each of them can take as input:
 
 <p align="center">
 <img width="1038" alt="Captura de ecrã 2023-03-28, às 18 26 09" src="https://user-images.githubusercontent.com/19263468/228320038-424ca291-d1be-4b32-9222-40f8758547d4.png">
 </p>
+
 
 
 ## Main output files
