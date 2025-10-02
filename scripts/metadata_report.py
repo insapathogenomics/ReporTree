@@ -15,8 +15,8 @@ import pandas
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 import datetime
 
-version = "1.1.0"
-last_updated = "2023-12-11"
+version = "1.2.0"
+last_updated = "2024-11-06"
 
 # functions	----------
 
@@ -404,11 +404,9 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 								else:
 									if stat not in absent_columns:
 										absent_columns.append(stat)
-									summary[stat].append("")
 							else:
 								if stat not in absent_columns:
 									absent_columns.append(stat)
-								summary[stat].append("")
 		
 	else:
 		if main_column != "none":
