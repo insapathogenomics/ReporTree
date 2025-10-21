@@ -13,10 +13,13 @@ import argparse
 import textwrap
 import datetime as datetime
 from datetime import date
+import glob
 import pandas
+import numpy
+from collections import defaultdict
 
-version = "2.5.4"
-last_updated = "2024-12-03"
+version = "2.6.0"
+last_updated = "2025-10-22"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -49,6 +52,8 @@ def run_metadata_report(args, partitions2report_final, partitions_status):
 		extra_metadata += " --mx-transpose "
 	if args.pivot:
 		extra_metadata += " --pivot "
+	if args.update_clusters:
+		extra_metadata += " --update-cluster-names "
 	if partitions_status == "new":
 		partitions = args.output + "_partitions.tsv"
 		no_partitions = False
@@ -305,7 +310,7 @@ def infer_partitions_from_list(analysis, partitions, metadata, thresholds, outpu
 					partitions2report_lst.append(part)
 	
 		partitions2report = ",".join(partitions2report_lst)
-	
+
 	return partitions2report, partitions2report_lst
 
 def all_partitions_available(method_threshold, include_node):
@@ -544,6 +549,23 @@ def get_clusters_interest(samples, matrix, metadata, day, partitions):
 	return clusters_of_interest, not_in_partitions
 
 
+def get_all_clusters(matrix, partitions, log):
+	""" get all clusters for zoom-all 
+	input: partitions table
+	output: list of all clusters """
+
+	partitions_mx = pandas.read_table(matrix)
+	clusters_of_interest = {}
+
+	if partitions in partitions_mx.columns:
+		counts = partitions_mx[partitions].value_counts()
+		clusters_of_interest = counts[counts > 1].index.tolist()
+	else:
+		print_log("\tThresold " + str(partitions) + "not found in partitions table...", log)
+
+	return clusters_of_interest
+
+
 def loci_called2metadata(metadata_original, out, thr, analysis):
 	""" adds column with percentage of called loci
 	to metadata table """
@@ -582,7 +604,7 @@ def get_closest_samples(sample, n, hamming, samples_in_partitions):
 			i = 0
 			for d in distances:
 				if d <= max_dist:
-					closest_samples.append(samples[i])
+					closest_samples.append(str(samples[i]))
 					i += 1
 			code = "run"
 		else:
@@ -702,15 +724,19 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
     
     conversion = {} # cluster_names_db[cluster partitions] = cluster nomenclature
     mx = mx_original.set_index(mx_original.columns[0], drop = False)
+    changes = {}
+    split_clusters = {}
+    merged_clusters = {}
+    previous_samples_set = set(previous_samples)
     clusters = list(mx[partition].unique())
     changes = {}
     split_clusters = {}
 
-    for cluster in clusters:
-        merged_clusters = {}
-        cluster_mx = mx[mx[partition] == cluster]
+    grouped = mx.groupby(partition)
+    
+    for cluster, cluster_mx in grouped:
         cluster_samples = cluster_mx[cluster_mx.columns[0]].values.tolist()
-        new_samples = set(cluster_samples) - set(previous_samples)
+        new_samples = set(cluster_samples) - previous_samples_set
         if len(new_samples) == len(cluster_samples): # all cluster samples are new
             if len(new_samples) == 1:
                 max_singleton += 1
@@ -720,11 +746,11 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                 new_cluster_name = "cluster_" + str(max_cluster)
             conversion[cluster] = new_cluster_name
             change_info = "new","-","new",new_cluster_name,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
-            if "new" not in changes.keys():
+            if "new" not in changes:
                 changes["new"] = []
             changes["new"].append(change_info)
         elif len(new_samples) == 0: # cluster does not have new samples
-            for sample_list in db_samples.keys():
+            for sample_list in db_samples:
                 old_samples = sample_list.split(",")
                 old_cluster = str(db_samples[sample_list])
                 cluster_intersection = set(cluster_samples) & set(old_samples)
@@ -734,13 +760,13 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                     if len(exclusive_old) == 0 and len(exclusive_new) == 0: # cluster remains exactly the same
                         conversion[cluster] = old_cluster
                         change_info = old_cluster,str(len(old_samples)),"kept (none)",old_cluster,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
-                        if old_cluster not in changes.keys():
+                        if old_cluster not in changes:
                             changes[old_cluster] = []
                         changes[old_cluster].append(change_info)
                     elif len(exclusive_old) > 0 and len(exclusive_new) == 0: # cluster was split and did not merge
-                        if old_cluster not in split_clusters.keys():
+                        if old_cluster not in split_clusters:
                             split_clusters[old_cluster] = 0
-                        if old_cluster not in changes.keys():
+                        if old_cluster not in changes:
                             changes[old_cluster] = []
                         if len(cluster_samples) == 1: # it is a singleton now
                             max_singleton += 1
@@ -758,7 +784,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                         cluster_old_mx = mx_new[mx_new[mx_new.columns[0]].isin(list(cluster_samples))]
                         all_clusters = sorted(cluster_old_mx[old_partition].unique())
                         all_clusters = "_".join(all_clusters)
-                        if all_clusters not in merged_clusters.keys():
+                        if all_clusters not in merged_clusters:
                             max_cluster += 1
                             new_cluster_name = "cluster_" + str(max_cluster)
                             merged_clusters[all_clusters] = new_cluster_name
@@ -766,7 +792,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                             new_cluster_name = merged_clusters[all_clusters]
                         conversion[cluster] = new_cluster_name
                         change_info = all_clusters,"multiple clusters","new (split_merge)",new_cluster_name,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
-                        if all_clusters not in changes.keys():
+                        if all_clusters not in changes:
                             changes[all_clusters] = []
                             changes[all_clusters].append(change_info)
                         else:
@@ -783,7 +809,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                         cluster_old_mx = mx_new[mx_new[mx_new.columns[0]].isin(list(cluster_samples))]
                         all_clusters = sorted(cluster_old_mx[old_partition].unique())
                         all_clusters = "_".join(all_clusters)
-                        if all_clusters not in merged_clusters.keys():
+                        if all_clusters not in merged_clusters:
                             max_cluster += 1
                             new_cluster_name = "cluster_" + str(max_cluster)
                             merged_clusters[all_clusters] = new_cluster_name
@@ -791,7 +817,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                             new_cluster_name = merged_clusters[all_clusters]
                         conversion[cluster] = new_cluster_name
                         change_info = all_clusters,"multiple clusters","new (merge)",new_cluster_name,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
-                        if all_clusters not in changes.keys():
+                        if all_clusters not in changes:
                             changes[all_clusters] = []
                             changes[all_clusters].append(change_info)
                         else:
@@ -822,13 +848,13 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                         else: # it was already a cluster that increased
                             conversion[cluster] = old_cluster
                             change_info = old_cluster,str(len(old_samples)),"kept (increase)",old_cluster,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
-                        if old_cluster not in changes.keys():
+                        if old_cluster not in changes:
                             changes[old_cluster] = []
                         changes[old_cluster].append(change_info)
                     elif len(exclusive_old) > 0 and len(exclusive_new) == len(new_samples): # cluster was split, increased and did not merge
-                        if old_cluster not in split_clusters.keys():
+                        if old_cluster not in split_clusters:
                             split_clusters[old_cluster] = 0
-                        if old_cluster not in changes.keys():
+                        if old_cluster not in changes:
                             changes[old_cluster] = []
                         split_clusters[old_cluster] += 1
                         new_cluster_name = old_cluster + "." + str(split_clusters[old_cluster])
@@ -839,7 +865,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                         cluster_old_mx = mx_new[mx_new[mx_new.columns[0]].isin(list(cluster_samples))]
                         all_clusters = sorted(cluster_old_mx[old_partition].unique())
                         all_clusters = "_".join(all_clusters)
-                        if all_clusters not in merged_clusters.keys():
+                        if all_clusters not in merged_clusters:
                             max_cluster += 1
                             new_cluster_name = "cluster_" + str(max_cluster)
                             merged_clusters[all_clusters] = new_cluster_name
@@ -847,7 +873,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                             new_cluster_name = merged_clusters[all_clusters]
                         conversion[cluster] = new_cluster_name
                         change_info = all_clusters,"multiple clusters","new (split_merge_increase)",new_cluster_name,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
-                        if all_clusters not in changes.keys():
+                        if all_clusters not in changes:
                             changes[all_clusters] = []
                             changes[all_clusters].append(change_info)
                         else:
@@ -864,7 +890,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                         cluster_old_mx = mx_new[mx_new[mx_new.columns[0]].isin(list(cluster_samples))]
                         all_clusters = sorted(cluster_old_mx[old_partition].unique())
                         all_clusters = "_".join(all_clusters)
-                        if all_clusters not in merged_clusters.keys():
+                        if all_clusters not in merged_clusters:
                             max_cluster += 1
                             new_cluster_name = "cluster_" + str(max_cluster)
                             merged_clusters[all_clusters] = new_cluster_name
@@ -872,7 +898,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                             new_cluster_name = merged_clusters[all_clusters]
                         conversion[cluster] = new_cluster_name
                         change_info = all_clusters,"multiple clusters","new (merge_increase)",new_cluster_name,str(len(cluster_samples)),str(len(new_samples)),",".join(list(new_samples))
-                        if all_clusters not in changes.keys():
+                        if all_clusters not in changes:
                             changes[all_clusters] = []
                             changes[all_clusters].append(change_info)
                         else:
@@ -880,7 +906,7 @@ def determine_new_cluster_names(previous_samples, db_samples, old_partition, mx_
                                 old,old_l,modification,new,new_l,n_new_samples,new_samples_name = change
                                 if old == all_clusters and new != new_cluster_name:
                                     changes[all_clusters].append(change_info)
-        if cluster not in conversion.keys():
+        if cluster not in conversion:
             if len(cluster_samples) == 1:
                 max_singleton += 1
                 new_cluster_name = "singleton_" + str(max_singleton)
@@ -1034,12 +1060,14 @@ def solve_nomenclature_code_in_args(args,day):
 	
 	# metadata2report
 	if args.metadata2report != "none":
+		metadata2report = str(args.metadata2report).split(",")
 		if "nomenclature_code" in args.metadata2report:
-			metadata2report = str(args.metadata2report).split(",")
 			for i in range(len(metadata2report)):
 				if metadata2report[i] == "nomenclature_code":
 					metadata2report[i] = "nomenclature_code_" + str(day)
-			args.metadata2report = ",".join(metadata2report)
+		else:
+			metadata2report.append("nomenclature_code_" + str(day))
+		args.metadata2report = ",".join(metadata2report)
 	else:
 		args.metadata2report = "nomenclature_code_" + str(day)
 	
@@ -1096,6 +1124,7 @@ def rename_clusters_subsets(analysis,partitions,tag):
 	
 	mx.replace(new_name, regex=True, inplace=True)
 	mx.to_csv(partitions, index = False, header=True, sep = "\t")
+		
 
 # running the pipeline	----------
 
@@ -1209,6 +1238,7 @@ def main():
 						input, it is MANDATORY to specify this argument.")
 	group1.add_argument("--subset", dest="subset", required=False, action="store_true", help="[OPTIONAL] Obtain genetic clusters using only the samples that correspond to the filters specified in the \
 						'--filter' argument.")
+	group1.add_argument("-flag", "--flag-multiple-clusters", dest="flag_clusters", required=False, action="store_true", help="[OPTIONAL] Generate an additional file with information about the ")
 	group1.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="[OPTIONAL] Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
 						-thr 5,8,10-30, the minimum spanning tree will be cut at 50,80,100,110,120,...,300. If -d 10 and --method-threshold avg_clade-2, the avg_clade threshold will be set \
 						at 20). This argument is particularly useful for non-SNP-scaled trees. Currently, the default is 1, which is equivalent to 1 allele distance or 1 SNP distance. [1.0]")
@@ -1309,6 +1339,11 @@ def main():
 		     			Of note, if a '--nomenclature-file' is provided in subsequent ReporTree runs using the same method and thresholds, the nomenclature code will be kept. You can also add one metadata variable \
 		     			(e.g. Country) to get an extra layer to the code (e.g. C3-C2-C1-Portugal). Partition thresholds can be indicated in this argument following the same rules as the arguments '-thr' and '-pct_thr' \
 		     			for GrapeTree or '--HC-threshold' and '--pct-HC-threshold' for HC.")
+	group7.add_argument("--update-cluster-names", dest="update_clusters", required=False, action="store_true", help="[OPTIONAL] Activate update clusters mode. If you set this argument, and the metadata you provided \
+					 	has columns names that correspond to partition thresholds from a previous ReporTree run using the same analysis method as in the current run, ReporTree will provide updated cluster names in \
+					  	the *metadata_w_partitions.tsv, instead of adding new columns with the prefix subset. This argument is only applicable if you provide a metadata file. To use this argument you do not need to \
+					 	provide a nomenclature file nor request a nomenclature code. Please be careful when using this argument in combination with '--subset' bacause ReporTree will perform a run on the subset samples \
+					 	you selected AND update the *metadata_w_partitions.tsv with the new cluster names instead of adding new columns.")
 
 
 	## reportree
@@ -1332,6 +1367,9 @@ def main():
 						they must be separated with commas (e.g 'country == Portugal,Spain,France'). When filters include more than one column, they must be separated with semicolon (e.g. \
 						'country == Portugal,Spain,France;date > 2018-01-01;date < 2022-01-01'). White spaces are important in this argument, so, do not leave spaces before and after \
 						commas/semicolons.")
+	group8.add_argument("--check-cluster-incongruencies", dest="incongruencies", required=False, action="store_true", help="[OPTIONAL and only available for --analysis grapetree or HC]] Perform \
+					 	a comparison between the genetic clusters obtained and the distance matrix to identify incongruencies between the two (e.g. isolates A and B dist by 10 allele differences \
+					 	but are not clustered at this threshold.")
 	group8.add_argument("--sample_of_interest", dest="sample_of_interest", required=False, default="all", help="[OPTIONAL] List of samples of interest for which summary reports will be created. This \
 		     			list can be a comma-separated list in the command line, or a comma-separated list in a file, or a list in the first column of a tsv file. No headers should be provided in the \
 		     			input files. If nothing is provided, only the summary reports comprising all samples will be generated.")
@@ -1344,8 +1382,13 @@ def main():
 		     			closest samples of each sample of interest. This argument takes as input a comma-separated list of n's, corresponding to the number of closest samples you want to include for \
 		     			the samples of interest. This argument requires that a metadata table was provided with '-m'. The argument '--loci-called' is not applied in the subtree analysis, i.e. \
 					 	all samples of the cluster are included. Default: no subtree.")
-	group8.add_argument("--unzip", dest="unzip", required=False, action="store_true", help="[OPTIONAL and only available for --analysis grapetree or HC] Provide the outputs of '--zoom-cluster-of-interest' and \
-						'--subtree-of-interest' in unzipped format.")
+	group8.add_argument("--zoom-all", dest="zoom_all", required=False, default="no", help="[OPTIONAL and only available for --analysis grapetree or HC] Repeat the analysis using only the samples that belong \
+					 	to each cluster identified at a given distance threshold. This argument takes as input only one threshold (partition) for which you want the zoom-in. This threshold can be \
+					 	indicated in this argument following the same rules as the arguments '-thr' and '-pct_thr' for GrapeTree or '--HC-threshold' and '--pct-HC-threshold' for HC. This argument \
+					 	requires that a metadata table was provided with '-m'. The argument '--loci-called' is not applied in the zoom-in analysis, i.e. all samples of the cluster are included. \
+					 	Default: no zoom-in.")
+	group8.add_argument("--unzip", dest="unzip", required=False, action="store_true", help="[OPTIONAL and only available for --analysis grapetree or HC] Provide the outputs of '--zoom-cluster-of-interest', \
+						'--subtree-of-interest' and '--zoom-all' in unzipped format.")
 	group8.add_argument("--frequency-matrix", dest="frequency_matrix", required=False, default="no", help="[OPTIONAL] Metadata column names for which a frequency matrix will be generated. This \
 						must be specified within quotation marks in the following format 'variable1,variable2'. Variable1 is the variable for which frequencies will be calculated (e.g. for \
 						'lineage,iso_week' the matrix reports the percentage of samples that correspond to each lineage per iso_week). If you want more than one matrix you can separate the \
@@ -1419,13 +1462,18 @@ def main():
 	day = str(datetime.datetime.today().strftime("%Y-%m-%d"))
 
 	if args.metadata == "none":
-		if args.zoom != "no" or args.subtree != "no":
-			sys.exit("\nYou have asked for '--zoom-cluster-of-interest' and/or '--subtree-of-interest'... I also need a metadata table :-)\n")
+		if args.zoom != "no" or args.subtree != "no" or args.zoom_all != "no":
+			sys.exit("\nYou have asked for '--zoom-cluster-of-interest' and/or '--subtree-of-interest' and/or '--zoom-all'... I also need a metadata table :-)\n")
 		else:
 			print_log("\nWARNING!! You did not provide a metadata file... metadata_report.py will not be run! Provide such a file if you want to take the most profit of ReporTree :-)", log)
 			metadata_col = []
+		if args.update_clusters:
+			sys.exit("\nYou have asked for '--update-cluster-names'... I also need a metadata table :-)\n")
 	else:
-		metadata_mx = pandas.read_table(args.metadata)
+		metadata_mx = pandas.read_table(args.metadata, dtype = str)
+		first_col = metadata_mx.columns[0]
+		if metadata_mx[first_col].duplicated().any():
+			sys.exit("\nYou have duplicated entries in your metadata file! I cannot proceed :-(\n")
 		metadata_col = [col.replace(" ", "_") for col in metadata_mx.columns]
 	
 	# adapting inputs to report nomenclature_code
@@ -1434,8 +1482,8 @@ def main():
 	
 	# solve incompatible input
 	if args.loci != "none" and args.N_content != 0.0:
-		if args.zoom == "no" and args.subtree == "no":
-			sys.exit("\nThe arguments '--loci' and '--site-inclusion' were specified without '--zoom-cluster-of-interest' or '--subtree-of-interest'... I am confused :-(\n")
+		if args.zoom == "no" and args.subtree == "no" and args.zoom_all == "no":
+			sys.exit("\nThe arguments '--loci' and '--site-inclusion' were specified without '--zoom-cluster-of-interest' or '--subtree-of-interest' or '--zoom-all'... I am confused :-(\n")
 
     # reportree workflow	----------
     
@@ -1638,12 +1686,12 @@ def main():
 			else: # can continue using the allele profile
 				analysis = args.analysis
 				profile = args.allele_profile
-				if args.zoom != "no" or args.subtree != "no": 
+				if args.zoom != "no" or args.subtree != "no" or args.zoom_all != "no": 
 					future_zoom = True
 				print_log("\nProfiles file provided -> will run partitioning_" + analysis + ".py:\n", log)
 		
 		elif args.alignment != "": # ALIGNMENT ---> PROCESS INPUT
-			if args.vcf != "": 
+			if args.vcf != "":
 				print_log("\nAlignment and VCF files specified... I am confused :-(\n", log)
 				sys.exit(1)
 			
@@ -1657,7 +1705,7 @@ def main():
 			
 			else: # can continue using the alignment
 				analysis = args.analysis
-				if args.zoom != "no" or args.subtree != "no":
+				if args.zoom != "no" or args.subtree != "no" or args.zoom_all != "no":
 					future_zoom = True
 				print_log("\nAlignment file provided -> will run alignment_processing.py and partitioning_" + analysis + ".py:\n", log)
 				
@@ -1768,6 +1816,16 @@ def main():
 			cmds.append("nomenclature")
 		
 
+		# FLAG INCONGRUENCIES	----------
+		
+		if args.incongruencies:
+			if analysis == "HC" or analysis == "grapetree":
+				print_log("\nChecking for incongruencies between clustering and distance matrix...", log)
+				loci_report = args.output + "_loci_report.tsv"
+			else:
+				print_log("\nRequest for checking clustering incongruencies is not compatible with this analysis, so it will not be performed :-(", log)
+
+
 		# running comparing partitions
 		if "stability_regions" in args.partitions2report and "all" in args.partitions2report:
 			print_log("\t'stability_regions' and 'all' options cannot be simultaneously specified in --partitions2report... I am confused :-(", log)
@@ -1823,17 +1881,17 @@ def main():
 			nomenclature_change2summary(args.output)
 			
 		# samples of interest
-		s_of_interest = args.sample_of_interest
-		if s_of_interest != "all" and  args.metadata != "none":
-			print("START SAMPLES INTEREST ANALYSIS")
+		if future_zoom: 
 			print_log("\n\n\n\n****************************** PROCESSING SAMPLES OF INTEREST ******************************\n\n", log)
 
-			print_log("Filtering partitions_summary.tsv according to samples of interest...", log)
-			samples_of_interest, singletons, do_not_exist = info_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output + "_partitions.tsv", args.output)
-			
-			# UPDATE METADATA	----------
-			print("ADD CATEGORY")
-			metadata = interest2metadata(args.output, samples_of_interest)
+			if args.zoom != "no" or args.subtree != "no":
+				s_of_interest = args.sample_of_interest
+				print_log("Filtering partitions_summary.tsv according to samples of interest...", log)
+				samples_of_interest, singletons, do_not_exist = info_samples_interest(s_of_interest, args.output + "_partitions_summary.tsv", args.output + "_partitions.tsv", args.output)
+
+				# UPDATE METADATA	----------
+				print("ADD CATEGORY")
+				metadata = interest2metadata(args.output, samples_of_interest)
 
 			# ZOOM-IN	----------
 
@@ -1844,7 +1902,7 @@ def main():
 				partitions4zoom, partitions4zoom_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.zoom, args.output, args.dist, log)
 				clusters_of_interest, not_in_partitions = get_clusters_interest(samples_of_interest, args.output + "_partitions.tsv", args.output + "_metadata_w_partitions.tsv", day, partitions4zoom_lst)
 				if len(partitions4zoom_lst) == 0:
-					print_log("\tNone of the requested partitions for zoom-in is valid!... We are sorry but cluster zoom-in will be done! Please check that you have correctly indicated the list of partitions in the '--zoom-cluster-of-interest' argument.", log)
+					print_log("\tNone of the requested partitions for zoom-in is valid!... We are sorry but cluster zoom-in will not be done! Please list the right partitions in the '--zoom-cluster-of-interest' argument.", log)
 				else:
 					for part in partitions4zoom_lst:
 						if part in clusters_of_interest.keys():
@@ -1859,6 +1917,27 @@ def main():
 							else:
 								print_log("\tAt the requested partition " + str(part) + ", we did not find any cluster with at least one sample of interest to zoom-in.", log)
 			
+
+			# ZOOM-IN ALL	----------
+
+			if args.zoom_all != "no":
+				print_log("Checking cluster zoom-all requests...", log)
+				if "," in args.zoom_all:
+					print("\tMore than one threshold indicated in '--zoom-all'. No zoom-all will be performed :-(", log)
+				else:
+					partitions4zoom, partitions4zoom_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.zoom_all, args.output, args.dist, log)
+					clusters_of_interest = get_all_clusters(args.output + "_partitions.tsv", partitions4zoom, log)
+					if len(partitions4zoom_lst) == 0:
+						print_log("\tThe requested partition for zoom-all is not valid!... We are sorry but cluster zoom-all will not be done!", log)
+					else:
+						part = partitions4zoom
+						for cluster in clusters_of_interest:
+							tag_subset = str(part) + "_" + str(cluster)
+							filter_subset = part + " == " + str(cluster)
+							info = "zoom-in",tag_subset,filter_subset
+							if info not in new_subset_filters:
+								new_subset_filters.append(info)
+			
 			# TREE INTEREST	----------
 
 			if args.subtree != "no" and args.metadata != "":
@@ -1869,6 +1948,7 @@ def main():
 				sample_col = metadata.columns[0]
 				for n in n4subtree:
 					for sample in samples_of_interest:
+						sample = str(sample)
 						closest_samples, code = get_closest_samples(sample, n, hamming, samples_in_partitions)
 						if code == "all_samples":
 							print_log("\tSubtree of interest requested for n = " + str(n) + " will not be done because this includes all samples in the dataset!", log)
@@ -1885,6 +1965,7 @@ def main():
 			# SUBSET	----------
 
 			zooms_file = open(args.output + "_zooms.txt", "w+")
+			zoom_df = pandas.DataFrame()
 			zoom = True
 			for type_analysis,tag_subset,filter_subset in new_subset_filters:
 				out_folder = args.output
