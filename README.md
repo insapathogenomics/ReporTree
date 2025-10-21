@@ -149,7 +149,7 @@ _Details about these and other situations are presented in the following table:_
 Of note, to increase the flexibility of the nomenclature system, ReporTree also allows the users to change the regular expression for cluster nomenclature (i.e., starting with “cluster_” or “singleton_”) by other nomenclature of interest (e.g., other official codes for outbreaks, genogroups, etc.), which will be kept afterwards. If the cluster/singleton names do not follow ReporTree's regular expression, the rules mentioned in the above table will be applied, except for the particular situation in which the name a former singleton does not follow ReporTree's regular expression. In this case, if a sigleton named as 'mycode' integrates a cluster only with new samples, this new cluster will be named 'mycode'.
 
 ## Cluster zoom-in and subtree of interest
-ReporTree cluster zoom-in (i.e. the application of '--zoom-cluster-of-interest' and '--subtree-of-interest' arguments) was designed to allow a gain of resolution in clusters of interest by dynamically increasing their set of core loci.
+ReporTree cluster zoom-in (i.e. the application of '--zoom-cluster-of-interest', '--subtree-of-interest' or '--zoom-all' arguments) was designed to allow a gain of resolution in clusters of interest by dynamically increasing their set of core loci.
 
 The following table summarizes the behavior of the tool according to the user's specifications. In summary:
 
