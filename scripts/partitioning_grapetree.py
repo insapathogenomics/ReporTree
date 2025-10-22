@@ -25,8 +25,8 @@ partitioning_grapetree_script = os.path.realpath(__file__)
 grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapetree.py"
 python = sys.executable
 
-version = "1.5.0"
-last_updated = "2024-07-12"
+version = "1.6.0"
+last_updated = "2025-10-21"
 
 # additional functions	----------
 
@@ -335,19 +335,18 @@ def main():
 		if float(args.samples_called) == 0.0:
 			print("Keeping the sites/loci present in the loci list.")
 			print("Keeping the sites/loci present in the loci list.", file = log)
-			for col in mx_allele.columns[1:]:
-				if col not in loci2include:
-					mx_allele = mx_allele.drop(columns=col)
+			cols_to_keep = [mx_allele.columns[0]] + [col for col in mx_allele.columns[1:] if col in loci2include]
+			mx_allele = mx_allele[cols_to_keep]
 		else:
 			print("Keeping the sites/loci present in the loci list and those with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...")
 			print("Keeping the sites/loci present in the loci list and those with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...", file = log)
-			for col in mx_allele.columns[1:]:
-				if col not in loci2include:
-					values = mx_allele[col].values.tolist()
-					if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
-						mx_allele = mx_allele.drop(columns=col)
-					elif (len(values)-values.count(0))/len(values) < float(args.samples_called):
-						mx_allele = mx_allele.drop(columns=col)
+			cols_to_check = [col for col in mx_allele.columns[1:] if col not in loci2include]
+			subset = mx_allele[cols_to_check]
+			called_proportion = (subset != "0").sum() / len(subset)
+			columns_to_keep = called_proportion[called_proportion >= float(args.samples_called)].index.tolist()
+			final_cols = [col for col in mx_allele.columns if col == mx_allele.columns[0] or col in columns_to_keep or col in loci2include]
+			mx_allele = mx_allele[final_cols]
+
 		pos_t1 = len(mx_allele.columns[1:])
 		print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
 		print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
@@ -356,12 +355,12 @@ def main():
 		if float(args.samples_called) > 0.0:
 			print("Keeping the sites/loci with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...")
 			print("Keeping the sites/loci with information in >= " + str(float(args.samples_called) * 100) + "%% of the samples...", file = log)
-			for col in mx_allele.columns[1:]:
-				values = mx_allele[col].values.tolist()
-				if (len(values)-values.count("0"))/len(values) < float(args.samples_called):
-					mx_allele = mx_allele.drop(columns=col)
-				elif (len(values)-values.count(0))/len(values) < float(args.samples_called):
-					mx_allele = mx_allele.drop(columns=col)	
+			cols_to_check = mx_allele.columns[1:]
+			subset = mx_allele[cols_to_check]
+			called_proportion = (subset != "0").sum(axis=0) / len(subset)
+			columns_to_keep = called_proportion[called_proportion >= float(args.samples_called)].index.tolist()
+			final_cols = [mx_allele.columns[0]] + [col for col in cols_to_check if col in columns_to_keep]
+			mx_allele = mx_allele[final_cols]
 			pos_t1 = len(mx_allele.columns[1:])
 			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.")
 			print("\tFrom the " + str(pos_t0) + " loci/positions, " + str(pos_t1) + " were kept in the matrix.", file = log)
@@ -380,25 +379,26 @@ def main():
 
 	# cleaning allele matrix (rows)	----------
 
-	if float(args.loci_called) > 0.0:
+	if float(args.loci_called) >= 0.0:
 		print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...")
 		print("Cleaning the profile matrix using a threshold of >" + str(args.loci_called) + " alleles/positions called...", file = log)
 		
 		allele_mx = pandas.read_table(allele_filename, dtype = str)
-		report_allele_mx = {}
-		
 		len_schema = len(allele_mx.columns) - 1
-		
+
+		missing_counts = allele_mx.isin(["0"]).sum(axis=1)
+		called_counts = len_schema - missing_counts
+
+		report_allele_mx = {}		
 		report_allele_mx["samples"] = allele_mx[allele_mx.columns[0]]
-		report_allele_mx["missing"] = allele_mx.isin(["0"]).sum(axis=1)
-		report_allele_mx["called"] = len_schema - allele_mx.isin(["0"]).sum(axis=1)
-		report_allele_mx["pct_called"] = (len_schema - allele_mx.isin(["0"]).sum(axis=1)) / len_schema
+		report_allele_mx["missing"] = missing_counts
+		report_allele_mx["called"] = called_counts
+		report_allele_mx["pct_called"] = called_counts / len_schema
 
 		report_allele_df = pandas.DataFrame(data = report_allele_mx)
-		if float(args.loci_called) != 1.0:
-			flt_report = report_allele_df[report_allele_df["pct_called"] > float(args.loci_called)]
-		else:
-			flt_report = report_allele_df[report_allele_df["pct_called"] == float(args.loci_called)]
+
+		flt_report = report_allele_df[report_allele_df["pct_called"] >= float(args.loci_called)]
+		
 		pass_samples = flt_report["samples"].values.tolist()
 		
 		print("\tFrom the " + str(len(allele_mx[allele_mx.columns[0]].values.tolist())) + " samples, " + str(len(pass_samples)) + " were kept in the profile matrix.")

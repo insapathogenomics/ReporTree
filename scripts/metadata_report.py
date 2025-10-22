@@ -15,12 +15,12 @@ import pandas
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 import datetime
 
-version = "1.2.0"
-last_updated = "2024-11-06"
+version = "1.4.0"
+last_updated = "2025-10-22"
 
 # functions	----------
 
-def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2report, filters, log):
+def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2report, filters, update_clusters, log):
 	""" 
 	create a combined matrix with metadata and partitions information
 	
@@ -54,10 +54,9 @@ def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2rep
 			mx_metadata.insert(index_no, "year_original", year_original)
 			index_no = mx_metadata.columns.get_loc("date")
 		mx_metadata["date"] = pandas.to_datetime(mx_metadata["date"], errors = "coerce")
-		mx_metadata["year"] = mx_metadata["date"].dt.year
+		mx_metadata["year"] = mx_metadata["date"].dt.year.astype("Int64")
 		year = mx_metadata.pop("year")
 		mx_metadata.insert(index_no + 1, "year", year)
-		index_no = mx_metadata.columns.get_loc("date")
 		if "iso_week_nr" not in mx_metadata.columns and "iso_year" not in mx_metadata.columns and "iso_week" not in mx_metadata.columns:
 			isoyear = mx_metadata["date"].dt.isocalendar().year
 			isoweek = mx_metadata["date"].dt.isocalendar().week
@@ -93,27 +92,50 @@ def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2rep
 		a = mx_metadata.set_index(sample_column, drop = True)
 		b = mx_partitions.set_index(sample_column_part, drop = True)
 		
-		if len(set(a.columns) & set(b.columns)) > 0:
-			b = b.add_prefix("subset_")
-			possible_subset = True
-			mx_partitions.columns = [sample_column_part] + b.columns.tolist()
-			mx_partitions.to_csv(partitions_name, index = False, header=True, sep ="\t")
-		if partitions2report == "all": # add all partitions
-			c = pandas.concat([a, b], axis=1)
-			
-		else: # add specific set of partitions
-			required_partitions = partitions2report.split(",")
-			c = a
-			for column_name in required_partitions:
-				if column_name in b.columns:
-					c = pandas.concat([c,b[column_name]], axis = 1)
-				else:
-					print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!")
-					print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!", file = log)
-		
+		if not update_clusters:
+			if len(set(a.columns) & set(b.columns)) > 0:
+				b = b.add_prefix("subset_")
+				possible_subset = True
+				mx_partitions.columns = [sample_column_part] + b.columns.tolist()
+				mx_partitions.to_csv(partitions_name, index = False, header=True, sep ="\t")
+			if partitions2report == "all": # add all partitions
+				c = pandas.concat([a, b], axis=1)
+			else: # add specific set of partitions
+				required_partitions = partitions2report.split(",")
+				c = a
+				for column_name in required_partitions:
+					if column_name in b.columns:
+						c = pandas.concat([c,b[column_name]], axis = 1)
+					else:
+						print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!")
+						print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!", file = log)
+		else:
+			shared_columns = list(set(a.columns) & set(b.columns))
+			new_columns = b.columns.difference(a.columns)
+			b_shared = b[shared_columns]
+			common_samples = a.index.intersection(b.index)
+			new_samples = b.index.difference(a.index)
+
+			a.loc[common_samples, shared_columns] = b_shared.loc[common_samples]
+			new_rows = b_shared.loc[new_samples]
+			a = pandas.concat([a, new_rows], axis=0)
+
+			c = a.copy()
+
+			if partitions2report == "all":  # add all partitions
+				valid_cols = b.columns.intersection(new_columns)
+				c = pandas.concat([c, b.loc[b.index.intersection(c.index), valid_cols].reindex(c.index)], axis=1)
+			else:
+				required_partitions = partitions2report.split(",")
+				for column_name in required_partitions:
+					if column_name in b.columns and column_name not in shared_columns:
+						valid_rows = b.index.intersection(c.index)
+						c = pandas.concat([c, b.loc[valid_rows, [column_name]].reindex(c.index)], axis=1)
+					else:
+						print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!")
+						print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!", file=log)	
 	else:
 		c = mx_metadata.set_index(mx_metadata.columns[0], drop = True)
-		
 		
 	# filtering table according to specifications
 	c_filtered = c.reset_index(drop = False)
@@ -225,7 +247,8 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 	summary = {"partition": [], "cluster": [], "cluster_length": [], "samples": []} # dictionary for final dataframe
 	order_columns = ["partition", "cluster", "cluster_length", "samples"] # list with the order of columns in final dataframe
 	
-	complete_metadata = complete_metadata.fillna("EMPTY")
+	str_cols = complete_metadata.select_dtypes(include=["object", "string"]).columns
+	complete_metadata[str_cols] = complete_metadata[str_cols].fillna("EMPTY")
 	
 	if partitions2report == "all":
 		if isinstance(partitions, pandas.DataFrame):
@@ -335,7 +358,8 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 	
 	absent_columns = []
 	
-	complete_metadata = complete_metadata.fillna("EMPTY")
+	str_cols = complete_metadata.select_dtypes(include=["object", "string"]).columns
+	complete_metadata[str_cols] = complete_metadata[str_cols].fillna("EMPTY")
 	if main_column in complete_metadata.columns:
 		order_columns = [main_column]
 		summary = {main_column: []} # dictionary for final dataframe
@@ -707,6 +731,9 @@ def main():
 						they must be separated with commas (e.g 'country == Portugal,Spain,France'). When filters include more than one column, they must be separated with semicolon (e.g. \
 						'country == Portugal,Spain,France;date > 2018-01-01;date < 2022-01-01'). White spaces are important in this argument, so, do not leave spaces before and after \
 						commas/semicolons.")
+	parser.add_argument("--update-cluster-names", dest="update_clusters", required=False, action="store_true", help="[OPTIONAL] Activate update clusters mode. If you set this argument, and the metadata \
+					 	you provided has columns names that correspond to partition thresholds from a previous ReporTree run using the same analysis method as in the current run, we will provide updated \
+						cluster names in the *metadata_w_partitions.tsv, instead of adding new columns with the prefix subset. This argument is only applicable if you provide a partitions file.")
 	parser.add_argument("--frequency-matrix", dest="frequency_matrix", required=False, default="no", help="[OPTIONAL] Metadata column names for which a frequency matrix will be generated. This must \
 						be specified within quotation marks in the following format 'variable1,variable2'. Variable1 is the variable for which frequencies will be calculated (e.g. for \
 						'lineage,iso_week' the matrix reports the percentage of samples that correspond to each lineage per iso_week). If you want more than one matrix you can separate the \
@@ -744,14 +771,19 @@ def main():
 
 	# analysis of the partitions file
 	
+	update_clusters = False
 	if args.partitions != "": # partitions table provided
 		print("Getting information from the partitions table: " + str(args.partitions))
 		print("Getting information from the partitions table: " + str(args.partitions), file = log)
 		partitions_name = args.partitions
 		partitions = pandas.read_table(args.partitions, dtype = str)
+		if args.update_clusters:
+			update_clusters = True
 	else:
 		partitions = args.partitions
 		partitions_name = ""
+		if args.update_clusters:
+			print("\nYou requested to update cluster names in metadata_w_partitions.tsv, but no partitions file was provided. So, I cannot do it :-(")
 		
 
 	# adding partitions to metadata
@@ -764,7 +796,7 @@ def main():
 		if " " in col:
 			new_name = col.replace(" ", "_")
 			col_rename[new_name] = col
-	complete_metadata, possible_subset = partitions2metadata(partitions_name, partitions, mx_metadata, args.partitions2report, args.filter_column, log)
+	complete_metadata, possible_subset = partitions2metadata(partitions_name, partitions, mx_metadata, args.partitions2report, args.filter_column, update_clusters, log)
 	sample_column = complete_metadata.columns[0]
 	
 	

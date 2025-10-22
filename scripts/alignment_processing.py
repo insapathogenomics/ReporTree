@@ -16,8 +16,8 @@ from datetime import date
 import datetime as datetime
 from Bio import SeqIO, AlignIO, Align, Alphabet
 
-version = "1.5.1"
-last_updated = "2024-09-27"
+version = "1.5.2"
+last_updated = "2024-10-20"
 
 # functions	----------
 
