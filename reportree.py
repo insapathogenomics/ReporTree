@@ -18,8 +18,8 @@ import pandas
 import numpy
 from collections import defaultdict
 
-version = "2.6.0"
-last_updated = "2025-10-22"
+version = "2.6.1"
+last_updated = "2025-11-27"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
