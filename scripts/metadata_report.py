@@ -15,8 +15,8 @@ import pandas
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 import datetime
 
-version = "1.4.0"
-last_updated = "2025-10-22"
+version = "1.5.0"
+last_updated = "2025-11-27"
 
 # functions	----------
 
@@ -128,9 +128,10 @@ def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2rep
 			else:
 				required_partitions = partitions2report.split(",")
 				for column_name in required_partitions:
-					if column_name in b.columns and column_name not in shared_columns:
-						valid_rows = b.index.intersection(c.index)
-						c = pandas.concat([c, b.loc[valid_rows, [column_name]].reindex(c.index)], axis=1)
+					if column_name in b.columns:
+						if column_name not in shared_columns:
+							valid_rows = b.index.intersection(c.index)
+							c = pandas.concat([c, b.loc[valid_rows, [column_name]].reindex(c.index)], axis=1)
 					else:
 						print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!")
 						print("\t\t" + column_name + " will not be reported because it was not found in the partitions table!!", file=log)	
