@@ -24,6 +24,9 @@ In summary, ReporTree facilitates and accelerates the production of surveillance
 _Note: this tool relies on the usage of programs/modules of other developers. DO NOT FORGET TO ALSO [CITE](https://github.com/insapathogenomics/ReporTree/edit/main/README.md#citation) THEM!_
 
 ## News!
+#### 2025.11.27 - ReporTree v2.6.1
+Fixes a bug when updating cluster names in metadata table.
+
 #### 2025.10.22 - ReporTree v2.6.0
 We release a new version of ReporTree that besides fixing some small issues, also brings important new features:
 1. ReporTree is much more efficient in filtering allele matrices based on "--loci-called, "--site-inclusion" or "--loci" arguments.
@@ -209,14 +212,14 @@ python reportree.py -h
 docker pull insapathogenomics/reportree:latest
 ```
 
-- Or install a specific version by specifying the release you want (e.g. for v2.5.4):
+- Or install a specific version by specifying the release you want (e.g. for v2.6.1):
 ```bash
-docker pull insapathogenomics/reportree:v2.6.0
+docker pull insapathogenomics/reportree:v2.6.1
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:v2.6.0 reportree.py -h
+docker run insapathogenomics/reportree:v2.6.1 reportree.py -h
 ```
 
 ## Usage
