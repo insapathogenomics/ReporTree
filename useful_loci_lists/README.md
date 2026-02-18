@@ -7,4 +7,4 @@ This directory contains loci lists that may be useful for clustering analysis in
   
 - _cgMLST_Campylobacter_jejuni_chewie-NS.txt_ - List of cgMLST loci of the INNUENDO wgMLST schema available at [chewie-NS for _Campylobacter jejuni_](https://chewbbaca.online/species/4)
   
-- _cgMLST_Legionella_pneumophila_chewie-NS.txt_ - List of cgMLST loci of the LIT wgMLST schema available at [Zenodo](https://doi.org/10.5281/zenodo.17871973)
+- _cgMLST_Legionella_pneumophila_LIT.txt_ - List of cgMLST loci of the LIT wgMLST schema available at [Zenodo](https://doi.org/10.5281/zenodo.17871973)
