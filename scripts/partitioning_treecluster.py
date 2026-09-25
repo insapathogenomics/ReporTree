@@ -10,16 +10,16 @@ By Veronica Mixao
 @INSA
 """
 
-import os
 import sys
+import subprocess
 import argparse
 import textwrap
 import pandas
 from datetime import date
 import ete3 as ete
 
-version = "1.3.0"
-last_updated = "2023-12-11"
+version = "1.4.0"
+last_updated = "2026-09-25"
 
 treecluster = "TreeCluster.py"
 
@@ -402,20 +402,20 @@ def main():
 			print("\tTreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method, file = log)
 			
 			if args.support != float('-inf'):
-				returned_value = os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method_run)
+				returned_value = subprocess.run("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method_run, shell=True).returncode
 				if str(returned_value) != "0":
 					print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!")
 					print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!", file = log)
 					sys.exit(1)
 			else:
-				returned_value = os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -m " + method_run)
+				returned_value = subprocess.run("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -m " + method_run, shell=True).returncode
 				if str(returned_value) != "0":
 					print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!")
 					print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!", file = log)
 					sys.exit(1)
 				
 			partitions = get_partitions(cluster_file, partitions, method, threshold, str(min_dist))
-			os.system("rm " + cluster_file)
+			subprocess.run("rm " + cluster_file, shell=True)
 			runs.append(info_run)
 							
 		else: # run for all possible thresholds
@@ -428,19 +428,19 @@ def main():
 				print("\tTreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method, file = log)
 				
 				if args.support != float('-inf'):
-					returned_value = os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method)
+					returned_value = subprocess.run("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -s " + str(args.support) + " -m " + method, shell=True).returncode
 					if str(returned_value) != "0":
 						print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!")
 						print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!", file = log)
 						sys.exit(1)
 				else:
-					returned_value = os.system("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -m " + method)
+					returned_value = subprocess.run("TreeCluster.py -i " + args.tree + " -o " + cluster_file + " -t " + str(final_thr) + " -m " + method, shell=True).returncode
 					if str(returned_value) != "0":
 						print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!")
 						print("\nSomething went wrong while running TreeCluster :-( please double check your input files and ReporTree specifications!", file = log)
 						sys.exit(1)
 				partitions = get_partitions(cluster_file, partitions, method, str(i), str(min_dist))
-				os.system("rm " + cluster_file)
+				subprocess.run("rm " + cluster_file, shell=True)
 				runs.append(info_run)
 							
 				i += 1

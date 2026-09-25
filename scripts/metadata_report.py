@@ -7,7 +7,6 @@ By Veronica Mixao
 """
 
 
-import os
 import sys
 import argparse
 import textwrap
@@ -15,8 +14,8 @@ import pandas
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 import datetime
 
-version = "1.5.0"
-last_updated = "2025-11-27"
+version = "1.7.0"
+last_updated = "2026-09-25"
 
 # functions	----------
 
@@ -57,18 +56,39 @@ def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2rep
 		mx_metadata["year"] = mx_metadata["date"].dt.year.astype("Int64")
 		year = mx_metadata.pop("year")
 		mx_metadata.insert(index_no + 1, "year", year)
-		if "iso_week_nr" not in mx_metadata.columns and "iso_year" not in mx_metadata.columns and "iso_week" not in mx_metadata.columns:
-			isoyear = mx_metadata["date"].dt.isocalendar().year
-			isoweek = mx_metadata["date"].dt.isocalendar().week
-			mx_metadata["iso_year"] = isoyear.astype(str)
-			mx_metadata["iso_week_nr"] = isoweek.astype(str)
-			mx_metadata["iso_week"] = isoyear.astype(str).replace("<NA>", "-") + "W" + isoweek.astype(str).replace("<NA>", "--").apply(lambda x: x.zfill(2))
-			isoyear = mx_metadata.pop("iso_year")
-			isoweek = mx_metadata.pop("iso_week_nr")
-			isodate = mx_metadata.pop("iso_week")
-			mx_metadata.insert(index_no + 2, "iso_year", isoyear)
-			mx_metadata.insert(index_no + 3, "iso_week_nr", isoweek)
-			mx_metadata.insert(index_no + 4, "iso_week", isodate)
+		isocal = mx_metadata["date"].dt.isocalendar()
+		iso_year_new = isocal.year.astype("Int64")
+		iso_week_new = isocal.week.astype("Int64")
+
+		iso_year_str = iso_year_new.astype(str)
+		iso_week_str = iso_week_new.astype(str)
+
+		iso_week_fmt = (
+            iso_year_str.replace("<NA>", "-") +
+            "W" +
+            iso_week_str.replace("<NA>", "--").apply(lambda x: x.zfill(2))
+        )
+
+        # --- UPDATE OR CREATE ---
+		for col, new_values in {
+            "iso_year": iso_year_str,
+            "iso_week_nr": iso_week_str,
+            "iso_week": iso_week_fmt
+        }.items():
+			if col in mx_metadata.columns:
+				mx_metadata[col] = (
+                    mx_metadata[col]
+                    .replace("", pandas.NA)   # handle empty strings
+                    .fillna(new_values)
+                )
+			else:
+				mx_metadata[col] = new_values
+		index_no = mx_metadata.columns.get_loc("date")
+
+		for offset, col in enumerate(["iso_year", "iso_week_nr", "iso_week"], start=2):
+			if col in mx_metadata.columns:
+				tmp = mx_metadata.pop(col)
+				mx_metadata.insert(index_no + offset, col, tmp)
 
 	# check for duplicated samples in metadata
 	metadata_samples = mx_metadata[mx_metadata.columns[0]].values.tolist()
@@ -227,7 +247,15 @@ def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2rep
 		print("\t\tSamples present in partitions table but missing in metadata table: " + ",".join(list(missing_in_metadata)), file = log)
 		print("\t\tSamples not present in partitions table but present in metadata table: " + ",".join(list(missing_in_partitions)))
 		print("\t\tSamples not present in partitions table but present in metadata table: " + ",".join(list(missing_in_partitions)), file = log)
-		
+	
+	if "date" in new_metadata.columns:
+		new_metadata["date"] = new_metadata["date"].dt.strftime("%Y-%m-%d")
+		new_metadata["year"] = pandas.to_numeric(new_metadata["year"], errors="coerce").astype("Int64")
+		new_metadata["iso_year"] = pandas.to_numeric(new_metadata["iso_year"], errors="coerce").astype("Int64")
+		new_metadata["iso_week"] = pandas.to_numeric(new_metadata["iso_week"], errors="coerce").astype("Int64")
+	if "year_original" in new_metadata.columns:
+		new_metadata["year_original"] = pandas.to_numeric(new_metadata["year"], errors="coerce").astype("Int64")
+
 	return new_metadata, possible_subset
 
 
@@ -285,20 +313,27 @@ def partitions_summary(complete_metadata, partitions, partitions2report, summary
 								if stat in complete_metadata.columns: # get summary of the variable
 									if stat != sample_column and stat != "n_" + sample_column:
 										col = stat
-										observations = list(flt_data[col])		
-										counter = {}
-										for obs in set(observations):
-											counter[obs] = observations.count(obs)
-										
+										observations = flt_data[col]
+										counter = observations.value_counts(dropna=False)
+
+										total = len(observations)
 										info2report = []
-										if len(counter.keys()) > 0:
-											for v in sorted(counter, key=counter.get, reverse=True):
-												rel_freq = float(counter[v]/len(observations))
-												statistics = str(v) + " (" + str(round(rel_freq * 100,1)) + "%)"
-												info2report.append(statistics)
-											joint = ", ".join(info2report) + " (n = " + str(len(observations)) + ")"
-										else:
-											joint = ""
+
+										for v, count in counter.items():
+											if count == 0:
+												continue
+
+											rel_freq = count / total
+
+											if pandas.isna(v):
+												label = "NA"
+											else:
+												label = str(v)
+
+											info2report.append(f"{label} ({round(rel_freq * 100, 1)}%)")
+
+										joint = ", ".join(info2report) + f" (n = {total})"
+
 									summary[stat].append(joint)
 								
 								else: # it is not a normal column
