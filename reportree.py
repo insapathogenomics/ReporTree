@@ -8,6 +8,7 @@ By Veronica Mixao
 """
 
 import os
+import subprocess
 import sys
 import argparse
 import textwrap
@@ -15,11 +16,12 @@ import datetime as datetime
 from datetime import date
 import glob
 import pandas
+from scipy.spatial.distance import pdist, squareform
 import numpy
 from collections import defaultdict
 
-version = "2.6.1"
-last_updated = "2025-11-27"
+version = "2.7.0"
+last_updated = "2026-09-25"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -40,7 +42,7 @@ def run_stability(args, log_name, partitions_status):
 		partitions = args.partitions
 	cmd = python + " " + reportree_path + "/scripts/ComparingPartitions/comparing_partitions_v2.py -i1 " + partitions + " -t " + args.output + " -o1 " +  str(args.order) + " -a stability -n \
 	" + str(args.n_obs) + " -thr " + str(args.AdjustedWallace) + " -log " + log_name + " " + extra_stability
-	returned_value = os.system(cmd)
+	returned_value = subprocess.run(cmd, shell=True).returncode
 
 	return returned_value
 
@@ -70,7 +72,7 @@ def run_metadata_report(args, partitions2report_final, partitions_status):
 		cmd = python + " " + reportree_path + "/scripts/metadata_report.py -m " + args.metadata + " -p " + partitions + " -o " + args.output + " --columns_summary_report \
 		" + args.columns_summary_report + " --partitions2report " + partitions2report_final + " --metadata2report " + args.metadata2report + " -f \"" + args.filter_column + "\" \
 		--frequency-matrix \'" + args.frequency_matrix + "\' --count-matrix \'" + args.count_matrix + "\' " + extra_metadata
-	returned_value = os.system(cmd)
+	returned_value = subprocess.run(cmd, shell=True).returncode
 
 	return returned_value
 
@@ -88,7 +90,7 @@ def run_treecluster(args):
 		extra_treecluster += extra
 	cmd = python + " " + reportree_path + "/scripts/partitioning_treecluster.py -t " + args.tree + " -o " + args.output + " -d " + str(args.dist) + " --method-threshold \
 	" + args.method_threshold + " --root " + args.root + " " + extra_treecluster
-	returned_value = os.system(cmd)
+	returned_value = subprocess.run(cmd, shell=True).returncode
 	
 	return returned_value
 
@@ -114,7 +116,7 @@ def run_alignment_processing(args):
 	cmd = python + " " + reportree_path + "/scripts/alignment_processing.py -align " + args.alignment + " -o " + args.output + " --sample-ATCG-content " + str(args.ATCG_content) + " \
 	-r " + args.reference + " --site-ATCG-content " + str(args.N_content) + " --missing-code " + str(missing_code) + " --get-position-correspondence " + args.pos_corr + " --position-list \
 	" + args.pos_list + " " + extras_alignment
-	returned_value = os.system(cmd)
+	returned_value = subprocess.run(cmd, shell=True).returncode
 
 	return returned_value
 
@@ -126,7 +128,7 @@ def run_vcf2mst(args, intype):
 	elif intype == "var":
 		cmd = "perl " + reportree_path + "/scripts/vcf2mst/vcf2mst.pl " + args.variants + " " + args.output + "_profile.tsv tsv -out profile -tsv-sample-pos 0 \
 		-tsv-mutationslist-find pos -tsv-mutationslist-pos 1 -tsv-mutation-pos-regexp '\w(\d+)\w'"
-	returned_value = os.system(cmd)
+	returned_value = subprocess.run(cmd, shell=True).returncode
 
 	return returned_value
 
@@ -173,7 +175,7 @@ def run_partitioning_grapetree(args, input_align, profile, zoom, future_zoom):
 	cmd = python + " " + reportree_path + "/scripts/partitioning_grapetree.py -a " + profile + " -o " + args.output + " --method " + args.grapetree_method + " --missing \
 	" + str(args.handler) + " --n_proc " + str(args.number_of_processes) + " -thr " + str(args.threshold) + " -d " + str(args.dist) + " --site-inclusion " + site_inclusion + " \
 	-pct_thr " + str(args.pct_threshold) + " --loci-called " + loci_called + " --missing-code " + missing_code + " -l " + loci_lst + extras_grapetree
-	returned_value = os.system(cmd)
+	returned_value = subprocess.run(cmd, shell=True).returncode
 
 	return returned_value
 
@@ -220,7 +222,7 @@ def run_partitioning_HC(args, input_align, distance_matrix_input, profile, zoom,
 		loci_lst = "none"
 		cmd = python + " " + reportree_path + "/scripts/partitioning_HC.py -d_mx " + profile + " -o " + args.output + " --HC-threshold " + args.HCmethod_threshold + " \
 		-d " + str(args.dist) + " --pct-HC-threshold " + str(args.pct_HCmethod_threshold) + " " + extras_hc
-	returned_value = os.system(cmd)
+	returned_value = subprocess.run(cmd, shell=True).returncode
 	
 	return returned_value
 
@@ -305,7 +307,9 @@ def infer_partitions_from_list(analysis, partitions, metadata, thresholds, outpu
 									if str(part) == col:
 										partitions2report_lst.append(col)
 							else:
-								print_log("\tWe are sorry but we cannot solve your request " + str(part) + ", so, it will be ignored.", log)
+								print_log("We are sorry but we cannot solve your request " + str(part) + ", so, it will be ignored.", log)
+					else:
+						print_log("\tWe are sorry but we cannot solve your request " + str(part) + ", so, it will be ignored.", log)
 				elif analysis == "other":
 					partitions2report_lst.append(part)
 	
@@ -548,7 +552,6 @@ def get_clusters_interest(samples, matrix, metadata, day, partitions):
 
 	return clusters_of_interest, not_in_partitions
 
-
 def get_all_clusters(matrix, partitions, log):
 	""" get all clusters for zoom-all 
 	input: partitions table
@@ -565,7 +568,6 @@ def get_all_clusters(matrix, partitions, log):
 
 	return clusters_of_interest
 
-
 def loci_called2metadata(metadata_original, out, thr, analysis):
 	""" adds column with percentage of called loci
 	to metadata table """
@@ -576,17 +578,24 @@ def loci_called2metadata(metadata_original, out, thr, analysis):
 	loci = pandas.read_table(out + "_" + analysis + "_report.tsv")
 	a = metadata.set_index(metadata.columns[0], drop = True)
 	b = loci.set_index(loci.columns[0], drop = True)
-	
-	b["QUAL_called"] = b["pct_called"]
-	b["QUAL_called"].where(b["QUAL_called"] <= float(thr), "PASS", inplace = True)
-	b["QUAL_called"].where(b["QUAL_called"].astype(str) == "PASS", "excluded", inplace = True)
 
-	c = pandas.concat([a, b["pct_called"], b["QUAL_called"]], axis=1)
-	c = c.reset_index(drop = False)
+	b["pct_called"] = b["pct_called"].astype(float)
+	
+	b["QUAL_called"] = numpy.where(
+        b["pct_called"] <= float(thr),
+        "excluded",
+        "PASS"
+    )
+
+	for col in ["pct_called", "QUAL_called"]:
+		if col in a.columns:
+			a[col] = b[col]
+		else:
+			a[col] = b[col]
+	c = a.reset_index(drop = False)
 	c.rename(columns={c.columns[0]: metadata.columns[0]}, inplace=True)
 	
-	complete_metadata = pandas.DataFrame(data = c)
-	complete_metadata.to_csv(metadata_original, index = False, header=True, sep = "\t")
+	c.to_csv(metadata_original, index = False, header=True, sep = "\t")
 
 def get_closest_samples(sample, n, hamming, samples_in_partitions):
 	""" get the list of n closest samples for subtree 
@@ -985,7 +994,7 @@ def run_nomenclature(partitions, nomenclature, tag, day, log_name):
 						out_partition = new_partition
 						for cluster in sorted(changes.keys()):
 							for old,old_l,modification,new,new_l,n_new_samples,new_samples in changes[cluster]:
-								print(str(out_partition) + "\t" + str(old) + "\t" + str(old_l) + "\t" + str(modification) + "\t" + str(new) + "\t" + new_l + "\t", n_new_samples + "\t" + new_samples, file = changes_output)
+								print(str(out_partition) + "\t" + str(old) + "\t" + str(old_l) + "\t" + str(modification) + "\t" + str(new) + "\t" + new_l + "\t" + n_new_samples + "\t" + new_samples, file = changes_output)
 			else:
 				print_log("\tThe nomenclature column " + str(partition) + " was not found in the partitions table. Cluster names will not be modified!", log_name)
 				changes = {}
@@ -1124,7 +1133,133 @@ def rename_clusters_subsets(analysis,partitions,tag):
 	
 	mx.replace(new_name, regex=True, inplace=True)
 	mx.to_csv(partitions, index = False, header=True, sep = "\t")
-		
+
+def compatible_clusters(dist_mx, partitions, thresholds, out, samples_of_interest, log):
+	""" report distance-based compatible clusters
+	input: distance matrix, partitions table, thresholds, output tag and log name
+	output: list of compatible clusters """
+
+	dist_mx = pandas.read_table(dist_mx)
+	dist_mx.set_index(dist_mx.columns[0], inplace=True)
+
+	partitions_mx = pandas.read_table(partitions)
+	partitions_mx.set_index(partitions_mx.columns[0], inplace=True)
+
+	dist_samples = set(dist_mx.index)
+	partition_samples = set(partitions_mx.index)
+
+	missing_in_partitions = dist_samples - partition_samples
+	missing_in_dist = partition_samples - dist_samples
+
+	if missing_in_partitions or missing_in_dist:
+		msg = "\nWARNING: Samples in distance matrix and partitions table do not match."
+
+		if missing_in_partitions:
+			msg += f"\nSamples present in distance matrix but missing in partitions table ({len(missing_in_partitions)}): "
+			msg += ", ".join(sorted(missing_in_partitions))
+
+		if missing_in_dist:
+			msg += f"\nSamples present in partitions table but missing in distance matrix ({len(missing_in_dist)}): "
+			msg += ", ".join(sorted(missing_in_dist))
+
+		print_log(msg, log)
+
+	threshold_info = {}
+	for partition in thresholds:
+		method = partition.rsplit("-", 1)[0]
+		distance_factor = float(partition.split("x")[-1])
+		t = int(int(partition.rsplit("-", 1)[-1].split("x")[0])	* distance_factor)
+		threshold_info[partition] = {"method": method, "threshold": t}
+	unique_thresholds = {x["threshold"]	for x in threshold_info.values()}
+	
+	neighbor_cache = {}
+	for t in unique_thresholds:
+		neighbor_cache[t] = {}
+		for sample in dist_mx.index:
+			dist_row = dist_mx.loc[sample]
+			neighbors = dist_row[(dist_row <= t) & (dist_row.index != sample)].index
+			neighbor_cache[t][sample] = neighbors
+
+	results = []
+	for partition in thresholds:
+		if partition not in partitions_mx.columns:
+			print_log(f"\nPartition {partition} not found in partitions table. Skipping...", log)
+			continue
+		method = threshold_info[partition]["method"]
+		t = threshold_info[partition]["threshold"]
+		partition_series = partitions_mx[partition]
+		cluster_sizes = partition_series.value_counts().to_dict()
+
+		partition_results = []
+		found = False
+		interest_samples = False
+		incongruent_samples_of_interest = []
+		flagged_clusters = {}
+
+		for sample in partition_series.index:
+			neighbors = neighbor_cache[t][sample]
+			missing_neighbors = neighbors.difference(partition_series.index)
+			if len(missing_neighbors) > 0:
+				print_log(f"\nWARNING: {len(missing_neighbors)} neighbors of sample {sample} are missing from partition {partition}. Ignoring them: {', '.join(sorted(missing_neighbors))}", log)
+			neighbors = neighbors.intersection(partition_series.index)
+			cluster_counts = partition_series[neighbors].value_counts().to_dict()
+			assigned_cluster = partition_series[sample]
+			other_clusters = {cluster: n for cluster, n in cluster_counts.items() if cluster != assigned_cluster}
+
+			if other_clusters:
+				found = True
+				if sample in samples_of_interest:
+					interest_samples = True
+					incongruent_samples_of_interest.append(sample)
+					interest = "yes"
+				else:
+					interest = "no"
+				flagged_clusters[assigned_cluster] = flagged_clusters.get(assigned_cluster, 0) + 1
+				compatible_clusters = []
+				for cluster, n_neighbors in cluster_counts.items():
+					cluster_length = cluster_sizes[cluster]
+					if cluster == assigned_cluster:
+						total = cluster_length - 1
+					else:
+						total = cluster_length
+					percentage = 100 * n_neighbors / total if total > 0 else 0
+					compatible_clusters.append(f"{percentage:.1f}% {cluster}")
+				partition_results.append({"sample": sample, "assigned_cluster": assigned_cluster, "distance_based_compatible_clusters": ", ".join(compatible_clusters), "sample_of_interest": interest})
+
+		if not found:
+			print_log(f"\nPartition {partition}: No differences in cluster assignments were found.", log)
+			results.append({"method": method, "threshold": t, "assigned_cluster": "-", "cluster_length": "-", "flagged_samples_in_cluster": "-", "sample": "-", "sample_of_interest": "-", "distance_based_compatible_clusters": "-"})
+
+		else:
+			if interest_samples:
+				print_log(f"\nPartition {partition}: Some differences were found, including samples: {', '.join(incongruent_samples_of_interest)}",log)
+			else:
+				print_log(f"\nPartition {partition}: Some differences were found!", log)
+
+		for row in partition_results:
+			cluster = row["assigned_cluster"]
+			row["method"] = method
+			row["threshold"] = t
+			row["cluster_length"] = cluster_sizes[cluster]
+			row["flagged_samples_in_cluster"] = flagged_clusters.get(cluster, 0)
+			results.append(row)
+
+	final_df = pandas.DataFrame(results)
+	final_df = final_df[
+		[
+			"method",
+			"threshold",
+			"assigned_cluster",
+			"cluster_length",
+			"flagged_samples_in_cluster",
+			"sample",
+			"sample_of_interest",
+			"distance_based_compatible_clusters"
+		]
+	]
+
+	final_df.to_csv(out + "_compatible_clusters.tsv", sep="\t", index=False)
+
 
 # running the pipeline	----------
 
@@ -1211,7 +1346,7 @@ def main():
 	group0.add_argument("-align", "--alignment", dest="alignment", default="", required=False, type=str, help="Input multiple sequence alignment (fasta format)")
 	group0.add_argument("-d_mx", "--distance_matrix", dest="distance_matrix", default="", required=False, type=str, help="Input pairwise distance matrix (tsv format)")
 	group0.add_argument("-t", "--tree", dest="tree", default="", required=False, type=str, help="Input tree (newick format)")
-	group0.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="Partitions file (tsv format) - 'partition' represents the threshold at \
+	group0.add_argument("-p", "--partitions", dest="partitions", required=False, default="", type=str, help="Partitions file (tsv format) - 'partition' represents the method-threshold at \
 						which clustering information was obtained")
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, type=str, default = "none", help="[MANDATORY] Metadata file (tsv format). To take the most profit of ReporTree \
 						functionalities, you must provide this file.")
@@ -1275,7 +1410,7 @@ def main():
 						'--get-position-correspondence' is requested. Each column should correspond to the positions of a sequence and the sequence name should be indicated in the header. If this \
 						file is not provided, all positions of the alignment will be reported.")
 	
-	
+
 	## partitioning grapetree
 	
 	group4 = parser.add_argument_group("Partitioning with GrapeTree", "Specifications to get and cut minimum spanning trees")
@@ -1367,9 +1502,9 @@ def main():
 						they must be separated with commas (e.g 'country == Portugal,Spain,France'). When filters include more than one column, they must be separated with semicolon (e.g. \
 						'country == Portugal,Spain,France;date > 2018-01-01;date < 2022-01-01'). White spaces are important in this argument, so, do not leave spaces before and after \
 						commas/semicolons.")
-	group8.add_argument("--check-cluster-incongruencies", dest="incongruencies", required=False, action="store_true", help="[OPTIONAL and only available for --analysis grapetree or HC]] Perform \
-					 	a comparison between the genetic clusters obtained and the distance matrix to identify incongruencies between the two (e.g. isolates A and B dist by 10 allele differences \
-					 	but are not clustered at this threshold.")
+	group8.add_argument("--get-compatible-clusters", dest="compatible_clusters", required=False, default="none", help="[OPTIONAL] Get the list of clusters at a given threshold where a sample could \
+					 	also be assigned, if hamming distances were considered. Partition thresholds can be indicated in this argument following the same rules as the arguments '-thr' and '-pct_thr' \
+					 	for GrapeTree or '--HC-threshold' and '--pct-HC-threshold' for HC or '--method-threshold' for TreeCluster.")
 	group8.add_argument("--sample_of_interest", dest="sample_of_interest", required=False, default="all", help="[OPTIONAL] List of samples of interest for which summary reports will be created. This \
 		     			list can be a comma-separated list in the command line, or a comma-separated list in a file, or a list in the first column of a tsv file. No headers should be provided in the \
 		     			input files. If nothing is provided, only the summary reports comprising all samples will be generated.")
@@ -1572,10 +1707,6 @@ def main():
 			print_log("\nTree and allele profiles files specified... I am confused :-(\n", log)
 			sys.exit(1)
 		
-		elif args.alignment != "": # alignment was provided -> grapetree, HC or treecluster
-			print_log("\nTree and sequence alignment files specified... I am confused :-(\n", log)
-			sys.exit(1)
-		
 		elif args.vcf != "": # VCF was provided -> grapetree, HC or treecluster
 			print_log("\nTree and VCF files specified... I am confused :-(\n", log)
 			sys.exit(1)
@@ -1584,13 +1715,51 @@ def main():
 			print_log("\nTree and variants list files specified... I am confused :-(\n", log)
 			sys.exit(1)
 		
-		elif args.distance_matrix != "": # distance mx was provided -> grapetree, HC or treecluster
-			print_log("\nTree and distance matrix specified... I am confused :-(\n", log)
-			sys.exit(1)
-		
 		else: # can continue using tree and run treecluster and metadata report
+			if args.compatible_clusters == "none":
+				if args.distance_matrix != "" or args.alignment != "":
+					print_log("\nTree and distance matrix or sequence alignment specified... I am confused :-(\n", log)
+					sys.exit(1)
+			else:
+				if args.distance_matrix != "" and args.alignment == "":
+					print_log("\nDistance matrix provided as input will be used to infer pairwise distances in the original alignment for the --get-compatible-clusters analysis...\n", log)
+					dist_mx = args.distance_matrix					
+				elif args.alignment != "" and args.distance_matrix == "":
+					print_log("\nAlignment file provided -> will run alignment_processing.py and partitioning_HC.py to infer pairwise distances for the --get-compatible-clusters analysis...\n", log)
+					log.close()
+					returned_value = run_alignment_processing(args)
+					log = open(log_name, "a+")
+					if str(returned_value) != "0":
+						sys.exit("\n\nReporTree exited before expected while running alignment_processing.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
+					if os.path.exists(args.output + "_align_profile.tsv"):
+						align_profile = args.output + "_align_profile.tsv"
+						input_align = True
+						distance_matrix_input = False
+						zoom = False
+						future_zoom = False
+						log.close()
+						returned_value = run_partitioning_HC(args, input_align, distance_matrix_input, align_profile, zoom, future_zoom)
+						if os.path.exists(args.output + "_loci_used.txt"):
+							subprocess.run("mv " + args.output + "_loci_used.txt " + args.output + "_positions_used.txt", shell=True)
+						if os.path.exists(args.output + "_loci_report.tsv"):
+							subprocess.run("mv " + args.output + "_loci_report.tsv " + args.output + "_positions_report.tsv", shell=True)
+						if os.path.exists(args.output + "_single_HC.nwk"):
+							subprocess.run("rm " + args.output + "_single_HC.nwk", shell=True)
+						if os.path.exists(args.output + "_flt_samples_matrix.tsv"):
+							subprocess.run("rm " + args.output + "_flt_samples_matrix.tsv", shell=True)
+						if os.path.exists(args.output + "_partitions.tsv"):
+							subprocess.run("rm " + args.output + "_partitions.tsv", shell=True)
+						if os.path.exists(args.output + "_metadata_w_partitions.tsv"):
+							subprocess.run("rm " + args.output + "_metadata_w_partitions.tsv", shell=True)
+						log = open(log_name, "a+")
+						dist_mx = args.output + "_dist_hamming.tsv"
+				else:
+					print_log("\nYou have asked for '--get-compatible-clusters' but you did not provide a distance matrix or sequence alignment ... I am confused :-(\n", log)
+					sys.exit(1)
+			
 			print_log("\nTree file provided -> will run partitioning_treecluster.py:\n", log)
 			
+			analysis = "treecluster"
 			# running partitioning treecluster
 
 			log.close()
@@ -1605,6 +1774,13 @@ def main():
 				partitions = run_nomenclature(args.output + "_partitions.tsv", args.nomenclature, args.output, day, log)
 				partition_status = "new"
 				cmds.append("nomenclature")
+			
+		# flag incongruencies
+		if args.compatible_clusters != "none":
+			print_log("\n\n--------------------  checking for differences in cluster assignments --------------------\n", log)
+			partitions2check, partitions2check_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", "ignore", args.compatible_clusters, args.output, args.dist, log)
+			compatible_clusters(dist_mx, args.output + "_partitions.tsv",  partitions2check_lst, args.output, args.sample_of_interest,log)
+			cmds.append("compatible_clusters")
 		
 		# running comparing partitions
 		if "stability_regions" in args.partitions2report and "all" in args.partitions2report:
@@ -1625,7 +1801,8 @@ def main():
 						sys.exit("\n\nReporTree exited before expected while running comparing_partitions_v2.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
 					args.partitions = real_partitions
 					args.output = real_output
-					os.system("rm " + args.output + "_tmp.tsv")
+					if os.path.exists(args.output + "_tmp.tsv"):
+						subprocess.run("rm " + args.output + "_tmp.tsv", shell=True)
 					log = open(log_name, "a+")
 			else:
 				if len(all_partitions_available(args.method_threshold, args.root_dist_by_node)) >= 1 and args.dist != 1.0:
@@ -1637,6 +1814,13 @@ def main():
 			
 		partitions2report_final, partitions2report_lst = infer_partitions_from_list("treecluster", args.output + "_partitions.tsv", metadata_col, args.partitions2report, args.output, args.dist, log)
 		
+		# get nomenclature code
+		if args.code_levels != "" and args.metadata != "":
+			print_log("\nGenerating nomenclature code...", log)
+			code_levels, code_levels_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", metadata_col, args.code_levels, args.output, args.dist, log)
+			nomenclature_code(metadata_mx,metadata_col,args.output + "_partitions.tsv",args.output,code_levels_lst,day,log)
+			args.metadata = args.output + "_metadata_w_partitions.tsv"
+
 		if len(partitions2report_final) == 0:
 			print_log("\tThe analysis of the partitions to report returned an empty list. All partitions will be included in the report...", log)
 			partitions2report_final = "all"
@@ -1786,6 +1970,7 @@ def main():
 				sys.exit("\n\nReporTree exited before expected while running partitioning_grapetree.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
 			partitions_dataframe = pandas.read_table(args.output + "_partitions.tsv")
 			samples_in_partitions = partitions_dataframe[partitions_dataframe.columns[0]].values.tolist()
+			dist_mx = args.output + "_dist_hamming.tsv"
 			log = open(log_name, "a+")
 		
 		
@@ -1799,6 +1984,7 @@ def main():
 				sys.exit("\n\nReporTree exited before expected while running partitioning_HC.py :-( Please check your input files and your command line. If you are in trouble and cannot figure out what is going on, contact us!!")
 			partitions_dataframe = pandas.read_table(args.output + "_partitions.tsv")
 			samples_in_partitions = partitions_dataframe[partitions_dataframe.columns[0]].values.tolist()
+			dist_mx = args.output + "_dist_hamming.tsv"
 			log = open(log_name, "a+")
 		
 		else:
@@ -1815,16 +2001,12 @@ def main():
 			partition_status = "new"
 			cmds.append("nomenclature")
 		
-
-		# FLAG INCONGRUENCIES	----------
-		
-		if args.incongruencies:
-			if analysis == "HC" or analysis == "grapetree":
-				print_log("\nChecking for incongruencies between clustering and distance matrix...", log)
-				loci_report = args.output + "_loci_report.tsv"
-			else:
-				print_log("\nRequest for checking clustering incongruencies is not compatible with this analysis, so it will not be performed :-(", log)
-
+		# flag incongruencies
+		if args.compatible_clusters != "none":
+			print_log("\n\n--------------------  checking for differences in cluster assignments --------------------\n", log)
+			partitions2check, partitions2check_lst = infer_partitions_from_list(analysis, args.output + "_partitions.tsv", "ignore", args.compatible_clusters, args.output, args.dist, log)
+			compatible_clusters(dist_mx, args.output + "_partitions.tsv",  partitions2check_lst, args.output, args.sample_of_interest,log)
+			cmds.append("compatible_clusters")
 
 		# running comparing partitions
 		if "stability_regions" in args.partitions2report and "all" in args.partitions2report:
@@ -1879,7 +2061,7 @@ def main():
 		# if nomenclature changed, add this info in partitions summary
 		if "nomenclature" in cmds and "metadata_report" in cmds:
 			nomenclature_change2summary(args.output)
-			
+
 		# samples of interest
 		if future_zoom: 
 			print_log("\n\n\n\n****************************** PROCESSING SAMPLES OF INTEREST ******************************\n\n", log)
@@ -1970,7 +2152,7 @@ def main():
 			for type_analysis,tag_subset,filter_subset in new_subset_filters:
 				out_folder = args.output
 				if not os.path.exists(out_folder + "_" + tag_subset):
-					os.system("mkdir " + out_folder + "_" + tag_subset)
+					subprocess.run("mkdir " + out_folder + "_" + tag_subset, shell=True)
 				if "/" in out_folder:
 					zooms_prefix = out_folder.split("/")[-1]
 				else:
@@ -2032,7 +2214,7 @@ def main():
 						returned_value = run_metadata_report(args, "all", "new")
 						if str(returned_value) != "0":
 							print_log(tag_subset + ": ReporTree cannot proceed after metadata_report.py :-( If you reached this step without previous errors, please contact us because this is a possible bug!!!", log)
-				os.system("rm " + args.metadata)
+				subprocess.run("rm " + args.metadata, shell=True)
 				args.output = real_output
 				args.metadata = real_metadata
 				args.filter_column = real_filter
@@ -2041,11 +2223,11 @@ def main():
 				subset_log = open(subset_log_name, "a+")
 				print_log("\n------------------------------------------------------------\n", subset_log)
 				if not args.unzip:
-					returned_value = os.system("zip -r " + out_folder + "_" + tag_subset + ".zip " + out_folder + "_" + tag_subset + "/")
-					if str(returned_value) != "0":
+					returned_value = subprocess.run("zip -r " + out_folder + "_" + tag_subset + ".zip " + out_folder + "_" + tag_subset + "/", shell=True, capture_output=True)
+					if str(returned_value.returncode) != "0":
 						print_log("ReporTree failed to compress your cluster of interest or tree of interest directory: " + args.output + "_" + tag_subset + "/", subset_log)
 					else:
-						os.system("rm -rf " + out_folder + "_" + tag_subset + "/")
+						subprocess.run("rm -rf " + out_folder + "_" + tag_subset + "/", shell=True)
 				subset_end = datetime.datetime.now()
 				subset_elapsed = subset_end - subset_start
 				print("ReporTree is done! If you found any issue please contact us!!\n", file = subset_log)
@@ -2076,7 +2258,7 @@ def main():
 	end = datetime.datetime.now()
 	
 	elapsed = end - start
-	print_log("\n------------------------------------------------------------\n", log)
+	print_log("\n------------------------------------------------------------------------------------------------------------------------\n", log)
 	print_log("ReporTree is done! If you found any issue please contact us!!\n", log)
 	print_log("\nEnd: " + str(end), log)
 	print_log("Time elapsed: " + str(elapsed), log)

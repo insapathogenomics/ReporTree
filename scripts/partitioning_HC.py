@@ -8,6 +8,7 @@ By Veronica Mixao
 
 import sys
 import os
+import subprocess
 import argparse
 import textwrap
 import pandas
@@ -20,8 +21,8 @@ partitioning_HC_script = os.path.realpath(__file__)
 
 sys.setrecursionlimit(10000) # please increase this number, if you are getting the error "RecursionError: maximum recursion depth exceeded while calling a Python object" 
 
-version = "1.9.0"
-last_updated = "2025-10-21"
+version = "1.10.0"
+last_updated = "2026-09-25"
 
 # functions	----------
 
@@ -499,14 +500,14 @@ def main():
 			tmp_df.to_csv(args.out + "_temporary_profile.tsv", index = True, header = True, sep ="\t")
 			
 			# run cgmlst-dists
-			returned_value = os.system("cgmlst-dists " + args.out + "_temporary_profile.tsv > " + args.out + "_tmp_dist_hamming.tsv")
+			returned_value = subprocess.run("cgmlst-dists " + args.out + "_temporary_profile.tsv > " + args.out + "_tmp_dist_hamming.tsv", shell=True).returncode
 			if str(returned_value) != "0":
 				print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!")
 				print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!", file = log)
 				sys.exit(1)
-			os.system("rm " + args.out + "_temporary_profile.tsv")
+			subprocess.run("rm " + args.out + "_temporary_profile.tsv", shell=True)
 			sub_dist_df = pandas.read_table(args.out + "_tmp_dist_hamming.tsv")
-			os.system("rm " + args.out + "_tmp_dist_hamming.tsv")
+			subprocess.run("rm " + args.out + "_tmp_dist_hamming.tsv", shell=True)
 			sub_dist_df.set_index(sub_dist_df.columns[0], inplace = True, drop = True)
 			if df_counter == 1:
 				dist_df = sub_dist_df

@@ -10,9 +10,9 @@ By Veronica Mixao
 
 import sys
 import os
+import subprocess
 import argparse
 import textwrap
-import glob
 import pandas
 from datetime import date
 import datetime as datetime
@@ -25,8 +25,8 @@ partitioning_grapetree_script = os.path.realpath(__file__)
 grapetree = partitioning_grapetree_script.rsplit("/", 1)[0] + "/GrapeTree/grapetree.py"
 python = sys.executable
 
-version = "1.6.0"
-last_updated = "2025-10-21"
+version = "1.7.0"
+last_updated = "2026-09-25"
 
 # additional functions	----------
 
@@ -463,14 +463,14 @@ def main():
 		tmp_df.to_csv(args.out + "_temporary_profile.tsv", index = True, header = True, sep ="\t")
 
 		# run cgmlst-dists
-		returned_value = os.system("cgmlst-dists " + args.out + "_temporary_profile.tsv > " + args.out + "_tmp_dist_hamming.tsv")
+		returned_value = subprocess.run("cgmlst-dists " + args.out + "_temporary_profile.tsv > " + args.out + "_tmp_dist_hamming.tsv", shell=True).returncode
 		if str(returned_value) != "0":
 			print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!")
 			print("\nSomething went wrong while running cgmlst-dists to get hamming distances :-( please double check your input files and ReporTree specifications!", file = log)
 			sys.exit(1)
-		os.system("rm " + args.out + "_temporary_profile.tsv")
+		subprocess.run("rm " + args.out + "_temporary_profile.tsv", shell=True)
 		sub_dist_df = pandas.read_table(args.out + "_tmp_dist_hamming.tsv")
-		os.system("rm " + args.out + "_tmp_dist_hamming.tsv")
+		subprocess.run("rm " + args.out + "_tmp_dist_hamming.tsv", shell=True)
 		sub_dist_df.set_index(sub_dist_df.columns[0], inplace = True, drop = True)
 		if df_counter == 1:
 			dist_df = sub_dist_df
@@ -494,7 +494,7 @@ def main():
 
 	print(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + extra_commands)
 	print(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + extra_commands, file = log)
-	returned_value = os.system(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + extra_commands)
+	returned_value = subprocess.run(python + " " + grapetree + " -p " + allele_filename + " -m " + args.grapetree_method + " -o " + args.out + " --missing " + str(args.handler) + " --n_proc " + str(args.number_of_processes) + extra_commands, shell=True).returncode
 	if str(returned_value) != "0":
 		print("\nSomething went wrong while running GrapeTree :-( Please check your input matrix and your filtering options... ")
 		print("\nSomething went wrong while running GrapeTree :-( Please check your input matrix and your filtering options... ", file = log)
@@ -785,7 +785,7 @@ def main():
 					print(str(percentage) + "\t" + str(threshold), file = out_pct)
 
 	if os.path.exists(args.out + "_temporary_clean_codes.tsv"):
-		os.system("rm " + args.out + "_temporary_clean_codes.tsv")
+		subprocess.run("rm " + args.out + "_temporary_clean_codes.tsv", shell=True)
 		
 	matrix = pandas.DataFrame(data = typing, columns = order_partitions)
 	matrix.to_csv(args.out + "_partitions.tsv", index = False, header=True, sep ="\t")

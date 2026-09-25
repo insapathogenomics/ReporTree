@@ -8,16 +8,18 @@ By Veronica Mixao
 
 import sys
 import os
+import subprocess
 import argparse
 import textwrap
 import pandas
 import numpy as np
 from datetime import date
 import datetime as datetime
-from Bio import SeqIO, AlignIO, Align, Alphabet
+from Bio import SeqIO, AlignIO
+from Bio.Data.IUPACData import protein_letters
 
-version = "1.5.2"
-last_updated = "2024-10-20"
+version = "1.7.0"
+last_updated = "2026-09-25"
 
 # functions	----------
 
@@ -300,8 +302,8 @@ def clean_mx(mx, gaps, all_gaps, missing_code, log):
     
     align_len = len(mx.columns)
     df = mx.apply(lambda x: x.astype(str).str.upper())
-    allowed_values = list(Alphabet.Gapped(Alphabet.IUPAC.ExtendedIUPACProtein, "-").letters)
-    df = df.replace({missing_code: "0"})
+    allowed_values = list(protein_letters + "BXZJUO-")
+    df = df.replace([x.strip() for x in missing_code.split(",")], "0")
     df[df.columns[0]] = mx[mx.columns[0]]
 
     df[~df[df.columns[1:]].isin(allowed_values)] = "0"
@@ -346,7 +348,7 @@ def clean_position(mx, atcg, gaps, all_gaps, missing_code, log):
 	mx_id = mx[mx.columns[0]]
 	mx = mx.apply(lambda x: x.astype(str).str.upper())
     
-	allowed_values = list(Alphabet.Gapped(Alphabet.IUPAC.ExtendedIUPACProtein, "-").letters)
+	allowed_values = list(protein_letters + "BXZJUO-")
 	mx = mx.replace({missing_code: "0"})
 	mx[mx.columns[0]] = mx_id
 	mx[~mx[mx.columns[1:]].isin(allowed_values)] = "0"
@@ -403,7 +405,7 @@ def rm_ns(mx, ATCG_content, out, log):
 
 	report_df = pandas.DataFrame(report_mx)
 	if float(ATCG_content) != 1.0:
-		flt_report = report_df[report_df["pct_called"] > float(ATCG_content)]
+		flt_report = report_df[report_df["pct_called"] >= float(ATCG_content)]
 	else:
 		flt_report = report_df[report_df["pct_called"] == float(ATCG_content)]
 	pass_samples = flt_report["samples"].values.tolist()
@@ -513,8 +515,6 @@ if __name__ == "__main__":
 	group0.add_argument("--keep-all-gaps", dest="keep_all_gaps", required=False, action="store_true", help="Set only if you want that all sites with gaps are considered as informative.")
 	group0.add_argument("--missing-code", dest="missing_code", required=False, type=str, default = "N", help="[OPTIONAL] Code representing missing data. If different from 'N', try to avoid a \
                         IUPAC character (even in lower-case) as this may influence affect the alignment cleaning. [default: N]")	
-	group0.add_argument("--use-alignment-coords", dest="use_align", required=False, action="store_true", help="Set only if you want that column names in the final matrix represent the initial \
-						alignment coordinates. Note: Depending on the alignment size, this argument can make alignment processing very slow!")	
 	group0.add_argument("--use-reference-coords", dest="use_ref", required=False, action="store_true", help="Set only if you want that column names in the final matrix represent the reference \
 						coordinates (reference name must be provided with the argument '--reference'). Note: Depending on the alignment size, this argument can make alignment processing very slow!")	
 	group0.add_argument("-m", "--metadata", dest="metadata", required=False, default="", type=str, help="[OPTIONAL] Metadata file in .tsv format to apply sample subset.")
@@ -530,6 +530,8 @@ if __name__ == "__main__":
 						'--get-position-correspondence' is requested. Each column should correspond to the positions of a sequence and the sequence name should be indicated in the header. If this \
 						file is not provided, all positions of the alignment will be reported.")
 	group0.add_argument("--ONLY-POS-CORRESPONDENCE", dest="only_pos_corr", required=False, action="store_true", help="Set only if you JUST WANT the position correspondence and nothing else.")
+	group0.add_argument("--outgroup", dest="outgroup", required=False, default="none", help="Indicate output sequence name. This sequence will be removes from the alignment during \
+					 	alignment processing, having no impact in core selection. In the end, the sequence is added back to the alignment.")
 	
 	args = parser.parse_args()
 
@@ -565,6 +567,7 @@ if __name__ == "__main__":
 	print("Loading the alignment...", file = log)
 
 	alignment = AlignIO.read(args.alignment, "fasta")
+	alignment_original = alignment
 	align_len = len(alignment[0].seq)
 
 	print("\tLoaded " + str(len(alignment)) + " samples.")
@@ -589,6 +592,13 @@ if __name__ == "__main__":
 			print("You have set '--ONLY-POS-CORRESPONDENCE'. So, alignment_processing.py will exit here!")
 			print("You have set '--ONLY-POS-CORRESPONDENCE'. So, alignment_processing.py will exit here!", file = log)
 			sys.exit(1)
+	
+
+	# removing outgroup if specified
+	if args.outgroup != "none":
+		print("Removing outgroup sequence: " + str(args.outgroup))
+		print("Removing outgroup sequence: " + str(args.outgroup), file = log)
+		alignment = rm_ref(alignment, args.outgroup)
 
 				
 	# remove samples according to metadata
@@ -603,7 +613,7 @@ if __name__ == "__main__":
 			sys.exit(1)
 		SeqIO.write(alignment, args.out + "_tmp.fasta", "fasta")
 		alignment = AlignIO.read(args.out + "_tmp.fasta", "fasta")
-		os.system("rm " + args.out + "_tmp.fasta")
+		subprocess.run("rm " + args.out + "_tmp.fasta", shell=True)
 	elif args.metadata != "" and args.filter_column == "":
 		print("Metadata file was provided but no filter was found... I am confused :-(")
 		print("Metadata file was provided but no filter was found... I am confused :-(", file = log)
@@ -614,7 +624,7 @@ if __name__ == "__main__":
 		print("Metadata file was not provided but a filter was found... I am confused :-(", file = log)
 		sys.exit(1)
 	
-	# run snp-sites to make the alignment shorter (only if '--use-reference-coords' and '--use-alignment-coords' are not set
+	# run snp-sites to make the alignment shorter
 
 	if float(args.ATCG_content) == 0.0 and float(args.N_content) == 1.0: # do not care about samples N content and keep only sites with ATCG
 		if args.remove_ref:
@@ -626,20 +636,20 @@ if __name__ == "__main__":
 		print("\tsnp-sites -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta")
 		print("\tsnp-sites -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta", file = log)
 		SeqIO.write(alignment, args.out + "_tmp.fasta", "fasta")
-		returned_value = os.system("snp-sites -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta")
+		returned_value = subprocess.run("snp-sites -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta", shell=True).returncode
 		if str(returned_value) != "0":
 			print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!")
 			print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!", file = log)
 			sys.exit(1)
-		returned_value = os.system("snp-sites -v -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.vcf")
+		returned_value = subprocess.run("snp-sites -v -c " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.vcf", shell=True).returncode
 		if str(returned_value) != "0":
 			print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!")
 			print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!", file = log)
 			sys.exit(1)
-		os.system("rm " + args.out + "_tmp.fasta")
+		subprocess.run("rm " + args.out + "_tmp.fasta", shell=True)
 		alignment = AlignIO.read(args.out + "_tmp_flt.fasta", "fasta")
-		os.system("grep -v '##' " + args.out + "_tmp_flt.vcf > " + args.out + "_tmp.vcf")
-		os.system("rm " + args.out + "_tmp_flt.fasta " + args.out + "_tmp_flt.vcf")
+		subprocess.run("grep -v '##' " + args.out + "_tmp_flt.vcf > " + args.out + "_tmp.vcf", shell=True)
+		subprocess.run("rm " + args.out + "_tmp_flt.fasta " + args.out + "_tmp_flt.vcf", shell=True)
 		print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)))
 		print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)), file = log)
 
@@ -649,10 +659,10 @@ if __name__ == "__main__":
 		print("Getting the alignment matrix...", file = log)
 		if args.use_ref:
 			mx = core2mx(alignment, args.out + "_tmp.vcf", coords, log)
-			os.system("rm " + args.out + "_tmp.vcf")
+			subprocess.run("rm " + args.out + "_tmp.vcf", shell=True)
 		else:
 			mx = core2mx(alignment, args.out + "_tmp.vcf", "", log)
-			os.system("rm " + args.out + "_tmp.vcf")
+			subprocess.run("rm " + args.out + "_tmp.vcf", shell=True)
 
 	else: # run snp-sites with option -c is not viable
 		if args.remove_ref:
@@ -665,20 +675,20 @@ if __name__ == "__main__":
 			print("\tsnp-sites " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta")
 			print("\tsnp-sites " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta", file = log)
 			SeqIO.write(alignment, args.out + "_tmp.fasta", "fasta")
-			returned_value = os.system("snp-sites " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta")
+			returned_value = subprocess.run("snp-sites " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.fasta", shell=True).returncode
 			if str(returned_value) != "0":
 				print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!")
 				print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!", file = log)
 				sys.exit(1)
-			returned_value = os.system("snp-sites -v " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.vcf")
+			returned_value = subprocess.run("snp-sites -v " + args.out + "_tmp.fasta > " + args.out + "_tmp_flt.vcf", shell=True).returncode
 			if str(returned_value) != "0":
 				print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!")
 				print("\nSomething went wrong while running snp-sites :-( please double check your input files and ReporTree specifications!", file = log)
 				sys.exit(1)
-			os.system("rm " + args.out + "_tmp.fasta")
+			subprocess.run("rm " + args.out + "_tmp.fasta", shell=True)
 			alignment = AlignIO.read(args.out + "_tmp_flt.fasta", "fasta")
-			os.system("grep -v '##' " + args.out + "_tmp_flt.vcf > " + args.out + "_tmp.vcf")
-			os.system("rm " + args.out + "_tmp_flt.fasta " + args.out + "_tmp_flt.vcf")
+			subprocess.run("grep -v '##' " + args.out + "_tmp_flt.vcf > " + args.out + "_tmp.vcf", shell=True)
+			subprocess.run("rm " + args.out + "_tmp_flt.fasta " + args.out + "_tmp_flt.vcf", shell=True)
 			print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)))
 			print("\tAlignment length after SNP-sites: " + str(len(alignment[0].seq)), file = log)
 
@@ -688,10 +698,10 @@ if __name__ == "__main__":
 			print("Getting the alignment matrix...", file = log)
 			if args.use_ref:
 				mx = core2mx(alignment, args.out + "_tmp.vcf", coords, log)
-				os.system("rm " + args.out + "_tmp.vcf")
+				subprocess.run("rm " + args.out + "_tmp.vcf", shell=True)
 			else:
 				mx = core2mx(alignment, args.out + "_tmp.vcf", "", log)
-				os.system("rm " + args.out + "_tmp.vcf")
+				subprocess.run("rm " + args.out + "_tmp.vcf", shell=True)
 
 		else:
 			# alignment matrix
@@ -737,6 +747,28 @@ if __name__ == "__main__":
 				print("Cannot proceed because " + str(len(mx.columns)-1) + " sites were kept in the alignment!", file = log)
 				sys.exit(1)	
 	
+
+	# add outgroup back to the alignment if specified
+	if args.outgroup != "none":
+		print("Adding outgroup sequence back to the alignment: " + str(args.outgroup))
+		print("Adding outgroup sequence back to the alignment: " + str(args.outgroup), file = log)
+		outgroup_seq = None
+		core_positions = mx.columns[1:].tolist()
+		if args.use_ref:
+			core_positions = [k for k, v in coords.items() if v in core_positions]
+		for record in alignment_original:
+			if record.id == args.outgroup:
+				outgroup_seq = record.seq
+				break
+		if outgroup_seq is not None:
+			outgroup_row = [str(args.outgroup)] + [outgroup_seq[int(pos) - 1] for pos in core_positions]
+			mx.loc[len(mx)] = outgroup_row	
+		else:
+			print("Outgroup sequence not found in the original alignment! Please double check your input files and ReporTree specifications :-(")
+			print("Outgroup sequence not found in the original alignment! Please double check your input files and ReporTree specifications :-(", file = log)
+			sys.exit(1)
+
+
 	# outputs
 
 	mx.to_csv(args.out + "_align_profile.tsv", index = False, header=True, sep ="\t")
