@@ -1,10 +1,8 @@
-name: reportree
+name: reportree_test
 channels:
-  - conda-forge
   - etetoolkit
-  - anaconda
   - bioconda
-  - defaults
+  - conda-forge
   - insapathogenomics
 dependencies:
   - biopython=1.77
