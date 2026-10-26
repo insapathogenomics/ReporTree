@@ -14,8 +14,8 @@ import pandas
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 import datetime
 
-version = "1.7.0"
-last_updated = "2026-09-25"
+version = "1.8.0"
+last_updated = "2026-10-26"
 
 # functions	----------
 
@@ -422,7 +422,7 @@ def col_summary(main_column, complete_metadata, columns_summary_report, sample_c
 							else:
 								col = stat
 								observations = list(flt_data[col])		
-														
+								observations = ["EMPTY" if pandas.isna(obs) else obs for obs in observations]				
 								counter = {}
 								for obs in set(observations):
 									counter[obs] = observations.count(obs)
