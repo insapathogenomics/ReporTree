@@ -20,8 +20,8 @@ from scipy.spatial.distance import pdist, squareform
 import numpy
 from collections import defaultdict
 
-version = "2.7.0"
-last_updated = "2026-09-25"
+version = "2.7.1"
+last_updated = "2026-10-26"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -410,14 +410,16 @@ def col_list(args):
 	
 	return cols_output,methods_output
 
-def info_samples_interest(samples, matrix, partitions, out):
-	""" filter partitions summary """
-	
-	if "," in samples:
-		samples_of_interest = samples.split(",")
-	elif ".tsv" in samples or ".txt" in samples or ".csv" in samples:
+def get_samples_of_interest(arg_samples_of_interest):
+	""" get the list of samples of interest from the command line argument 
+	input: string with samples of interest
+	output: list of samples of interest """
+
+	if "," in arg_samples_of_interest:
+		samples_of_interest = arg_samples_of_interest.split(",")
+	elif ".tsv" in arg_samples_of_interest or ".txt" in arg_samples_of_interest or ".csv" in arg_samples_of_interest:
 		samples_of_interest = []
-		with open(samples, "r") as input_file:
+		with open(arg_samples_of_interest, "r") as input_file:
 			infile = input_file.readlines()
 			for line in infile:
 				l = line.split("\n")[0]
@@ -432,7 +434,14 @@ def info_samples_interest(samples, matrix, partitions, out):
 					samples_of_interest.append(l)
 	else:
 		samples_of_interest = []
-		samples_of_interest.append(samples)
+		samples_of_interest.append(arg_samples_of_interest)
+
+	return samples_of_interest
+
+def info_samples_interest(samples, matrix, partitions, out):
+	""" filter partitions summary """
+	
+	samples_of_interest = get_samples_of_interest(samples)
 				
 	found = set()
 	partitions_mx = pandas.read_table(partitions)
@@ -1142,6 +1151,8 @@ def compatible_clusters(dist_mx, partitions, thresholds, out, samples_of_interes
 	dist_mx = pandas.read_table(dist_mx)
 	dist_mx.set_index(dist_mx.columns[0], inplace=True)
 
+	samples_of_interest = get_samples_of_interest(samples_of_interest)
+
 	partitions_mx = pandas.read_table(partitions)
 	partitions_mx.set_index(partitions_mx.columns[0], inplace=True)
 
@@ -1258,6 +1269,8 @@ def compatible_clusters(dist_mx, partitions, thresholds, out, samples_of_interes
 		]
 	]
 
+	final_df = final_df.sort_values(by=["method", "threshold", "assigned_cluster"])
+
 	final_df.to_csv(out + "_compatible_clusters.tsv", sep="\t", index=False)
 
 
@@ -1373,7 +1386,6 @@ def main():
 						input, it is MANDATORY to specify this argument.")
 	group1.add_argument("--subset", dest="subset", required=False, action="store_true", help="[OPTIONAL] Obtain genetic clusters using only the samples that correspond to the filters specified in the \
 						'--filter' argument.")
-	group1.add_argument("-flag", "--flag-multiple-clusters", dest="flag_clusters", required=False, action="store_true", help="[OPTIONAL] Generate an additional file with information about the ")
 	group1.add_argument("-d", "--dist", dest="dist", required=False, default=1.0, type=float, help="[OPTIONAL] Distance unit by which partition thresholds will be multiplied (example: if -d 10 and \
 						-thr 5,8,10-30, the minimum spanning tree will be cut at 50,80,100,110,120,...,300. If -d 10 and --method-threshold avg_clade-2, the avg_clade threshold will be set \
 						at 20). This argument is particularly useful for non-SNP-scaled trees. Currently, the default is 1, which is equivalent to 1 allele distance or 1 SNP distance. [1.0]")
