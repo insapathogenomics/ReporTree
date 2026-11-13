@@ -380,7 +380,6 @@ def main():
 			print("Filtering the allele matrix...", file = log)
 			
 			filters = args.filter_column
-			print(args.metadata)
 			mx = pandas.read_table(args.metadata, dtype = str)
 			columns_names = [col.replace(" ", "_") for col in mx.columns]
 			mx.replace(" ", "_", regex=True, inplace=True)

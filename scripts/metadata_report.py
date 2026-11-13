@@ -14,8 +14,8 @@ import pandas
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 import datetime
 
-version = "1.8.0"
-last_updated = "2026-10-26"
+version = "1.8.1"
+last_updated = "2026-11-13"
 
 # functions	----------
 
