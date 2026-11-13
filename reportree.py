@@ -20,8 +20,8 @@ from scipy.spatial.distance import pdist, squareform
 import numpy
 from collections import defaultdict
 
-version = "2.7.1"
-last_updated = "2026-10-26"
+version = "2.7.2"
+last_updated = "2026-11-13"
 
 reportree_script = os.path.realpath(__file__)
 reportree_path = reportree_script.rsplit("/", 1)[0]
@@ -497,7 +497,7 @@ def interest2metadata(tag, samples_of_interest):
 	input: list of samples and metadata table
 	output: metadata table """
 	
-	mx = pandas.read_table(tag + "_metadata_w_partitions.tsv")
+	mx = pandas.read_table(tag + "_metadata_w_partitions.tsv", dtype = str)
 	samples = mx[mx.columns[0]].values.tolist()
 	category = []
 	for s in samples:
@@ -528,7 +528,7 @@ def get_clusters_interest(samples, matrix, metadata, day, partitions):
 	input: list of samples and partitions table
 	output: list of clusters of interest """
 
-	partitions_mx = pandas.read_table(matrix)
+	partitions_mx = pandas.read_table(matrix, dtype = str)
 	metadata_mx = pandas.read_table(metadata, dtype = str)
 	nomenclature_code = "nomenclature_code_" + day
 	clusters_of_interest = {}
@@ -566,7 +566,7 @@ def get_all_clusters(matrix, partitions, log):
 	input: partitions table
 	output: list of all clusters """
 
-	partitions_mx = pandas.read_table(matrix)
+	partitions_mx = pandas.read_table(matrix, dtype = str)
 	clusters_of_interest = {}
 
 	if partitions in partitions_mx.columns:
@@ -639,13 +639,13 @@ def metadata4subset(mx, partitions_mx, tag_subset, filter_subset):
 	input: big metadata, tag_subset, filter_subset
 	output: 'subset.tsv' """
 
-	mx = pandas.read_table(mx)
+	mx = pandas.read_table(mx, dtype = str)
 	
 	filter_subset = filter_subset.split(" ")
 	col = filter_subset[0]
 	val = filter_subset[2].split(",")
 	if col not in mx.columns:
-		partitions_mx = pandas.read_table(partitions_mx)
+		partitions_mx = pandas.read_table(partitions_mx, dtype = str)
 		partitions_mx.set_index(partitions_mx.columns[0], drop = False, inplace = True)
 		mx.set_index(mx.columns[0], drop = False, inplace = True)
 		if col in partitions_mx.columns:
@@ -1128,7 +1128,7 @@ def solve_nomenclature_code_in_args(args,day):
 def rename_clusters_subsets(analysis,partitions,tag):
 	""" rename clusters resulting from zoom-in or subtree analysis """
 
-	mx = pandas.read_table(partitions)
+	mx = pandas.read_table(partitions, dtype = str)
 
 	new_name = {}
 	if analysis == "zoom-in":
