@@ -255,7 +255,6 @@ def partitions2metadata(partitions_name, partitions, mx_metadata, partitions2rep
 		new_metadata["iso_week"] = pandas.to_numeric(new_metadata["iso_week"], errors="coerce").astype("Int64")
 	if "year_original" in new_metadata.columns:
 		new_metadata["year_original"] = pandas.to_numeric(new_metadata["year"], errors="coerce").astype("Int64")
-
 	return new_metadata, possible_subset
 
 
@@ -654,7 +653,7 @@ def col_list(metadata, partitions):
 	"""
 	
 	cols_output = []
-	metadata_mx = pandas.read_table(metadata)
+	metadata_mx = pandas.read_table(metadata, dtype = str)
 	columns_names = [col.replace(" ", "_") for col in metadata_mx.columns]
 	metadata_mx.columns = columns_names
 	
@@ -669,7 +668,7 @@ def col_list(metadata, partitions):
 			cols_output.append("timespan_days")
 	
 	if partitions != "":
-		partitions_mx = pandas.read_table(partitions)
+		partitions_mx = pandas.read_table(partitions, dtype = str)
 		for col in partitions_mx.columns:
 			if col not in cols_output:
 				n_col = "n_" + col
