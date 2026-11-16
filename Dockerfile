@@ -21,6 +21,7 @@ RUN conda create -y -p /opt/reportree-env \
     scipy \
     scikit-learn \
     libgomp \
+    procps-ng \
     snp-sites=2.5.1 \
     treecluster=1.0.3 \
     zip \
@@ -35,7 +36,7 @@ ENV PATH="/opt/reportree-env/bin:/app/ReporTree:/app/ReporTree/scripts:/app/Repo
 ENV LD_LIBRARY_PATH="/opt/reportree-env/lib"
 
 # Download ReporTree and dependencies
-RUN git clone -b v2.7.1 https://github.com/insapathogenomics/ReporTree \
+RUN git clone -b v2.7.2 https://github.com/insapathogenomics/ReporTree \
     && chmod 755 ReporTree/reportree.py \
     && chmod 755 ReporTree/scripts/partitioning_grapetree.py \
     && chmod 755 ReporTree/scripts/partitioning_HC.py \

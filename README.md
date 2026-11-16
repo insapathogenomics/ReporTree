@@ -215,14 +215,14 @@ python reportree.py -h
 docker pull insapathogenomics/reportree:latest
 ```
 
-- Or install a specific version by specifying the release you want (e.g. for v2.7.1):
+- Or install a specific version by specifying the release you want (e.g. for v2.7.2):
 ```bash
-docker pull insapathogenomics/reportree:v2.7.1
+docker pull insapathogenomics/reportree:v2.7.2
 ```
 
 Run ReporTree:
 ```bash
-docker run insapathogenomics/reportree:v2.7.0 reportree.py -h
+docker run insapathogenomics/reportree:v2.7.2 reportree.py -h
 ```
 
 ## Usage
